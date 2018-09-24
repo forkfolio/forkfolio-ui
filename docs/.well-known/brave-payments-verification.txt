@@ -1,4 +1,0 @@
-This is a Brave Payments publisher verification file.
-
-Domain: forkfol.io
-Token: 06695ecc33440971bfad003fdbb47d829442c1e4abff807c51f12fa08ee6f721
