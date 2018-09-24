@@ -1,10 +1,10 @@
 {
-    "short_name": "LBD-PRO-REACT",
-    "name": "Light Bootstrap Dashboard PRO React",
+    "short_name": "ForkFolio",
+    "name": "ForkFolio App",
     "icons": [
         {
-            "src": "favicon.ico",
-            "sizes": "192x192",
+            "src": "android-icon.png",
+            "sizes": "512x512",
             "type": "image/png"
         }
     ],
