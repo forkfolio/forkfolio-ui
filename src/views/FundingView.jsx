@@ -1,0 +1,191 @@
+import React, { Component } from "react";
+// react component for creating dynamic tables
+import ReactTable from "react-table";
+import { Grid, Row, Col } from "react-bootstrap";
+
+import Card from "components/Card/Card.jsx";
+import Button from "components/CustomButton/CustomButton.jsx";
+import AddFundingDialog from "./dialogs/AddFundingDialog";
+import EditFundingDialog from "./dialogs/EditFundingDialog";
+import ConfirmDialog from "./dialogs/ConfirmDialog";
+import { formatUtils } from './../utils/FormatUtils';
+
+class FundingView extends Component {
+  constructor(props) {
+    super(props);
+    this.hideConfirmDialog = this.hideConfirmDialog.bind(this);
+    this.removeTransaction = this.removeTransaction.bind(this);
+    this.state = {
+      data: this.mapTradesToState(props),
+      isConfirmDialogShown: false,
+      removedTransaction: null
+    };
+  }
+
+  // safely change state here
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      data: this.mapTradesToState(nextProps)
+    });
+  }
+
+  mapTradesToState(props) {
+    // first get data from user and res model
+    const tableData = [];
+    let newestFirst = props.userModel.transactions.slice(0, props.userModel.transactions.length);
+    newestFirst.sort((a, b) => b.time.getTime() - a.time.getTime());
+    for (let tx of newestFirst) {
+      if(!tx.isTrade) {
+        let date = tx.time.toISOString().split('T')[0];
+        let name = tx.pair.base.name;
+        let type = tx.isBuy ? "Deposit" : "Withdrawal";
+        let comment = tx.comment === "null" ? "" : tx.comment;
+        let volume = [tx.baseAmount, tx.pair.base.code];
+        tableData.push([tx, date, name, type, comment, volume]);
+      }
+    }
+
+    return tableData.map((prop, key) => {
+      return {
+        id: prop[0],
+        date: prop[1],
+        name: prop[2],
+        type: prop[3],
+        comment: prop[4],
+        volume: prop[5],
+        actions: (
+          // we've added some custom button actions
+          <div className="actions-right">
+            <Button
+              onClick={() => {
+                this.props.setEditedTransaction(this.state.data[key].id);
+                this.props.showEditFundingDialog();
+                return true;
+              }}
+              bsStyle="default"
+              simple
+              icon
+            >
+              <i className="fa fa-edit" />
+            </Button>{" "}
+            <Button
+              onClick={() => {
+                this.setState({
+                  isConfirmDialogShown: true,
+                  removedTransaction: this.state.data[key].id
+                });
+                return true;
+              }}
+              bsStyle="danger"
+              simple
+              icon
+            >
+              <i className="fa fa-times" />
+            </Button>{" "}
+          </div>
+        )
+      };
+    })
+  }
+
+  getTableColumns() {
+    const tableColumns = [
+      { Header: "Date", accessor: "date", minWidth: 95, width: 160,
+        filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
+      },
+      { Header: "Name", accessor: "name", minWidth: 120, width: 200,
+        filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
+      },
+      { Header: "Type", accessor: "type", minWidth: 95, width: 120,
+        filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
+      },
+      { Header: "Comment", accessor: "comment", minWidth: 100, width: 300, maxWidth: 500,
+        filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
+      },
+      { Header: "Volume", accessor: "volume", minWidth: 120, width: 150, filterable: false,
+      Cell: row => (
+        <span style={{ float: "right" }}>
+          {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
+        </span>
+      ),
+      sortMethod: (a, b) => {
+        return b[0] - a[0];
+      }
+    },
+      { Header: "Actions", accessor: "actions", minWidth: 80, maxWidth: 80, sortable: false, filterable: false }
+    ];
+
+    return tableColumns;
+  }
+
+  hideConfirmDialog() {
+    this.setState({
+      isConfirmDialogShown: false
+    });
+  }
+
+  removeTransaction() {
+    this.props.removeTransaction(this.state.removedTransaction);
+    this.hideConfirmDialog();
+  }
+
+  render() {
+    return (
+      <div className="main-content">
+        <Grid fluid>
+          <Row>
+            <Col md={12}>
+              <Card
+                title="What are my recent deposits and withdrawals?"
+                content={
+                  <ReactTable
+                    data={this.state.data}
+                    filterable
+                    columns={this.getTableColumns()}
+                    defaultPageSize={10}
+                    className="-striped -highlight"
+                  />
+                }
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={2} mdOffset={10}>
+              <Button
+                bsStyle="default"
+                fill
+                wd
+                onClick={() => this.props.showAddFundingDialog()}
+              >
+                Add Funding
+              </Button>
+              <AddFundingDialog
+                isDialogShown={this.props.isAddFundingDialogShown}
+                hideDialog={this.props.hideAddFundingDialog}
+                addTransaction={this.props.addTransaction}
+                userModel={this.props.userModel}
+                resModel={this.props.resModel}
+              />
+              <EditFundingDialog
+                isDialogShown={this.props.isEditFundingDialogShown}
+                hideDialog={this.props.hideEditFundingDialog}
+                editedTransaction={this.props.editedTransaction}
+                updateTransaction={this.props.updateTransaction}
+                userModel={this.props.userModel}
+                resModel={this.props.resModel}
+              />
+              <ConfirmDialog
+                isDialogShown={this.state.isConfirmDialogShown}
+                hideDialog={this.hideConfirmDialog}
+                removedTransaction={this.state.removedTransaction}
+                removeTransaction={this.removeTransaction}
+              />
+            </Col>
+          </Row>
+        </Grid>
+      </div>
+    );
+  }
+}
+
+export default FundingView;

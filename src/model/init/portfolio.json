@@ -1,0 +1,8 @@
+[
+    {"isTrade": false, "isBuy": true, "pair": "USD/USD", "baseAmount": 100, "counterAmount": 0, "time": 1484607600000, "comment": "Initial deposit"},
+    {"isTrade": true, "isBuy": true, "pair": "BTC/USD", "baseAmount": 0.01, "counterAmount": 19.085, "time": 1500163200000, "comment": "Invest in BTC"},
+    {"isTrade": true, "isBuy": true, "pair": "ETH/USD", "baseAmount": 0.5, "counterAmount": 21.5, "time": 1491523200000, "comment": "Invest in ETH"},
+    {"isTrade": true, "isBuy": true, "pair": "DOGE/USD", "baseAmount": 2000, "counterAmount": 26.17, "time": 1515801600000, "comment": "Such coin"},
+    {"isTrade": true, "isBuy": true, "pair": "REP/ETH", "baseAmount": 1, "counterAmount": 0.057, "time": 1525219200000, "comment": "Pre-launch buy"},
+    {"isTrade": true, "isBuy": true, "pair": "BAT/ETH", "baseAmount": 100, "counterAmount": 0.05, "time": 1515196800000, "comment": "Coinbase very soon"}
+]
