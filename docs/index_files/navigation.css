@@ -1,0 +1,221 @@
+.mgn-main {
+	font-family: 'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #909c9e;
+    font-size: 14px;
+    line-height: normal;
+    position: relative
+}
+
+.mgn-main,
+.mgn-main * {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box
+}
+
+.mgn-main a {
+    color: #778283;
+    text-decoration: none!important
+}
+
+.mgn-main a:hover {
+    color: #424A4F;
+    text-decoration: none!important
+}
+
+.mgn-main ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0
+}
+
+.mgn-main li {
+    margin: 0;
+    padding: 0
+}
+
+.mgn-bar {
+    background: #fff;
+    height: 56px;
+    position: relative;
+    z-index: 100;
+    clear: both;
+    line-height: normal;
+    opacity: 1;
+    padding: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+.mgn-container {
+    max-width: 100%;
+    width: 1180px;
+    margin: 0 auto;
+    padding: 0;
+    position: static
+}
+
+.mgn-nav-meta .mgn-item {
+    display: block;
+    float: left;
+    font-family: "Roboto Slab", Museo, MuseoSlab500, Helvetica, Arial, sans-serif
+}
+
+.mgn-nav-meta .mgn-item a {
+    display: block;
+    font-size: 18px;
+    padding: 0 20px;
+    line-height: 56px
+}
+
+.mgn-nav-extra {
+    float: right;
+    margin: 0;
+    padding: 0
+}
+
+.mgn-nav-extra>li {
+    font-size: 14px;
+    float: left;
+    position: relative;
+    height: 56px;
+    line-height: 56px;
+    overflow: hidden;
+    padding-top: 3px
+}
+
+.mgn-nav-extra>li:hover>a {
+    color: #424A4F;
+    fill: #424A4F
+}
+
+.mgn-nav-extra .mgn-item {
+    display: block;
+    cursor: pointer;
+    padding: 0 10px
+}
+
+.mgn-pro:hover:after {
+    background-color: #4dbdeb
+}
+
+.mgn-footer {
+    position: relative;
+    color: #5d6769;
+    font-size: 14px;
+    font-family: Lato, Helvetica, Arial, sans-serif
+}
+
+.mgn-footer .mgn-container:after,
+.mgn-footer .mgn-container:before {
+    content: " ";
+    display: table
+}
+
+.mgn-footer .mgn-container:after {
+    clear: both
+}
+
+.mgn-footer .mgn-copyright {
+    line-height: 14px
+}
+
+.mgn-footer .mgn-copyright,
+.mgn-footer .mgn-links {
+    padding: 0;
+    margin: 10px 0 0
+}
+
+.mgn-footer .mgn-links {
+    list-style: none
+}
+
+.mgn-footer-skinny {
+	font-family: 'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif;
+    padding: 25px 0 30px;
+    border-top: 1px solid #dde8e8;
+    background-color: #fff;
+    line-height: 14px
+}
+
+.mgn-footer-skinny .mgn-links {
+    float: left
+}
+
+.mgn-footer-skinny .mgn-links li {
+    display: inline-block;
+    padding: 0;
+    margin: 0
+}
+
+.mgn-footer-skinny .mgn-links li:not(:last-child) {
+    margin-right: 15px
+}
+
+.mgn-footer-skinny .mgn-links a {
+    color: #778283;
+    text-decoration: none
+}
+
+.mgn-footer-skinny .mgn-links a:hover {
+    text-decoration: underline
+}
+
+.mgn-footer-skinny .mgn-copyright {
+    float: right;
+    color: #909c9e;
+    font-size: 12px
+}
+
+@media all and (min-width:0) and (max-width:959px) {
+    .mgn-footer:not(.medium-screen) {
+        border-top: 0 none
+    }
+    .mgn-footer:not(.medium-screen) .mgn-footer-skinny {
+        text-align: center
+    }
+    .mgn-footer:not(.medium-screen) .mgn-copyright,
+    .mgn-footer:not(.medium-screen) .mgn-links {
+        float: none
+    }
+    .mgn-footer:not(.medium-screen) .mgn-links {
+        margin-bottom: 15px
+    }
+    .mgn-footer:not(.medium-screen) .mgn-links li.mgn-hide-small {
+        display: none
+    }
+}
+
+@media all and (min-width:960px) and (max-width:1179px) {
+    .mgn-container {
+        max-width: 960px
+    }
+}
+
+@media all and (min-width:768px) and (max-width:1179px) {
+    .mgn-nav-meta .mgn-item a {
+        padding: 0 15px
+    }
+}
+
+@media all and (min-width:768px) and (max-width:959px) {
+    .mgn-container {
+        max-width: 768px
+    }
+}
+
+@media all and (max-width:768px) {
+    .mgn-container {
+        margin: 0;
+        padding: 0 20px
+    }
+    .mgn-nav-extra,
+    .mgn-nav-meta {
+        display: none
+    }
+    .mgn-hide-small {
+        display: none
+    }
+}
