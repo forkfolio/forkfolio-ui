@@ -1,8 +1,8 @@
 {
   "name": "forkfolio-ui",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "private": true,
-  "homepage" : "https://forkfol.io/app",
+  "homepage" : "https://app.forkfol.io",
   "dependencies": {
     "bluebird": "^3.5.1",
     "bootstrap": "3.3.7",
