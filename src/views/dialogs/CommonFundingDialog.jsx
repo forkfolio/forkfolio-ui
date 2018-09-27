@@ -103,6 +103,10 @@ class CommonFundingDialog extends Component {
     return !isNaN(numValue) && numValue >=0;
   }
 
+  isEnabledDate(current) {
+    return current.isBefore(Datetime.moment());
+  };
+
   render() {
     return (
       <div className="main-content">
@@ -190,6 +194,7 @@ class CommonFundingDialog extends Component {
                       </Col>
                       <Col sm={6}>
                         <Datetime
+                          isValidDate={this.isEnabledDate}
                           timeFormat={false}
                           inputProps={{ placeholder: "Click to select a date" }}
                           value={this.state.date}

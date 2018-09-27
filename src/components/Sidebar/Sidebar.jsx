@@ -156,7 +156,7 @@ class Sidebar extends Component {
               }
             })}
             <li className={""} key={7}>
-              <a class="nav-link" href="https://docs.google.com/forms/d/e/1FAIpQLSedlJMow1MmI3o6yBNAjtfXUQo05Pb6DVVSRg46PcM9yc8Bow/viewform" target="_blank">
+              <a class="nav-link" href="https://docs.google.com/forms/d/e/1FAIpQLSedlJMow1MmI3o6yBNAjtfXUQo05Pb6DVVSRg46PcM9yc8Bow/viewform" target="_blank" rel="noopener noreferrer">
                 <i className={"fa fa-comments"} />
                 <p>Feedback</p>
               </a>    

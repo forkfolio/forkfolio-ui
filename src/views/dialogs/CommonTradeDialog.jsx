@@ -123,6 +123,10 @@ class CommonTradeDialog extends Component {
     return "";
   }*/
 
+  isEnabledDate(current) {
+    return current.isBefore(Datetime.moment());
+  };
+
   render() {
     return (
       <div className="main-content">
@@ -228,6 +232,7 @@ class CommonTradeDialog extends Component {
                       </Col>
                       <Col sm={6}>
                         <Datetime
+                          isValidDate={this.isEnabledDate}
                           timeFormat={false}
                           inputProps={{ placeholder: "Click to select a date" }}
                           value={this.state.date}
