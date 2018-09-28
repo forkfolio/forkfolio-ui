@@ -105,6 +105,47 @@ class TradesView extends Component {
     return total;
   }
 
+  getTotalVolume(rows) {
+    let total = 0;
+    for (let row of rows.data) {
+      total += row.volume[0] * (row.type === "Buy" ? 1 : -1);
+    }
+    return total;
+  }
+
+  getTotalCost(rows) {
+    let total = 0;
+    for (let row of rows.data) {
+      total += row.cost[0] * (row.type === "Buy" ? 1 : -1);
+    }
+    return total;
+  }
+
+  isOnePair(rows) {
+    for(let row of rows.data) {
+      if(row.pair !== rows.data[0].pair) {
+        return false;
+      }
+    }
+    return rows.data.length !== 0;
+  }
+
+  getVolumeFooter(rows) {
+    if(this.isOnePair(rows)) {
+      return formatUtils.formatNumber(this.getTotalVolume(rows), 2) + " " + rows.data[0].volume[1];
+    }
+
+    return "";
+  }
+
+  getCostFooter(rows) {
+    if(this.isOnePair(rows)) {
+      return formatUtils.formatNumber(this.getTotalCost(rows), 2) + " " + rows.data[0].cost[1];
+    }
+
+    return "";
+  }
+
   getTableColumns() {
     const tableColumns = [
       { Header: "Date", accessor: "date", minWidth: 95, maxWidth: 100,
@@ -125,7 +166,14 @@ class TradesView extends Component {
             {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
           </span>
         ),
-        sortMethod: (a, b) => { return b[0] - a[0]; }
+        sortMethod: (a, b) => { return b[0] - a[0]; 
+        }, Footer: rows => (
+            <span style={{ float: "right" }}>
+              <strong>
+                {this.getVolumeFooter(rows)}
+              </strong>
+            </span>
+          )
       },
       { Header: "Price", accessor: "price", maxWidth: 160, filterable: false,
       Cell: row => (
@@ -144,7 +192,13 @@ class TradesView extends Component {
       ),
       sortMethod: (a, b) => {
         return b[0] - a[0];
-      }},
+      }, Footer: rows => (
+        <span style={{ float: "right" }}>
+          <strong>
+            {this.getCostFooter(rows)}
+          </strong>
+        </span>
+      )},
       { Header: "Profit [%]", accessor: "profitpercentage", maxWidth: 80, filterable: false,
       Cell: row => (
         <span style={{ float: "right" }}>
