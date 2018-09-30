@@ -426,7 +426,7 @@ class Dashboard extends Component {
       transactions: fileTransactions
     }
     let formattedFile = JSON.stringify(portfolioFile, null, "\t");
-    let file = new File([formattedFile], "portfolio.json", {type: "text/plain;charset=utf-8"});
+    let file = new File([formattedFile], "portfolio" + fileTransactions.length + ".json", {type: "text/plain;charset=utf-8"});
     FileSaver.saveAs(file);
   }
 

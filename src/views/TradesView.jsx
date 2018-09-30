@@ -144,7 +144,6 @@ class TradesView extends Component {
 
   getPriceFooter(rows) {
     if(this.isOnePair(rows)) {
-      console.log(this.getTotalPrice(rows))
       return formatUtils.formatNumber(this.getTotalPrice(rows), 6) + " " + rows.data[0].cost[1];
     }
 
