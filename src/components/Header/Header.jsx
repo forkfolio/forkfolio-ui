@@ -49,8 +49,6 @@ class Header extends Component {
     document.documentElement.classList.toggle("nav-open");
   }
 
-
-
   render() {
     return (
       <Navbar fluid>
@@ -67,7 +65,7 @@ class Header extends Component {
         <Navbar.Header>
           <Navbar.Brand>
             {/* Here we create navbar brand, based on route name */}
-            <a href={"#/" + this.makeBrand().toLowerCase()}>{this.makeBrand()}</a>
+            {this.makeBrand()}
           </Navbar.Brand>
           <Navbar.Toggle onClick={this.mobileSidebarToggle} />
         </Navbar.Header>
