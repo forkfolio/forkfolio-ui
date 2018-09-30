@@ -113,6 +113,10 @@ class TradesView extends Component {
     return total;
   }
 
+  getTotalPrice(rows) {
+    return this.getTotalCost(rows) / this.getTotalVolume(rows);
+  }
+
   getTotalCost(rows) {
     let total = 0;
     for (let row of rows.data) {
@@ -133,6 +137,15 @@ class TradesView extends Component {
   getVolumeFooter(rows) {
     if(this.isOnePair(rows)) {
       return formatUtils.formatNumber(this.getTotalVolume(rows), 2) + " " + rows.data[0].volume[1];
+    }
+
+    return "";
+  }
+
+  getPriceFooter(rows) {
+    if(this.isOnePair(rows)) {
+      console.log(this.getTotalPrice(rows))
+      return formatUtils.formatNumber(this.getTotalPrice(rows), 6) + " " + rows.data[0].cost[1];
     }
 
     return "";
@@ -160,7 +173,7 @@ class TradesView extends Component {
       { Header: "Comment", accessor: "comment", maxWidth: 300,
         filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
       },
-      { Header: "Volume", accessor: "volume", maxWidth: 120, filterable: false,
+      { Header: "Volume", accessor: "volume", maxWidth: 140, filterable: false,
         Cell: row => (
           <span style={{ float: "right" }}>
             {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
@@ -183,8 +196,15 @@ class TradesView extends Component {
       ),
       sortMethod: (a, b) => {
         return b[0] - a[0];
-      }},
-      { Header: "Cost", accessor: "cost", maxWidth: 120, filterable: false,
+      }, Footer: rows => (
+          <span style={{ float: "right" }}>
+            <strong>
+              {this.getPriceFooter(rows)}
+            </strong>
+          </span>
+        )
+      },
+      { Header: "Cost", accessor: "cost", maxWidth: 140, filterable: false,
       Cell: row => (
         <span style={{ float: "right" }}>
           {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
