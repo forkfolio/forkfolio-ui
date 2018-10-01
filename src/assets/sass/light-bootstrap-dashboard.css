@@ -3867,6 +3867,7 @@ button.rbc-input::-moz-focus-inner {
   color: #565656;
   font-weight: 400;
   height: 36px;
+  width: 100px;
   background-color: inherit;
   text-align: center; }
   .ReactTable .-pagination input:focus, .ReactTable .-pagination select:focus {
@@ -3998,10 +3999,11 @@ button.rbc-input::-moz-focus-inner {
   outline: none; }
 
 .ReactTable .rt-thead .rt-th {
-  font-size: 12px;
+  font-size: 13px;
   text-transform: uppercase;
-  color: #9a9a9a;
-  font-weight: 400; }
+  color: #999999;
+  font-weight: 400;
+  text-align: center; }
 
 .sweet-overlay {
   background-color: rgba(0, 0, 0, 0.4);

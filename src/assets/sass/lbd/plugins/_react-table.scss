@@ -327,6 +327,7 @@
   color: #565656;
   font-weight: 400;
   height: 36px;
+  width: 100px;
   background-color: inherit;
   text-align: center;
   &:focus{
@@ -460,8 +461,9 @@
   outline: none;
 }
 .ReactTable .rt-thead .rt-th{
-  font-size: 12px;
+  font-size: 13px;
   text-transform: uppercase;
-  color: #9a9a9a;
+  color: #999999;
   font-weight: 400;
+  text-align: center;
 }
