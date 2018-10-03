@@ -5,6 +5,7 @@ import Highstock from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 import Card from "components/Card/Card.jsx";
 import PortfolioPie from './common/PortfolioPie';
+import HelpCard from './common/HelpCard';
 import { formatUtils } from './../utils/FormatUtils';
 import { rangeSelectorModel } from "../model/init/ResModelInit.js";
 
@@ -171,6 +172,14 @@ class PortfolioView extends Component {
     return (
       <div className="main-content">
         <Grid fluid>
+          <Row>
+            <Col md={12}>
+              <HelpCard 
+                isHelpPanelShown={this.props.isHelpPanelShown}
+                hideHelpPanel={this.props.hideHelpPanel}
+              />
+            </Col>
+          </Row>
           <Row>
             <Col md={8}>
               <Card

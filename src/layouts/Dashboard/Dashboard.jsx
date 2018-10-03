@@ -33,6 +33,9 @@ class Dashboard extends Component {
     super(props);
     this.handleNotificationClick = this.handleNotificationClick.bind(this);
     
+    this.showHelpPanel = this.showHelpPanel.bind(this);
+    this.hideHelpPanel = this.hideHelpPanel.bind(this);
+
     this.showAddTradeDialog = this.showAddTradeDialog.bind(this);
     this.hideAddTradeDialog = this.hideAddTradeDialog.bind(this);
     this.showAddFundingDialog = this.showAddFundingDialog.bind(this);
@@ -60,6 +63,7 @@ class Dashboard extends Component {
     this.downloadPortfolio = this.downloadPortfolio.bind(this);
     this.state = {
       _notificationSystem: null,
+      isHelpPanelShown: true,
       isAddTradeDialogShown: false,
       isAddFundingDialogShown: false,
       isEditTradeDialogShown: false,
@@ -297,6 +301,15 @@ class Dashboard extends Component {
 
   // TODO: merge show hide to one
 
+  showHelpPanel() {
+    this.setState({ isHelpPanelShown: true });
+  }
+
+  hideHelpPanel() {
+    console.log("Hide help panel")
+    this.setState({ isHelpPanelShown: false });
+  }
+
   showAddTradeDialog() {
     this.setState({ isAddTradeDialogShown: true });
   }
@@ -435,10 +448,11 @@ class Dashboard extends Component {
       <div className="wrapper">
         <NotificationSystem ref="notificationSystem" style={style} />
         <Sidebar {...this.props}
-        uploadPortfolioFromFile={this.uploadPortfolioFromFile} 
-        downloadPortfolio={this.downloadPortfolio} 
-        userModel={this.state.userModel}
-        resModel={this.state.resModel}
+          uploadPortfolioFromFile={this.uploadPortfolioFromFile} 
+          downloadPortfolio={this.downloadPortfolio} 
+          showHelpPanel={this.showHelpPanel} 
+          userModel={this.state.userModel}
+          resModel={this.state.resModel}
         />
         <div
           className={
@@ -498,6 +512,9 @@ class Dashboard extends Component {
                           handleClick={this.handleNotificationClick}
                           userModel={this.state.userModel}
                           resModel={this.state.resModel}
+
+                          isHelpPanelShown={this.state.isHelpPanelShown}
+                          hideHelpPanel={this.hideHelpPanel}
 
                           isAddTradeDialogShown={this.state.isAddTradeDialogShown}
                           showAddTradeDialog={this.showAddTradeDialog}

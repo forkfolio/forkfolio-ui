@@ -161,6 +161,12 @@ class Sidebar extends Component {
                 <p>Feedback</p>
               </a>    
             </li>
+            <li className={""} key={8}>
+              <a class="nav-link" onClick={() => this.props.showHelpPanel()}>
+                <i className={"fa fa-question-circle"} />
+                <p>Help</p>
+              </a>    
+            </li>
           </ul>
         </div>
       </div>
