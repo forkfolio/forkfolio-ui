@@ -7,7 +7,16 @@ import CommonFundingDialog from "./CommonFundingDialog";
 class AddFundingDialog extends CommonFundingDialog {
   constructor(props) {
     super(props);
-    this.state = {
+    this.state = this.getInitialState();
+  }
+
+  // safely change state here
+  componentWillReceiveProps(nextProps) {
+    this.setState(this.getInitialState());
+  }
+
+  getInitialState() {
+    return {
       title: "Add funding",
       type: {value: true, label: "Deposit"},
       typeError: null,
@@ -15,17 +24,11 @@ class AddFundingDialog extends CommonFundingDialog {
       amountError: null,
       currency: null,
       currencyError: null,
+      date: new Date(),
       dateError: null,
-      comment: null
-    };
-  }
-
-  // safely change state here
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      currencies: this.getDepositCurrencies(),
-      date: new Date()
-    });
+      comment: null,
+      currencies: this.getDepositCurrencies()
+    }
   }
 
   handleSaveButtonClick() {

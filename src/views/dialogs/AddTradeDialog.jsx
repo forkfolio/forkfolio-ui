@@ -5,7 +5,16 @@ import CommonTradeDialog from "./CommonTradeDialog";
 class AddTradeDialog extends CommonTradeDialog {
   constructor(props) {
     super(props);
-    this.state = {
+    this.state = this.getInitialState();
+  }
+
+  // safely change state here
+  componentWillReceiveProps(nextProps) {
+    this.setState(this.getInitialState());
+  }
+
+  getInitialState() {
+    return {
       title: "Add trade",
       buyAmount: "",
       buyAmountError: null,
@@ -15,18 +24,12 @@ class AddTradeDialog extends CommonTradeDialog {
       sellAmountError: null,
       sellCurrency: null,
       sellCurrencyError: null,
+      date: new Date(),
       dateError: null,
-      comment: null
-    };
-  }
-
-  // safely change state here
-  componentWillReceiveProps(nextProps) {
-    this.setState({
+      comment: null,
       buyCurrencies: this.getBuyCurrencies(),
       sellCurrencies: this.getSellCurrencies(),
-      date: new Date(),
-    });
+    }
   }
 
   getPair(buyCurency, sellCurrency, buyAmount, sellAmount) {
