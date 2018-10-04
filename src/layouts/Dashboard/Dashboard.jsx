@@ -59,6 +59,7 @@ class Dashboard extends Component {
     this.fetchAllAndRender = this.fetchAllAndRender.bind(this);
     this.fetchHistoday = this.fetchHistoday.bind(this);
 
+    this.newPortfolio = this.newPortfolio.bind(this);
     this.uploadPortfolioFromFile = this.uploadPortfolioFromFile.bind(this);
     this.downloadPortfolio = this.downloadPortfolio.bind(this);
     this.state = {
@@ -85,31 +86,33 @@ class Dashboard extends Component {
   
   fetchRecentPrices() {
     let currencies = this.getCurrenciesToFetch();
-    fetch(config.restURL + 'recent?tokens=' + this.toTokensString(currencies))
-    .then((response) => {
-      return response.text()
-    }).then((body) => {
-      let tickers = JSON.parse(body);
-      let count = 0;
-      for (let i = 0; i < tickers.length; i++) {
-        let newPrice = parseFloat(tickers[i].l);
-        if(resModel.recentTickers.get(currencies[i]) == null ||
-          newPrice !== resModel.recentTickers.get(currencies[i]).price) {
-          let pair = new CurrencyPair(currencies[i], resModel.usd);
-          resModel.recentTickers.set(currencies[i], new Ticker(pair, parseFloat(tickers[i].l) /*+ Math.random() * 5*/, new Date(parseInt(tickers[i].t, 10) * 1000)))
-          count++
+    if(currencies.length > 0) {
+      fetch(config.restURL + 'recent?tokens=' + this.toTokensString(currencies))
+      .then((response) => {
+        return response.text()
+      }).then((body) => {
+        let tickers = JSON.parse(body);
+        let count = 0;
+        for (let i = 0; i < tickers.length; i++) {
+          let newPrice = parseFloat(tickers[i].l);
+          if(resModel.recentTickers.get(currencies[i]) == null ||
+            newPrice !== resModel.recentTickers.get(currencies[i]).price) {
+            let pair = new CurrencyPair(currencies[i], resModel.usd);
+            resModel.recentTickers.set(currencies[i], new Ticker(pair, parseFloat(tickers[i].l) /*+ Math.random() * 5*/, new Date(parseInt(tickers[i].t, 10) * 1000)))
+            count++
+          }
         }
-      }
-      // if there is update, render
-      if(count > 0) {
-        console.log(count + " new recent prices updated. Updating UI..")
-        let newModel = new UserModel(this.state.userModel.transactions, this.state.resModel);
-        this.setState({
-          userModel: newModel,
-          resModel: this.state.resModel.clone()
-        })
-      }
-    })
+        // if there is update, render
+        if(count > 0) {
+          console.log(count + " new recent prices updated. Updating UI..")
+          let newModel = new UserModel(this.state.userModel.transactions, this.state.resModel);
+          this.setState({
+            userModel: newModel,
+            resModel: this.state.resModel.clone()
+          })
+        }
+      });
+    }
   }
   
   updateUserModel(fileFormatTransactions) {
@@ -406,6 +409,23 @@ class Dashboard extends Component {
     })
   }
 
+  newPortfolio() {
+    console.log("New portfolio");
+    this.updateUserModel([]);
+    //this.fetchAllAndRender(this.getCurrenciesToFetch());
+    /*const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      // TODO: check if format ok, version number
+      this.updateUserModel(JSON.parse(reader.result).transactions);
+      this.fetchAllAndRender(this.getCurrenciesToFetch());
+    }, false);
+    if (files.length > 0) {
+      reader.readAsText(files[0]);
+    } else {
+      //this.props.showError(new InputValidationError("Portfolio file should be in JSON file format."));
+    }*/
+  }
+
   uploadPortfolioFromFile(files) {
     const reader = new FileReader();
     reader.addEventListener("load", () => {
@@ -448,6 +468,7 @@ class Dashboard extends Component {
       <div className="wrapper">
         <NotificationSystem ref="notificationSystem" style={style} />
         <Sidebar {...this.props}
+          newPortfolio={this.newPortfolio} 
           uploadPortfolioFromFile={this.uploadPortfolioFromFile} 
           downloadPortfolio={this.downloadPortfolio} 
           showHelpPanel={this.showHelpPanel} 

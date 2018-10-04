@@ -115,12 +115,18 @@ class Sidebar extends Component {
                     <Collapse in={this.state[prop.state]}>
                       <ul className="nav">
                         <li className={""} key={5}>
+                          <a class="nav-link" onClick={() => this.props.newPortfolio()}>
+                              <i className={"fa fa-file-text-o" /* for fa v5 "fa fa-file-import"*/} />
+                              <p>New</p>
+                            </a>
+                        </li>                      
+                        <li className={""} key={6}>
                           <a class="nav-link" onClick={() => this.onOpenClick()}>
                               <i className={"fa fa-folder-open" /* for fa v5 "fa fa-file-import"*/} />
                               <p>Open</p>
                             </a>
                         </li>
-                        <li className={""} key={6}>
+                        <li className={""} key={7}>
                           <a class="nav-link" onClick={() => this.props.downloadPortfolio()}>
                             <i className={"fa fa-floppy-o"} />
                             <p>Save</p>
@@ -155,13 +161,13 @@ class Sidebar extends Component {
                 }
               }
             })}
-            <li className={""} key={7}>
+            <li className={""} key={8}>
               <a class="nav-link" href="https://docs.google.com/forms/d/e/1FAIpQLSedlJMow1MmI3o6yBNAjtfXUQo05Pb6DVVSRg46PcM9yc8Bow/viewform" target="_blank" rel="noopener noreferrer">
                 <i className={"fa fa-comments"} />
                 <p>Feedback</p>
               </a>    
             </li>
-            <li className={""} key={8}>
+            <li className={""} key={9}>
               <a class="nav-link" onClick={() => this.props.showHelpPanel()}>
                 <i className={"fa fa-question-circle"} />
                 <p>Help</p>

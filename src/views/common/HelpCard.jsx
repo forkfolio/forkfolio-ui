@@ -27,7 +27,7 @@ class HelpCard extends Component {
                 </Col>
                 <Col md={3}>
                   <p>If you have your past trades, you can go to Trades -> Add Trades to add your past trades. Now you can analyze how much are your trades profitable, and get insight into your trading strategy.</p>
-                  <p>Important: don't forget to save your changes as we do not save any of your data. Go to Manage -> Save to save your updates.  </p>
+                  <p>Important: don't forget to save your changes as <b>we don't have access</b> to any of your data. Go to Manage -> Save to save your updates.  </p>
                 </Col>
                 <Col md={6}>
                   <p>Video goes here</p>
