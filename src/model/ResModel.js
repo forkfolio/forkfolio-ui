@@ -12,9 +12,9 @@ export default class ResModel {
 
   clone() {
     let newModel = new ResModel();
+    newModel.usd = this.usd;
     newModel.dailyTickers = this.dailyTickers;
     newModel.recentTickers = this.recentTickers;
-    newModel.usd = this.usd;
     return newModel;
   }
 
