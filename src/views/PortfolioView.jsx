@@ -183,7 +183,7 @@ class PortfolioView extends Component {
           <Row>
             <Col md={8}>
               <Card
-                title="What is my portfolio allocation?"
+                title="What is my asset allocation?"
                 content={
                   <ReactTable
                     data={this.getTableData(this.props)}
@@ -207,7 +207,7 @@ class PortfolioView extends Component {
           <Row>
             <Col md={12}>
               <Card
-                title="What is my portfolio performance?"
+                title="What is my portfolio history?"
                 //category="24 Hours performance"
                 content={
                   <HighchartsReact
