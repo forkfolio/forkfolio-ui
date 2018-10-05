@@ -136,11 +136,10 @@ class Dashboard extends Component {
     })
   }
   
-  // fetches a list of all curerncies, crypto and fiat, and stores them in resModel
+  // fetches a list of all curencies, crypto and fiat, and stores them in resModel
   fetchCurrencies() {
     return new Promise((accept, reject) => {
-      fetch(config.restURL + 'currencies')
-      .then((response) => {
+      fetch(config.restURL + 'currencies').then((response) => {
         return response.text()
       }).then((body) => {
         for (let c of JSON.parse(body)) {
@@ -160,7 +159,7 @@ class Dashboard extends Component {
     let currentPortfolio = this.state.userModel.portfolios.slice(-1)[0];
     let currencies = [];
     for (const k of currentPortfolio.balances.keys()) {
-        currencies.push(k);
+      currencies.push(k);
     }
 
     //console.log(currencies);
@@ -363,9 +362,7 @@ class Dashboard extends Component {
     console.log(newModel.transactions.length + " transactions in userModel");
 
     if(shouldFetch) {
-      this.fetchCurrencies().then(() => {
-        this.fetchAllAndRender(this.getCurrenciesToFetch());
-      });
+      this.fetchAllAndRender(this.getCurrenciesToFetch());
     }
   }
 
