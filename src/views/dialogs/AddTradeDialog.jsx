@@ -5,16 +5,20 @@ import CommonTradeDialog from "./CommonTradeDialog";
 class AddTradeDialog extends CommonTradeDialog {
   constructor(props) {
     super(props);
-    this.state = this.getInitialState();
+    this.state = this.getInitialState(props);
   }
 
   // safely change state here
   componentWillReceiveProps(nextProps) {
-    this.setState(this.getInitialState());
+    // update only if shown is changes (this prevents resetting when prices are updated)
+    if(this.props.isDialogShown !== nextProps.isDialogShown) {
+      this.setState(this.getInitialState(nextProps));
+    }
   }
 
-  getInitialState() {
+  getInitialState(nextProps) {
     return {
+      isDialogShown: nextProps.isDialogShown,
       title: "Add trade",
       buyAmount: "",
       buyAmountError: null,
@@ -27,8 +31,8 @@ class AddTradeDialog extends CommonTradeDialog {
       date: new Date(),
       dateError: null,
       comment: null,
-      buyCurrencies: this.getBuyCurrencies(),
-      sellCurrencies: this.getSellCurrencies(),
+      buyCurrencies: this.getBuyCurrencies(nextProps),
+      sellCurrencies: this.getSellCurrencies(nextProps),
     }
   }
 
@@ -72,6 +76,7 @@ class AddTradeDialog extends CommonTradeDialog {
 
       let tx = new Transaction(true, isBuy, pair, buyAmount, sellAmount, this.state.date, this.state.comment);
       this.props.addTransaction(tx);
+      this.setState(this.getInitialState(this.props));
       this.props.hideDialog();
     }
   }

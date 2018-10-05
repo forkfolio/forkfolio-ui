@@ -78,17 +78,19 @@ class CommonTradeDialog extends Component {
     return !isInvalid;
   }
 
-  getBuyCurrencies() {
-    const buyCurrencies = [];
-    for(let c of this.props.resModel.dailyTickers.keys()) {
+  getBuyCurrencies(nextProps) {
+    let buyCurrencies = [];
+    console.log(nextProps.resModel)
+    for(let c of nextProps.resModel.dailyTickers.keys()) {
       buyCurrencies.push({ value: c, label: c.code + " - " + c.name });
     }
 
+    console.log(buyCurrencies.length)
     return buyCurrencies;
   }
 
-  getSellCurrencies() {
-    let currentPortfolio = this.props.userModel.portfolios.slice(-1)[0];
+  getSellCurrencies(nextProps) {
+    let currentPortfolio = nextProps.userModel.portfolios.slice(-1)[0];
     let sellCurrencies = [];
     for (const c of currentPortfolio.balances.keys()) {
       sellCurrencies.push({ value: c, label: c.code + " - " + c.name });
