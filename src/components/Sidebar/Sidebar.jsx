@@ -7,7 +7,8 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 // backgroundImage for Sidebar
 import image from "assets/img/full-screen-image-3.jpg";
 import dashboardRoutes from "routes/dashboard.jsx";
-import InputFiles from 'react-input-files';
+//import InputFiles from 'react-input-files';
+import InputFiles from './../Input/InputFiles.js'
 
 //const bgImage = { backgroundImage: "url(" + image + ")" };
 
