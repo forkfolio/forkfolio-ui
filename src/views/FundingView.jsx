@@ -129,6 +129,23 @@ class FundingView extends Component {
     this.hideConfirmDialog();
   }
 
+  getNoDataText(name, userModel) {
+    let currentPortfolio = userModel.portfolios.slice(-1)[0];
+    if(currentPortfolio.tradeCount === 0) {
+      // if there are no trades, and no fundings
+      if(userModel.transactions.length === 0) {
+        return (<span><p>Your portfolio is empty. To get started:</p>
+          <ol>
+            <li>click on the Add Funding button,</li>
+            <li>add your first deposit.</li>
+         </ol>
+         </span>);
+      } 
+
+      return (<span>No {name} found</span>)
+    }
+  }
+
   render() {
     return (
       <div className="main-content">
@@ -139,11 +156,12 @@ class FundingView extends Component {
                 title="What are my recent deposits and withdrawals?"
                 content={
                   <ReactTable
+                    className="-striped -highlight"
                     data={this.state.data}
                     filterable
                     columns={this.getTableColumns()}
-                    defaultPageSize={10}
-                    className="-striped -highlight"
+                    defaultPageSize={10}                    
+                    noDataText={() => this.getNoDataText('deposits or withdrawals', this.props.userModel)} 
                   />
                 }
               />

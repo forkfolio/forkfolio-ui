@@ -270,11 +270,12 @@ class TradesView extends Component {
                 title="What are my recent trades?"
                 content={
                   <ReactTable
+                    className="-striped -highlight"
                     data={this.state.data}
                     filterable
                     columns={this.getTableColumns()}
                     defaultPageSize={10}
-                    className="-striped -highlight"
+                    noDataText={() => formatUtils.getNoDataText('trades', this.props.userModel)}                    
                   />
                 }
               />

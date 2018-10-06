@@ -186,12 +186,13 @@ class PortfolioView extends Component {
                 title="What is my asset allocation?"
                 content={
                   <ReactTable
+                    className="-striped -highlight"
                     data={this.getTableData(this.props)}
                     columns={this.getTableColumns(this.props)}
                     defaultPageSize={10}
                     showPageSizeOptions={false}
                     showPagination={showPagination}
-                    className="-striped -highlight"
+                    noDataText={() => formatUtils.getNoDataText('assets', this.props.userModel)} 
                   />
                 }
               />
