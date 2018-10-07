@@ -166,9 +166,9 @@ class PortfolioView extends Component {
   }
 
   render() {
-    //console.log("RENDERING PORTFOLIOVIEW")
-    //console.log(JSON.stringify(this.state.chartOptions))
-    const showPagination = this.props.userModel.portfolios.slice(-1)[0].balances.size > 10;
+    let currentPortfolio = this.props.userModel.portfolios.slice(-1)[0];
+    let assetCount = currentPortfolio.balances.size;
+    const showPagination = assetCount > 10;
     return (
       <div className="main-content">
         <Grid fluid>
@@ -184,6 +184,7 @@ class PortfolioView extends Component {
             <Col md={8}>
               <Card
                 title="What is my asset allocation?"
+                category={assetCount + " asset" + (assetCount > 1 ? "s" : "")}
                 content={
                   <ReactTable
                     className="-striped -highlight"

@@ -261,6 +261,8 @@ class TradesView extends Component {
   }
 
   render() {
+    let currentPortfolio = this.props.userModel.portfolios.slice(-1)[0];
+    let tradeCount = currentPortfolio.tradeCount;
     return (
       <div className="main-content">
         <Grid fluid>
@@ -268,6 +270,7 @@ class TradesView extends Component {
             <Col md={12}>
               <Card
                 title="What are my recent trades?"
+                category={tradeCount + " trade" + (tradeCount > 1 ? "s" : "")}
                 content={
                   <ReactTable
                     className="-striped -highlight"

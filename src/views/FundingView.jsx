@@ -147,6 +147,8 @@ class FundingView extends Component {
   }
 
   render() {
+    let currentPortfolio = this.props.userModel.portfolios.slice(-1)[0];
+    let fundingCount = this.props.userModel.transactions.length - currentPortfolio.tradeCount;
     return (
       <div className="main-content">
         <Grid fluid>
@@ -154,6 +156,7 @@ class FundingView extends Component {
             <Col md={12}>
               <Card
                 title="What are my recent deposits and withdrawals?"
+                category={fundingCount + " funding" + (fundingCount > 1 ? "s" : "")}
                 content={
                   <ReactTable
                     className="-striped -highlight"
