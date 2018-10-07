@@ -78,7 +78,8 @@ class Dashboard extends Component {
       isEditFundingDialogShown: false,
       userModel: userModel,
       resModel: resModel,
-      editedTransaction: null
+      editedTransaction: null,
+      changeCount: 0
     };
   }
   
@@ -139,7 +140,8 @@ class Dashboard extends Component {
     // update userModel with new transactions
     let newModel = new UserModel(transactions, this.state.resModel);
     this.setState({
-      userModel: newModel
+      userModel: newModel,
+      changeCount: 0
     })
   }
   
@@ -232,7 +234,7 @@ class Dashboard extends Component {
       ps.destroy();
     }
   }
-  
+
   componentDidUpdate(e) {
     if (navigator.platform.indexOf("Win") > -1) {
       setTimeout(() => {
@@ -357,7 +359,8 @@ class Dashboard extends Component {
     // update userModel
     let newModel = new UserModel(this.state.userModel.transactions, this.state.resModel);
     this.setState({
-      userModel: newModel
+      userModel: newModel,
+      changeCount: this.state.changeCount + 1
     });
 
     console.log("Transaction added to user model.");
@@ -379,7 +382,8 @@ class Dashboard extends Component {
     // update userModel
     let newModel = new UserModel(newTransactions, this.state.resModel);
     this.setState({
-      userModel: newModel
+      userModel: newModel,
+      changeCount: this.state.changeCount + 1
     });
 
     console.log("Transaction updated.");
@@ -395,7 +399,8 @@ class Dashboard extends Component {
     // update userModel
     let newModel = new UserModel(newTransactions, this.state.resModel);
     this.setState({
-      userModel: newModel
+      userModel: newModel,
+      changeCount: this.state.changeCount + 1
     });
 
     console.log("Transaction removed from user model.");
@@ -448,6 +453,10 @@ class Dashboard extends Component {
     let formattedFile = JSON.stringify(portfolioFile, null, "\t");
     let file = new File([formattedFile], "portfolio" + fileTransactions.length + ".json", {type: "text/plain;charset=utf-8"});
     FileSaver.saveAs(file);
+
+    this.setState({
+      changeCount: 0
+    });
   }
 
   render() {
@@ -461,6 +470,7 @@ class Dashboard extends Component {
           showHelpPanel={this.showHelpPanel} 
           userModel={this.state.userModel}
           resModel={this.state.resModel}
+          changeCount={this.state.changeCount}
         />
         <div
           className={
