@@ -62,8 +62,6 @@ class Sidebar extends Component {
   }
 
   render() {
-    //console.log("Printing sidebar props")
-    //console.log(this.props)
     return (
       <div className="sidebar" data-color="black" data-image={image}>
         {/*<div className="sidebar-background" style={bgImage} />*/}
@@ -130,7 +128,7 @@ class Sidebar extends Component {
                         <li className={""} key={7}>
                           <a class="nav-link" onClick={() => this.props.downloadPortfolio()}>
                             <i className={"fa fa-floppy-o"} />
-                            <p>Save</p>
+                            <p>Save {this.props.changeCount > 0 ? "(" + this.props.changeCount + ")" : ""}</p>
                           </a>
                         </li>
                       </ul>
