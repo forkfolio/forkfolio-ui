@@ -8,7 +8,7 @@ import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import AddTradeDialog from "./dialogs/AddTradeDialog";
 import EditTradeDialog from "./dialogs/EditTradeDialog";
-import ConfirmDialog from "./dialogs/ConfirmDialog";
+import ConfirmRemoveTransactionDialog from "./dialogs/ConfirmRemoveTransactionDialog";
 import { formatUtils } from './../utils/FormatUtils';
 
 class TradesView extends Component {
@@ -309,7 +309,7 @@ class TradesView extends Component {
                 userModel={this.props.userModel}
                 resModel={this.props.resModel}
               />
-              <ConfirmDialog
+              <ConfirmRemoveTransactionDialog
                 isDialogShown={this.state.isConfirmDialogShown}
                 hideDialog={this.hideConfirmDialog}
                 removedTransaction={this.state.removedTransaction}

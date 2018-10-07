@@ -7,7 +7,7 @@ import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import AddFundingDialog from "./dialogs/AddFundingDialog";
 import EditFundingDialog from "./dialogs/EditFundingDialog";
-import ConfirmDialog from "./dialogs/ConfirmDialog";
+import ConfirmRemoveTransactionDialog from "./dialogs/ConfirmRemoveTransactionDialog";
 import { formatUtils } from './../utils/FormatUtils';
 
 class FundingView extends Component {
@@ -195,7 +195,7 @@ class FundingView extends Component {
                 userModel={this.props.userModel}
                 resModel={this.props.resModel}
               />
-              <ConfirmDialog
+              <ConfirmRemoveTransactionDialog
                 isDialogShown={this.state.isConfirmDialogShown}
                 hideDialog={this.hideConfirmDialog}
                 removedTransaction={this.state.removedTransaction}

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-
 import {
   Grid,
   Row,
@@ -10,28 +9,28 @@ import {
 import Button from "components/CustomButton/CustomButton.jsx";
 
 
-class ConfirmDialog extends Component {
+class ConfirmRemoveTransactionDialog extends Component {
 
   getType() {
-    if(this.props.removedTransaction != null) {
+    if (this.props.removedTransaction != null) {
       return this.props.removedTransaction.isTrade ? "trade" : "funding";
     }
   }
 
   getDescription() {
-    if(this.props.removedTransaction != null) {
+    if (this.props.removedTransaction != null) {
       return (this.props.removedTransaction.isTrade ? "Trade" : "Funding") + ": " + this.props.removedTransaction.toShortString();
     }
   }
 
   getDate() {
-    if(this.props.removedTransaction != null) {
+    if (this.props.removedTransaction != null) {
       return "Date: " + this.props.removedTransaction.time.toISOString().split('T')[0];
     }
   }
 
   getComment() {
-    if(this.props.removedTransaction != null) {
+    if (this.props.removedTransaction != null) {
       return "Comment: " + this.props.removedTransaction.comment;
     }
   }
@@ -53,7 +52,7 @@ class ConfirmDialog extends Component {
                   <p>
                     Are you sure you want to remove this {this.getType()}?
                   </p>
-                  <br/>                  
+                  <br />
                   <p>
                     {this.getDescription()}
                   </p>
@@ -90,4 +89,4 @@ class ConfirmDialog extends Component {
   }
 }
 
-export default ConfirmDialog;
+export default ConfirmRemoveTransactionDialog;
