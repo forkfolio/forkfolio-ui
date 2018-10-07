@@ -25,6 +25,7 @@ import Transaction from "../../model/Transaction";
 import UserModel from "../../model/UserModel";
 import { config } from "../../config/Config.js";
 import FileSaver from 'file-saver';
+import cookie from 'react-cookies'
 
 var ps;
 
@@ -62,9 +63,15 @@ class Dashboard extends Component {
     this.newPortfolio = this.newPortfolio.bind(this);
     this.uploadPortfolioFromFile = this.uploadPortfolioFromFile.bind(this);
     this.downloadPortfolio = this.downloadPortfolio.bind(this);
+
+    // check if cookie is not set, then it's the first load
+    let showHelpPanel = cookie.load('showGettingStarted') === undefined;
+    // add cookie always
+    cookie.save('showGettingStarted', "1", { path: '/', maxAge: 31536000});
+
     this.state = {
       _notificationSystem: null,
-      isHelpPanelShown: true,
+      isHelpPanelShown: showHelpPanel,
       isAddTradeDialogShown: false,
       isAddFundingDialogShown: false,
       isEditTradeDialogShown: false,
@@ -211,26 +218,21 @@ class Dashboard extends Component {
     });
   }
 
-  // safely change state here
-  componentWillReceiveProps(nextProps) {
-    /*this.setState({
-      userModel: this.props.userModel,
-      resModel: this.props.resModel
-    });*/
-  }
   componentDidMount() {
     this.setState({ 
       _notificationSystem: this.refs.notificationSystem,
     });
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.mainPanel);
-    }
+    }    
   }
+
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
       ps.destroy();
     }
   }
+  
   componentDidUpdate(e) {
     if (navigator.platform.indexOf("Win") > -1) {
       setTimeout(() => {
@@ -407,20 +409,8 @@ class Dashboard extends Component {
   }
 
   newPortfolio() {
-    console.log("New portfolio");
+    console.log("New portfolio created");
     this.updateUserModel([]);
-    //this.fetchAllAndRender(this.getCurrenciesToFetch());
-    /*const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      // TODO: check if format ok, version number
-      this.updateUserModel(JSON.parse(reader.result).transactions);
-      this.fetchAllAndRender(this.getCurrenciesToFetch());
-    }, false);
-    if (files.length > 0) {
-      reader.readAsText(files[0]);
-    } else {
-      //this.props.showError(new InputValidationError("Portfolio file should be in JSON file format."));
-    }*/
   }
 
   uploadPortfolioFromFile(files) {
