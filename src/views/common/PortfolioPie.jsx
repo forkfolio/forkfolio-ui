@@ -55,10 +55,11 @@ class PortfolioPie extends Component {
     return pieOptions;
   }
    render() {
+     let tradeCount = this.props.portfolio.tradeCount;
     return (
       <Card
         title={this.props.title}
-        category={this.props.portfolio.tradeCount + " trades"}
+        category={tradeCount + " trade" + (tradeCount === 1 ? "" : "s")}
         content={<HighchartsReact
           highcharts={Highcharts}
           options={this.state.chartOptions}

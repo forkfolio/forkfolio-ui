@@ -184,7 +184,7 @@ class PortfolioView extends Component {
             <Col md={8}>
               <Card
                 title="What is my asset allocation?"
-                category={assetCount + " asset" + (assetCount > 1 ? "s" : "")}
+                category={assetCount + " asset" + (assetCount === 1 ? "" : "s")}
                 content={
                   <ReactTable
                     className="-striped -highlight"

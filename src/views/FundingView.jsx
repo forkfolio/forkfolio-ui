@@ -156,7 +156,7 @@ class FundingView extends Component {
             <Col md={12}>
               <Card
                 title="What are my recent deposits and withdrawals?"
-                category={fundingCount + " funding" + (fundingCount > 1 ? "s" : "")}
+                category={fundingCount + " funding" + (fundingCount === 1 ? "" : "s")}
                 content={
                   <ReactTable
                     className="-striped -highlight"

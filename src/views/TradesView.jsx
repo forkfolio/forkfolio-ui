@@ -270,7 +270,7 @@ class TradesView extends Component {
             <Col md={12}>
               <Card
                 title="What are my recent trades?"
-                category={tradeCount + " trade" + (tradeCount > 1 ? "s" : "")}
+                category={tradeCount + " trade" + (tradeCount === 1 ? "" : "s")}
                 content={
                   <ReactTable
                     className="-striped -highlight"
