@@ -19,8 +19,8 @@ class ConfirmNewPortfolioDialog extends Component {
                 </Modal.Header>
                 <Modal.Body>
                   <p>
-                  You have unsaved changes in your current portfolio. If you create a
-		              new portfolio, unsaved changes will be lost.
+                  You have {this.props.changeCount} unsaved change{this.props.changeCount > 1 ? "s" : ""} in your current portfolio. If you create a
+		              new portfolio, all unsaved changes will be lost.
                   </p>
                   <br />
                   <p>
@@ -47,7 +47,7 @@ class ConfirmNewPortfolioDialog extends Component {
                     type="submit"
                     onClick={() => this.props.saveCurrentAndCreateNew()}
                   >
-                    Save Current and Create New
+                    Save current and create new
                   </Button>
                 </Modal.Footer>
               </Modal>

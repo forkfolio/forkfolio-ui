@@ -27,6 +27,7 @@ import { config } from "../../config/Config.js";
 import FileSaver from 'file-saver';
 import cookie from 'react-cookies';
 import ConfirmNewPortfolioDialog from "../../views/dialogs/ConfirmNewPortfolioDialog";
+import Beforeunload from 'react-beforeunload'
 
 
 var ps;
@@ -480,6 +481,12 @@ class Dashboard extends Component {
   render() {
     return (
       <div className="wrapper">
+        <Beforeunload onBeforeunload={e => { 
+          if(this.state.changeCount > 0) {
+            e.preventDefault();
+            e.returnValue = '';
+          }
+        }} />
         <NotificationSystem ref="notificationSystem" style={style} />
         <Sidebar {...this.props}
           newPortfolio={this.newPortfolio} 
@@ -587,6 +594,7 @@ class Dashboard extends Component {
             hideDialog={this.hideConfirmNewPortfolioDialog}
             createNew={this.newPortfolio}
             saveCurrentAndCreateNew={this.saveCurrentAndCreateNewPortfolio}
+            changeCount={this.state.changeCount}
           />
         </div>
       </div>
