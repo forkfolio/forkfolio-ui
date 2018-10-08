@@ -25,7 +25,9 @@ import Transaction from "../../model/Transaction";
 import UserModel from "../../model/UserModel";
 import { config } from "../../config/Config.js";
 import FileSaver from 'file-saver';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
+import ConfirmNewPortfolioDialog from "../../views/dialogs/ConfirmNewPortfolioDialog";
+
 
 var ps;
 
@@ -47,6 +49,8 @@ class Dashboard extends Component {
     this.showEditFundingDialog = this.showEditFundingDialog.bind(this);
     this.hideEditFundingDialog = this.hideEditFundingDialog.bind(this);
 
+    this.hideConfirmNewPortfolioDialog = this.hideConfirmNewPortfolioDialog.bind(this);
+
     this.addTransaction = this.addTransaction.bind(this);
     this.removeTransaction = this.removeTransaction.bind(this);
     this.updateTransaction = this.updateTransaction.bind(this);
@@ -63,10 +67,11 @@ class Dashboard extends Component {
     this.newPortfolio = this.newPortfolio.bind(this);
     this.uploadPortfolioFromFile = this.uploadPortfolioFromFile.bind(this);
     this.downloadPortfolio = this.downloadPortfolio.bind(this);
+    this.saveCurrentAndCreateNewPortfolio = this.saveCurrentAndCreateNewPortfolio.bind(this);
 
     // check if cookie is not set, then it's the first load
     let showHelpPanel = cookie.load('showGettingStarted') === undefined;
-    // add cookie always
+    // add cookie on load
     cookie.save('showGettingStarted', "1", { path: '/', maxAge: 31536000});
 
     this.state = {
@@ -76,6 +81,7 @@ class Dashboard extends Component {
       isAddFundingDialogShown: false,
       isEditTradeDialogShown: false,
       isEditFundingDialogShown: false,
+      isConfirmNewPortfolioDialogShown: false,
       userModel: userModel,
       resModel: resModel,
       editedTransaction: null,
@@ -171,7 +177,6 @@ class Dashboard extends Component {
       currencies.push(k);
     }
 
-    //console.log(currencies);
     return currencies;
   }
   
@@ -256,12 +261,10 @@ class Dashboard extends Component {
   }
 
   componentWillMount() {
+    // start fetching prices based on user model
     this.fetchCurrencies().then(() => {
-    
       this.updateUserModel(portfolioTransactions);
-
       this.fetchAllAndRender(this.getCurrenciesToFetch());
-    
       // start checking recent prices periodically
       setInterval(this.fetchRecentPrices, 2000);
     });
@@ -312,7 +315,6 @@ class Dashboard extends Component {
   }
 
   hideHelpPanel() {
-    console.log("Hide help panel")
     this.setState({ isHelpPanelShown: false });
   }
 
@@ -343,9 +345,14 @@ class Dashboard extends Component {
   showEditFundingDialog() {
     this.setState({ isEditFundingDialogShown: true });
   }
-
+  
   hideEditFundingDialog() {
     this.setState({ isEditFundingDialogShown: false });
+  }
+
+  
+  hideConfirmNewPortfolioDialog() {
+    this.setState({ isConfirmNewPortfolioDialogShown: false });
   }
 
   addTransaction(tx) {
@@ -408,14 +415,25 @@ class Dashboard extends Component {
   }
 
   setEditedTransaction(tx) {
-    this.setState({
-      editedTransaction: tx
-    })
+    this.setState({ editedTransaction: tx });
   }
 
   newPortfolio() {
-    console.log("New portfolio created");
-    this.updateUserModel([]);
+    // if there are unsaved changes, show confirm dialog
+    if(this.state.changeCount > 0 && !this.state.isConfirmNewPortfolioDialogShown) {
+      this.setState({
+        isConfirmNewPortfolioDialogShown: true
+      });
+    } else {
+      console.log("New portfolio created");
+      this.updateUserModel([]);
+      this.setState({ isConfirmNewPortfolioDialogShown: false });
+    }
+  }
+
+  saveCurrentAndCreateNewPortfolio() {
+    this.downloadPortfolio();
+    this.newPortfolio();
   }
 
   uploadPortfolioFromFile(files) {
@@ -564,6 +582,12 @@ class Dashboard extends Component {
             })}
           </Switch>
           <Footer fluid />
+          <ConfirmNewPortfolioDialog
+            isDialogShown={this.state.isConfirmNewPortfolioDialogShown}
+            hideDialog={this.hideConfirmNewPortfolioDialog}
+            createNew={this.newPortfolio}
+            saveCurrentAndCreateNew={this.saveCurrentAndCreateNewPortfolio}
+          />
         </div>
       </div>
     );
