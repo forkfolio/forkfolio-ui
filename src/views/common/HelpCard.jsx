@@ -21,7 +21,7 @@ class HelpCard extends Component {
                 </Col>
 
                 <Col md={3}>
-                  <p>Your portfolio is similar to bank account - you need to deposit some funds to be able to trade one asset for another. Go to Funding -> Add Funding to deposit crypto or fiat currencies to portfolio.</p>
+                  <p>Your portfolio is similar to a bank account - you need to deposit some funds to be able to trade one asset for another. Go to Funding -> Add Funding to deposit crypto or fiat currencies to portfolio.</p>
                   <p>If you don't know what your past trades are, you can use deposits to add final balance of your assets, and track your portfolio from that moment on.</p>
                   <p>If you have your past trades, you can go to Trades -> Add Trades to add your past trades. Now you can analyze how much are your trades profitable, and get insight into your trading strategy.</p>
                 </Col>
