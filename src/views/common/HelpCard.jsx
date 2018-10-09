@@ -16,8 +16,6 @@ class HelpCard extends Component {
           content={
             <Grid fluid>
               <Row>
-
-
                 <Col lg={5} md={3} sm={0} xs={0}>
                   <p>Your portfolio is similar to a bank account - you need to deposit an asset to portfolio to be able to trade that asset for another one. </p>
                   <h5>Adding your first deposit</h5> 
