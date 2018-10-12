@@ -9,6 +9,7 @@ import AddFundingDialog from "./dialogs/AddFundingDialog";
 import EditFundingDialog from "./dialogs/EditFundingDialog";
 import ConfirmRemoveTransactionDialog from "./dialogs/ConfirmRemoveTransactionDialog";
 import { formatUtils } from './../utils/FormatUtils';
+import ReactGA from 'react-ga';
 
 class FundingView extends Component {
   constructor(props) {
@@ -22,6 +23,11 @@ class FundingView extends Component {
     };
   }
 
+  componentWillMount() {
+    console.log("Navigate to: " + window.location.pathname + window.location.hash);
+    ReactGA.pageview(window.location.pathname + window.location.hash);
+  }
+  
   // safely change state here
   componentWillReceiveProps(nextProps) {
     this.setState({

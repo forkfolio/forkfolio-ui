@@ -3,6 +3,7 @@ import "react-select/dist/react-select.css";
 import CurrencyPair from "../../model/CurrencyPair"
 import Transaction from "../../model/Transaction"
 import CommonFundingDialog from "./CommonFundingDialog";
+import ReactGA from 'react-ga';
 
 class AddFundingDialog extends CommonFundingDialog {
   constructor(props) {
@@ -12,7 +13,13 @@ class AddFundingDialog extends CommonFundingDialog {
 
   // safely change state here
   componentWillReceiveProps(nextProps) {
+    // TODO like in addTradeDialog
     this.setState(this.getInitialState());
+
+    // track ga
+    if(nextProps.isDialogShown === true) {
+      ReactGA.modalview('/#/addFunding');
+    }
   }
 
   getInitialState() {

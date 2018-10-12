@@ -80,12 +80,10 @@ class CommonTradeDialog extends Component {
 
   getBuyCurrencies(nextProps) {
     let buyCurrencies = [];
-    console.log(nextProps.resModel)
     for(let c of nextProps.resModel.dailyTickers.keys()) {
       buyCurrencies.push({ value: c, label: c.code + " - " + c.name });
     }
 
-    console.log(buyCurrencies.length)
     return buyCurrencies;
   }
 

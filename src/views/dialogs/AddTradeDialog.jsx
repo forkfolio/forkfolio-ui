@@ -1,6 +1,7 @@
 import CurrencyPair from "../../model/CurrencyPair";
 import Transaction from "../../model/Transaction";
 import CommonTradeDialog from "./CommonTradeDialog";
+import ReactGA from 'react-ga';
 
 class AddTradeDialog extends CommonTradeDialog {
   constructor(props) {
@@ -13,6 +14,11 @@ class AddTradeDialog extends CommonTradeDialog {
     // update only if shown is changes (this prevents resetting when prices are updated)
     if(this.props.isDialogShown !== nextProps.isDialogShown) {
       this.setState(this.getInitialState(nextProps));
+    }
+
+    // track ga
+    if(nextProps.isDialogShown === true) {
+      ReactGA.modalview('/#/addTrade');
     }
   }
 

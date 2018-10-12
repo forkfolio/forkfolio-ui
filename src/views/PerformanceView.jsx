@@ -5,6 +5,7 @@ import HighchartsReact from 'highcharts-react-official'
 import PortfolioPie from './common/PortfolioPie'
 import Card from "components/Card/Card.jsx";
 import { rangeSelectorModel } from "../model/init/ResModelInit.js";
+import ReactGA from 'react-ga';
 
 
 class PerformanceView extends Component {
@@ -22,6 +23,11 @@ class PerformanceView extends Component {
     };
   }
   
+  componentWillMount() {
+    console.log("Navigate to: " + window.location.pathname + window.location.hash);
+    ReactGA.pageview(window.location.pathname + window.location.hash);
+  }
+
   // safely change state here
   componentWillReceiveProps(nextProps) {
     console.log("componentWillReceiveProps PerformanceView")

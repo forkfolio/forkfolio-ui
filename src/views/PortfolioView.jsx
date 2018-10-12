@@ -8,6 +8,7 @@ import PortfolioPie from './common/PortfolioPie';
 import HelpCard from './common/HelpCard';
 import { formatUtils } from './../utils/FormatUtils';
 import { rangeSelectorModel } from "../model/init/ResModelInit.js";
+import ReactGA from 'react-ga';
 
 class PortfolioView extends Component {
   constructor(props) {
@@ -16,6 +17,11 @@ class PortfolioView extends Component {
     this.getTotalBalance = this.getTotalBalance.bind(this);
     this.getTableColumns = this.getTableColumns.bind(this);
     this.getTableData = this.getTableData.bind(this);
+  }
+
+  componentWillMount() {
+    console.log("Navigate to: " + window.location.pathname + window.location.hash);
+    ReactGA.pageview(window.location.pathname + window.location.hash);
   }
 
   getTotalBalance(rows) {

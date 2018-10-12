@@ -10,6 +10,7 @@ import AddTradeDialog from "./dialogs/AddTradeDialog";
 import EditTradeDialog from "./dialogs/EditTradeDialog";
 import ConfirmRemoveTransactionDialog from "./dialogs/ConfirmRemoveTransactionDialog";
 import { formatUtils } from './../utils/FormatUtils';
+import ReactGA from 'react-ga';
 
 class TradesView extends Component {
   constructor(props) {
@@ -21,6 +22,11 @@ class TradesView extends Component {
       isConfirmDialogShown: false,
       removedTransaction: null
     };
+  }
+  
+  componentWillMount() {
+    console.log("Navigate to: " + window.location.pathname + window.location.hash);
+    ReactGA.pageview(window.location.pathname + window.location.hash);
   }
 
   // safely change state here

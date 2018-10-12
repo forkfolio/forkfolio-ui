@@ -1,6 +1,7 @@
-import CurrencyPair from "../../model/CurrencyPair"
-import Transaction from "../../model/Transaction"
+import CurrencyPair from "../../model/CurrencyPair";
+import Transaction from "../../model/Transaction";
 import CommonFundingDialog from "./CommonFundingDialog";
+import ReactGA from 'react-ga';
 
 class EditFundingDialog extends CommonFundingDialog {
   constructor(props) {
@@ -26,6 +27,11 @@ class EditFundingDialog extends CommonFundingDialog {
         dateError: null,
         comment: nextProps.editedTransaction.comment
       });
+    }
+
+    // track ga
+    if(nextProps.isDialogShown === true) {
+      ReactGA.modalview('/#/editFunding');
     }
   }
 

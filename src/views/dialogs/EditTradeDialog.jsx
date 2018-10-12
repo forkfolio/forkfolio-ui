@@ -1,6 +1,7 @@
 import CurrencyPair from "../../model/CurrencyPair";
 import Transaction from "../../model/Transaction";
 import CommonTradeDialog from "./CommonTradeDialog";
+import ReactGA from 'react-ga';
 
 class EditTradeDialog extends CommonTradeDialog {
   constructor(props) {
@@ -29,6 +30,11 @@ class EditTradeDialog extends CommonTradeDialog {
         dateError: null,
         comment: nextProps.editedTransaction.comment
       });
+    }
+
+    // track ga
+    if(nextProps.isDialogShown === true) {
+      ReactGA.modalview('/#/editTrade');
     }
   }
 

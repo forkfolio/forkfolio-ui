@@ -115,13 +115,13 @@ class Sidebar extends Component {
                       <ul className="nav">
                         <li className={""} key={5}>
                           <a class="nav-link" onClick={() => this.props.newPortfolio()}>
-                              <i className={"fa fa-file-text-o" /* for fa v5 "fa fa-file-import"*/} />
+                              <i className={"fa fa-file-text-o"} />
                               <p>New</p>
                             </a>
                         </li>                      
                         <li className={""} key={6}>
                           <a class="nav-link" onClick={() => this.onOpenClick()}>
-                              <i className={"fa fa-folder-open" /* for fa v5 "fa fa-file-import"*/} />
+                              <i className={"fa fa-folder-open"} />
                               <p>Open</p>
                             </a>
                         </li>

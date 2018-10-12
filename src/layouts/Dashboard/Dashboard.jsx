@@ -27,7 +27,8 @@ import { config } from "../../config/Config.js";
 import FileSaver from 'file-saver';
 import cookie from 'react-cookies';
 import ConfirmNewPortfolioDialog from "../../views/dialogs/ConfirmNewPortfolioDialog";
-import Beforeunload from 'react-beforeunload'
+import Beforeunload from 'react-beforeunload';
+import ReactGA from 'react-ga';
 
 
 var ps;
@@ -429,6 +430,8 @@ class Dashboard extends Component {
       console.log("New portfolio created");
       this.updateUserModel([]);
       this.setState({ isConfirmNewPortfolioDialogShown: false });
+
+      ReactGA.event({category: 'User', action: 'New'});
     }
   }
 
@@ -443,6 +446,8 @@ class Dashboard extends Component {
       // TODO: check if format ok, version number
       this.updateUserModel(JSON.parse(reader.result).transactions);
       this.fetchAllAndRender(this.getCurrenciesToFetch());
+
+      ReactGA.event({category: 'User', action: 'Open'});
     }, false);
     if (files.length > 0) {
       reader.readAsText(files[0]);
@@ -476,6 +481,8 @@ class Dashboard extends Component {
     this.setState({
       changeCount: 0
     });
+
+    ReactGA.event({category: 'User', action: 'Save'});
   }
 
   render() {
