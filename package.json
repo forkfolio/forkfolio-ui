@@ -1,6 +1,6 @@
 {
   "name": "forkfolio-ui",
-  "version": "1.4.5",
+  "version": "1.5.1",
   "private": true,
   "homepage": "https://forkfol.io/app",
   "dependencies": {
@@ -34,6 +34,7 @@
     "react-router-dom": "4.2.2",
     "react-scripts": "1.1.1",
     "react-select": "1.2.1",
+    "react-share": "^2.3.1",
     "react-stepzilla": "4.7.0",
     "react-syntax-highlighter": "7.0.2",
     "react-table": "6.8.0",
