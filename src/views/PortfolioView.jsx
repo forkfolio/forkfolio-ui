@@ -35,7 +35,7 @@ class PortfolioView extends Component {
   getTableColumns() {
     const tableColumns = [
       { Header: "Name", accessor: "name", maxWidth: 180, },
-      { Header: "Balance", accessor: "balance", maxWidth: 130, sortable: false, 
+      { Header: "Balance", accessor: "balance", maxWidth: 160, sortable: false, 
       Cell: row => (
         <span style={{
           float: "right"
