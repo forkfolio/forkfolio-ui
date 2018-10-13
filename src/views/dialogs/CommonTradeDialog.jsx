@@ -218,6 +218,7 @@ class CommonTradeDialog extends Component {
         <Datetime
           isValidDate={this.isEnabledDate}
           timeFormat={false}
+          closeOnSelect={true}
           inputProps={{ placeholder: "Click to select a date" }}
           value={this.state.date}
           onChange={event => {
