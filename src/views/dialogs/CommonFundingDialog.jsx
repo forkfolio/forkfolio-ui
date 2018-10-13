@@ -12,23 +12,18 @@ import {
   Form,
   FormGroup,
   FormControl,
-  ControlLabel
+  ControlLabel,
+  Tab,
+  Tabs
 } from "react-bootstrap";
 
 import Button from "components/CustomButton/CustomButton.jsx";
 
 class CommonFundingDialog extends Component {
 
-  isValidType(value) {
-    let isInvalid = value == null;
-    isInvalid ? this.setState({
-      typeError: (
-        <small className="text-danger">
-          Please select deposit or withdrawal.
-        </small>)
-    })
-      : this.setState({ typeError: null });
-    return !isInvalid;
+  constructor(props) {
+    super(props);
+    this.handleTabSelect = this.handleTabSelect.bind(this);
   }
 
   isValidAmount(value) {
@@ -87,17 +82,6 @@ class CommonFundingDialog extends Component {
     return currencies;
   }
 
-  getTypes() {
-    return [{ value: true, label: "Deposit" }, { value: false, label: "Withdrawal" }];
-  }
-
-  updateCurrencySelection(type) {
-    this.setState({
-      currencies: type.value ? this.getDepositCurrencies() : this.getWithdrawalCurrencies(),
-      currency: null
-    })
-  }
-
   isValidNumber(strValue) {
     let numValue = parseFloat(strValue);
     return !isNaN(numValue) && numValue >=0;
@@ -106,6 +90,97 @@ class CommonFundingDialog extends Component {
   isEnabledDate(current) {
     return current.isBefore(Datetime.moment());
   };
+
+  getBuySellFormGroup(name, placeholder) {
+    this.selected = name;
+    return (
+      <FormGroup controlId="formHorizontalNumber">
+      <Col componentClass={ControlLabel} sm={3} smOffset={0}>
+        {name}
+      </Col>
+      <Col sm={5}>
+        <FormControl
+          placeholder={placeholder}
+          type="number"
+          name="amount"
+          min={0}
+          value={this.state.amount}
+          onChange={event => {
+            this.setState({
+              amount: event.target.value
+            });
+            this.isValidAmount(event.target.value);
+          }}
+        />
+        {this.state.amountError}
+      </Col>
+      <Col sm={3}>
+        <Select
+          placeholder="Currency"
+          name="currency"
+          value={this.state.currency}
+          options={this.state.currencies}
+          onChange={value => {
+            this.setState({ currency: value });
+            this.isValidCurrency(value);
+          }}
+        />
+        {this.state.currencyError}
+      </Col>
+    </FormGroup>
+    );
+  }
+
+  getDateFormGroup() {
+    return (
+      <FormGroup controlId="formHorizontalNumber">
+      <Col componentClass={ControlLabel} sm={3} smOffset={0}>
+        Date
+      </Col>
+      <Col sm={5}>
+        <Datetime
+          isValidDate={this.isEnabledDate}
+          timeFormat={false}
+          inputProps={{ placeholder: "Click to select a date" }}
+          value={this.state.date}
+          onChange={event => {
+            this.setState({ date: (typeof event === "string") ? null : event.toDate() });
+            this.isValidDate((typeof event === "string") ? null : event.toDate());
+          }}
+        />
+        {this.state.dateError}
+      </Col>
+    </FormGroup>
+    );
+  }
+
+  getCommentFormGroup() {
+    return (
+      <FormGroup controlId="formHorizontalURL">
+      <Col componentClass={ControlLabel} sm={3} smOffset={0}>
+        Comment
+      </Col>
+      <Col sm={5}>
+        <FormControl
+          type="text"
+          name="comment"
+          value={this.state.comment}
+          onChange={event => {
+            this.setState({ comment: event.target.value });
+          }}
+        />
+      </Col>
+    </FormGroup>
+    );
+  }
+
+  handleTabSelect(key) {
+    this.setState({
+      isDeposit: key === "deposit",
+      currencies: key === "deposit" ? this.getDepositCurrencies() : this.getWithdrawalCurrencies(),
+      currency: null
+    });
+  }
 
   render() {
     return (
@@ -121,111 +196,26 @@ class CommonFundingDialog extends Component {
                   <Modal.Title>{this.state.title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  <Form horizontal>
-
-
-                    <FormGroup controlId="formHorizontalNumber">
-                      <Col componentClass={ControlLabel} sm={4} smOffset={0}>
-                        Type
-                      </Col>
-                      <Col sm={6}>
-                        <Select
-                          placeholder="Select deposit or withdrawal"
-                          name="type"
-                          value={this.state.type}
-                          options={this.getTypes()}
-                          onChange={value => {
-                            this.setState({ type: value });
-                            this.isValidType(value);
-                            if (value !== null) {
-                              this.updateCurrencySelection(value);
-                            }
-                          }}
-                        />
-                        {this.state.typeError}
-                      </Col>
-                    </FormGroup>
-
-
-                    <FormGroup controlId="formHorizontalNumber">
-                      <Col componentClass={ControlLabel} sm={4} smOffset={0}>
-                        Amount
-                      </Col>
-                      <Col sm={6}>
-                        <FormControl
-                          type="number"
-                          name="amount"
-                          min={0}
-                          value={this.state.amount}
-                          onChange={event => {
-                            this.setState({
-                              amount: event.target.value
-                            });
-                            this.isValidAmount(event.target.value);
-                          }}
-                        />
-                        {this.state.amountError}
-                      </Col>
-                    </FormGroup>
-
-                    <FormGroup controlId="formHorizontalNumber">
-                      <Col componentClass={ControlLabel} sm={4} smOffset={0}>
-                        Currency
-                      </Col>
-                      <Col sm={6}>
-                        <Select
-                          placeholder="Type or select currency"
-                          name="currency"
-                          value={this.state.currency}
-                          options={this.state.currencies}
-                          onChange={value => {
-                            this.setState({ currency: value });
-                            this.isValidCurrency(value);
-                          }}
-                        />
-                        {this.state.currencyError}
-                      </Col>
-                    </FormGroup>
-
-
-                    <FormGroup controlId="formHorizontalNumber">
-                      <Col componentClass={ControlLabel} sm={4} smOffset={0}>
-                        Date
-                      </Col>
-                      <Col sm={6}>
-                        <Datetime
-                          isValidDate={this.isEnabledDate}
-                          timeFormat={false}
-                          inputProps={{ placeholder: "Click to select a date" }}
-                          value={this.state.date}
-                          onChange={event => {
-                            this.setState({ date: (typeof event === "string") ? null : event.toDate() });
-                            this.isValidDate((typeof event === "string") ? null : event.toDate());
-                          }}
-                        />
-                        {this.state.dateError}
-                      </Col>
-                    </FormGroup>
-
-
-                    <FormGroup controlId="formHorizontalURL">
-                      <Col componentClass={ControlLabel} sm={2} smOffset={2}>
-                        Comment
-                      </Col>
-                      <Col sm={6}>
-                        <FormControl
-                          type="text"
-                          name="comment"
-                          value={this.state.comment}
-                          onChange={event => {
-                            this.setState({ comment: event.target.value });
-                          }}
-                        />
-                      </Col>
-                    </FormGroup>
-
-
-                  </Form>
+                  <Tabs
+                    activeKey={this.state.isDeposit ? "deposit" : "withdrawal"}
+                    onSelect={this.handleTabSelect}
+                    id="controlled-tab-example"
+                  >
+                    <Tab eventKey="deposit" title="Deposit">
+                      <Form horizontal> 
+                        {this.getBuySellFormGroup("Deposit", "Deposit amount")}
+                        {this.getDateFormGroup()}
+                        {this.getCommentFormGroup()}
+                      </Form>
+                    </Tab>
+                    <Tab eventKey="withdrawal" title="Withdrawal">
+                      <Form horizontal> 
+                        {this.getBuySellFormGroup("Withdrawal", "Withdrawal amount")}
+                        {this.getDateFormGroup()}
+                        {this.getCommentFormGroup()}
+                      </Form>
+                    </Tab>
+                  </Tabs>
                 </Modal.Body>
                 <Modal.Footer>
                   <Button
