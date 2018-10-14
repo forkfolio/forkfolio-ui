@@ -78,6 +78,7 @@ class TradesView extends Component {
                 return true;
               }}
               bsStyle="default"
+              table
               simple
               icon
             >
@@ -92,6 +93,7 @@ class TradesView extends Component {
                 return true;
               }}
               bsStyle="danger"
+              table
               simple
               icon
             >

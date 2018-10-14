@@ -97,6 +97,12 @@
 }
 
 /* added by forkfolio start */
+
+.btn-table{
+   @include btn-size($padding-xs-vertical, $padding-xs-horizontal, $font-size-medium-large, $border-radius-small);
+   font-weight: $font-weight-normal; 
+}
+
 .btn-special-large{
    @include btn-size($padding-xs-vertical, $padding-xs-horizontal, $font-size-large, $border-radius-small);
    font-weight: $font-weight-normal;

@@ -10,6 +10,7 @@ class CustomButton extends Component {
     const {
       special,
       speciallarge,
+      table,
       fill,
       simple,
       pullRight,
@@ -36,6 +37,7 @@ class CustomButton extends Component {
     const btnClasses = cx({
       "btn-special": special,
       "btn-special-large": speciallarge,
+      "btn-table": table,
       "btn-fill": fill,
       "btn-simple": simple,
       "pull-right": pullRight,
@@ -65,6 +67,7 @@ class CustomButton extends Component {
 CustomButton.propTypes = {
   special: PropTypes.bool,
   speciallarge: PropTypes.bool,
+  table: PropTypes.bool,
   fill: PropTypes.bool,
   simple: PropTypes.bool,
   pullRight: PropTypes.bool,

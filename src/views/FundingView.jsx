@@ -69,6 +69,7 @@ class FundingView extends Component {
                 return true;
               }}
               bsStyle="default"
+              table
               simple
               icon
             >
@@ -83,6 +84,7 @@ class FundingView extends Component {
                 return true;
               }}
               bsStyle="danger"
+              table
               simple
               icon
             >

@@ -40,13 +40,13 @@ class AddTradeDialog extends CommonTradeDialog {
     }
   }
 
-  getPair(buyCurency, sellCurrency, buyAmount, sellAmount) {
-    let buyRank = buyCurency.rank + (buyCurency.isFiat ? -1000000 : 0);
+  getPair(buyCurrency, sellCurrency, buyAmount, sellAmount) {
+    let buyRank = buyCurrency.rank + (buyCurrency.isFiat ? -1000000 : 0);
     let sellRank = sellCurrency.rank + (sellCurrency.isFiat ? -1000000 : 0);
     // reverse if needed for ranks, or in special case where ETH/ETH and 0
     if(buyRank < sellRank || (buyRank === sellRank && buyAmount === 0)) {
       return {
-        pair: new CurrencyPair(sellCurrency, buyCurency),
+        pair: new CurrencyPair(sellCurrency, buyCurrency),
         isBuy: false,
         buyAmount: sellAmount,
         sellAmount: buyAmount
@@ -54,7 +54,7 @@ class AddTradeDialog extends CommonTradeDialog {
     }
 
     return {
-      pair: new CurrencyPair(buyCurency, sellCurrency),
+      pair: new CurrencyPair(buyCurrency, sellCurrency),
       isBuy: true,
       buyAmount: buyAmount,
       sellAmount: sellAmount

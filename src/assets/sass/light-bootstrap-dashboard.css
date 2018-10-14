@@ -5478,6 +5478,16 @@ h1 .subtitle {
     padding: 8px; }
 
 /* added by forkfolio start */
+.btn-table {
+  font-size: 18px;
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-weight: 400; }
+  .btn-table.btn-round {
+    padding: 2px 5px; }
+  .btn-table.btn-simple {
+    padding: 3px 5px; }
+
 .btn-special-large {
   font-size: 23px;
   border-radius: 3px;
