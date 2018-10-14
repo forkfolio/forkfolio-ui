@@ -26,6 +26,7 @@ class AddTradeDialog extends CommonTradeDialog {
     return {
       isDialogShown: nextProps.isDialogShown,
       title: "Add trade",
+      buttonText: "Add",
       buyAmount: "",
       buyAmountError: null,
       buyCurrency: null,

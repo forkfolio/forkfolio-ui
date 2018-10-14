@@ -8,6 +8,7 @@ class EditTradeDialog extends CommonTradeDialog {
     super(props);
     this.state = {
       title: "Update trade",
+      buttonText: "Update",
     };
   }
 

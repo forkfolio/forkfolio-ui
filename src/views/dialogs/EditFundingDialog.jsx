@@ -8,6 +8,7 @@ class EditFundingDialog extends CommonFundingDialog {
     super(props);
     this.state = {
       title: "Update funding",
+      buttonText: "Update",
     };
   }
 

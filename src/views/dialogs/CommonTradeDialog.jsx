@@ -315,7 +315,7 @@ class CommonTradeDialog extends Component {
                     type="submit"
                     onClick={this.handleSaveButtonClick.bind(this)}
                   >
-                    Save
+                    {this.state.buttonText}
                   </Button>
                 </Modal.Footer>
               </Modal>

@@ -25,6 +25,7 @@ class AddFundingDialog extends CommonFundingDialog {
   getInitialState() {
     return {
       title: "Add funding",
+      buttonText: "Add",
       isDeposit: true,
       amount: "",
       amountError: null,
