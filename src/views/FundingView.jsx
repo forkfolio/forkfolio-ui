@@ -155,6 +155,37 @@ class FundingView extends Component {
   render() {
     let currentPortfolio = this.props.userModel.portfolios.slice(-1)[0];
     let fundingCount = this.props.userModel.transactions.length - currentPortfolio.tradeCount;
+
+    let addFundingDialog = (
+      <AddFundingDialog
+        isDialogShown={this.props.isAddFundingDialogShown}
+        hideDialog={this.props.hideAddFundingDialog}
+        addTransaction={this.props.addTransaction}
+        userModel={this.props.userModel}
+        resModel={this.props.resModel}
+      />
+    );
+
+    let editFundingDialog = (
+      <EditFundingDialog
+        isDialogShown={this.props.isEditFundingDialogShown}
+        hideDialog={this.props.hideEditFundingDialog}
+        editedTransaction={this.props.editedTransaction}
+        updateTransaction={this.props.updateTransaction}
+        userModel={this.props.userModel}
+        resModel={this.props.resModel}
+      />
+    );
+    
+    let confirmRemoveTransactionDialog = (
+      <ConfirmRemoveTransactionDialog
+        isDialogShown={this.state.isConfirmDialogShown}
+        hideDialog={this.hideConfirmDialog}
+        removedTransaction={this.state.removedTransaction}
+        removeTransaction={this.removeTransaction}
+      />
+    );
+
     return (
       <div className="main-content">
         <Grid fluid>
@@ -192,31 +223,9 @@ class FundingView extends Component {
                   />
                 }
               />
-            </Col>
-          </Row>
-          <Row>
-            <Col md={2} mdOffset={10}>
-              <AddFundingDialog
-                isDialogShown={this.props.isAddFundingDialogShown}
-                hideDialog={this.props.hideAddFundingDialog}
-                addTransaction={this.props.addTransaction}
-                userModel={this.props.userModel}
-                resModel={this.props.resModel}
-              />
-              <EditFundingDialog
-                isDialogShown={this.props.isEditFundingDialogShown}
-                hideDialog={this.props.hideEditFundingDialog}
-                editedTransaction={this.props.editedTransaction}
-                updateTransaction={this.props.updateTransaction}
-                userModel={this.props.userModel}
-                resModel={this.props.resModel}
-              />
-              <ConfirmRemoveTransactionDialog
-                isDialogShown={this.state.isConfirmDialogShown}
-                hideDialog={this.hideConfirmDialog}
-                removedTransaction={this.state.removedTransaction}
-                removeTransaction={this.removeTransaction}
-              />
+              {this.props.isAddFundingDialogShown ? addFundingDialog : ""}
+              {this.props.isEditFundingDialogShown ? editFundingDialog : ""}
+              {this.state.isConfirmDialogShown ? confirmRemoveTransactionDialog : ""}
             </Col>
           </Row>
         </Grid>

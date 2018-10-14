@@ -291,7 +291,7 @@ class TradesView extends Component {
       />
     );
     
-    let confirmRemoveTtansactionDialog = (
+    let confirmRemoveTransactionDialog = (
       <ConfirmRemoveTransactionDialog
         isDialogShown={this.state.isConfirmDialogShown}
         hideDialog={this.hideConfirmDialog}
@@ -339,9 +339,8 @@ class TradesView extends Component {
               />
               {this.props.isAddTradeDialogShown ? addTradeDialog : ""}
               {this.props.isEditTradeDialogShown ? editTradeDialog : ""}
-              {this.state.isConfirmDialogShown ? confirmRemoveTtansactionDialog : ""}
+              {this.state.isConfirmDialogShown ? confirmRemoveTransactionDialog : ""}
             </Col>
-
           </Row>
         </Grid>
       </div>
