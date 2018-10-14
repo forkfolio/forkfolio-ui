@@ -9,12 +9,26 @@ class EditFundingDialog extends CommonFundingDialog {
     this.state = {
       title: "Update funding",
       buttonText: "Update",
+      editedTransaction: props.editedTransaction,
+      isDeposit: props.editedTransaction.isBuy, 
+      amount: props.editedTransaction.baseAmount.toString(),
+      amountError: null,
+      currency: this.getSelectObject(props.editedTransaction.pair.base),
+      currencyError: null,
+      currencies: props.editedTransaction.isBuy ? this.getDepositCurrencies() : this.getWithdrawalCurrencies(),
+      date: props.editedTransaction.time,
+      dateError: null,
+      comment: props.editedTransaction.comment
     };
+
+    // track ga
+    ReactGA.modalview('/#/editFunding');
   }
 
   // safely change state here
   componentWillReceiveProps(nextProps) {
-    if(nextProps.editedTransaction != null) {
+    // old way, keeping it for now
+    /*if(nextProps.editedTransaction != null) {
       this.setState({
         editedTransaction: nextProps.editedTransaction,
         isDeposit: nextProps.editedTransaction.isBuy, 
@@ -32,7 +46,7 @@ class EditFundingDialog extends CommonFundingDialog {
     // track ga
     if(nextProps.isDialogShown === true) {
       ReactGA.modalview('/#/editFunding');
-    }
+    }*/
   }
 
   getSelectObject(currency) {

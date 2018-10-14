@@ -9,12 +9,29 @@ class EditTradeDialog extends CommonTradeDialog {
     this.state = {
       title: "Update trade",
       buttonText: "Update",
+      editedTransaction: props.editedTransaction,
+      buyAmount: props.editedTransaction.baseAmount.toString(),
+      buyAmountError: null,
+      buyCurrency: this.getSelectObject(props.editedTransaction.pair.base),
+      buyCurrencyError: null,
+      buyCurrencies: this.getBuyCurrencies(props),
+      sellAmount: props.editedTransaction.counterAmount.toString(),
+      sellAmountError: null,
+      sellCurrency: this.getSelectObject(props.editedTransaction.pair.counter),
+      sellCurrencyError: null,
+      sellCurrencies: this.getSellCurrencies(props),
+      date: props.editedTransaction.time,
+      dateError: null,
+      comment: props.editedTransaction.comment
     };
+
+    ReactGA.modalview('/#/editTrade');
   }
 
   // safely change state here
   componentWillReceiveProps(nextProps) {
-    if(nextProps.editedTransaction != null) {
+    // old way, keeping it for now
+    /*if(nextProps.editedTransaction != null) {
       this.setState({
         editedTransaction: nextProps.editedTransaction,
         buyAmount: nextProps.editedTransaction.baseAmount.toString(),
@@ -36,7 +53,7 @@ class EditTradeDialog extends CommonTradeDialog {
     // track ga
     if(nextProps.isDialogShown === true) {
       ReactGA.modalview('/#/editTrade');
-    }
+    }*/
   }
 
   getSelectObject(currency) {

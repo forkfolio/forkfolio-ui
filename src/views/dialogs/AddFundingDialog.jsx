@@ -9,17 +9,19 @@ class AddFundingDialog extends CommonFundingDialog {
   constructor(props) {
     super(props);
     this.state = this.getInitialState();
+
+    ReactGA.modalview('/#/addFunding');
   }
 
   // safely change state here
   componentWillReceiveProps(nextProps) {
-    // TODO like in addTradeDialog
-    this.setState(this.getInitialState());
+    // old way, keeping it for now
+    /*this.setState(this.getInitialState());
 
     // track ga
     if(nextProps.isDialogShown === true) {
       ReactGA.modalview('/#/addFunding');
-    }
+    }*/
   }
 
   getInitialState() {

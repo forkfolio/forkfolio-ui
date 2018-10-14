@@ -7,19 +7,16 @@ class AddTradeDialog extends CommonTradeDialog {
   constructor(props) {
     super(props);
     this.state = this.getInitialState(props);
+
+    ReactGA.modalview('/#/addTrade');
   }
 
   // safely change state here
   componentWillReceiveProps(nextProps) {
-    // update only if shown is changes (this prevents resetting when prices are updated)
-    if(this.props.isDialogShown !== nextProps.isDialogShown) {
-      this.setState(this.getInitialState(nextProps));
-    }
-
     // track ga
-    if(nextProps.isDialogShown === true) {
+    /*if(nextProps.isDialogShown === true) {
       ReactGA.modalview('/#/addTrade');
-    }
+    }*/
   }
 
   getInitialState(nextProps) {

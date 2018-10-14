@@ -110,11 +110,11 @@ class Dashboard extends Component {
         let tickers = JSON.parse(body);
         let count = 0;
         for (let i = 0; i < tickers.length; i++) {
-          let newPrice = parseFloat(tickers[i].l);
+          let newPrice = parseFloat(tickers[i].l/* + Math.random()*/);
           if(resModel.recentTickers.get(currencies[i]) == null ||
             newPrice !== resModel.recentTickers.get(currencies[i]).price) {
             let pair = new CurrencyPair(currencies[i], resModel.usd);
-            resModel.recentTickers.set(currencies[i], new Ticker(pair, parseFloat(tickers[i].l) /*+ Math.random() * 5*/, new Date(parseInt(tickers[i].t, 10) * 1000)))
+            resModel.recentTickers.set(currencies[i], new Ticker(pair, newPrice, new Date(parseInt(tickers[i].t, 10) * 1000)))
             count++
           }
         }
@@ -486,6 +486,16 @@ class Dashboard extends Component {
   }
 
   render() {
+    let confirmNewPortfolioDialog = (
+      <ConfirmNewPortfolioDialog
+        isDialogShown={this.state.isConfirmNewPortfolioDialogShown}
+        hideDialog={this.hideConfirmNewPortfolioDialog}
+        createNew={this.newPortfolio}
+        saveCurrentAndCreateNew={this.saveCurrentAndCreateNewPortfolio}
+        changeCount={this.state.changeCount}
+      />
+    );
+
     return (
       <div className="wrapper">
         <Beforeunload onBeforeunload={e => { 
@@ -596,13 +606,7 @@ class Dashboard extends Component {
             })}
           </Switch>
           <Footer fluid />
-          <ConfirmNewPortfolioDialog
-            isDialogShown={this.state.isConfirmNewPortfolioDialogShown}
-            hideDialog={this.hideConfirmNewPortfolioDialog}
-            createNew={this.newPortfolio}
-            saveCurrentAndCreateNew={this.saveCurrentAndCreateNewPortfolio}
-            changeCount={this.state.changeCount}
-          />
+          {this.state.isConfirmNewPortfolioDialogShown ? confirmNewPortfolioDialog : ""}
         </div>
       </div>
     );
