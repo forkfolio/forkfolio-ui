@@ -162,6 +162,24 @@ class FundingView extends Component {
             <Col md={12}>
               <Card
                 title="What are my recent deposits and withdrawals?"
+                rightSection={
+                  <div>
+                  <Button
+                    bsSize="special"
+                    simple
+                    onClick={() => this.props.showAddFundingDialog()}
+                  >
+                    <i className={"fa fa-plus"} /> Add funding
+                  </Button>
+                  {/*<Button
+                    bsStyle="default"
+                    bsSize="special-large"
+                    simple
+                  >
+                    <i className={"fa fa-question-circle"} />
+                  </Button>*/}
+                  </div>
+                }
                 category={fundingCount + " funding" + (fundingCount === 1 ? "" : "s")}
                 content={
                   <ReactTable
@@ -178,14 +196,6 @@ class FundingView extends Component {
           </Row>
           <Row>
             <Col md={2} mdOffset={10}>
-              <Button
-                bsStyle="default"
-                fill
-                wd
-                onClick={() => this.props.showAddFundingDialog()}
-              >
-                Add Funding
-              </Button>
               <AddFundingDialog
                 isDialogShown={this.props.isAddFundingDialogShown}
                 hideDialog={this.props.hideAddFundingDialog}
