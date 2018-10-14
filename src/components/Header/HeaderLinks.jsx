@@ -45,7 +45,7 @@ class HeaderLinks extends Component {
     return (
       <div>
         <Nav pullRight>
-          <NavItem eventKey={3} a href="#/portfolio">
+          <NavItem eventKey={3} href="#/portfolio">
             <p>{this.toShortFormat(this.getTotalBalance())}</p>
           </NavItem>
         </Nav>

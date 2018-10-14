@@ -199,7 +199,7 @@ class PortfolioView extends Component {
                     defaultPageSize={10}
                     showPageSizeOptions={false}
                     showPagination={showPagination}
-                    noDataText={() => formatUtils.getNoDataText('assets', this.props.userModel)} 
+                    noDataText={formatUtils.getNoDataText('assets', this.props.userModel)} 
                   />
                 }
               />

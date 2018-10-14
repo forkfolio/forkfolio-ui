@@ -8,6 +8,8 @@ import PropTypes from "prop-types";
 class CustomButton extends Component {
   render() {
     const {
+      special,
+      speciallarge,
       fill,
       simple,
       pullRight,
@@ -32,6 +34,8 @@ class CustomButton extends Component {
     } = this.props;
 
     const btnClasses = cx({
+      "btn-special": special,
+      "btn-special-large": speciallarge,
       "btn-fill": fill,
       "btn-simple": simple,
       "pull-right": pullRight,
@@ -59,6 +63,8 @@ class CustomButton extends Component {
 }
 
 CustomButton.propTypes = {
+  special: PropTypes.bool,
+  speciallarge: PropTypes.bool,
   fill: PropTypes.bool,
   simple: PropTypes.bool,
   pullRight: PropTypes.bool,

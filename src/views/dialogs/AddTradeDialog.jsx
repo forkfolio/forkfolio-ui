@@ -34,7 +34,7 @@ class AddTradeDialog extends CommonTradeDialog {
       sellCurrencyError: null,
       date: new Date(),
       dateError: null,
-      comment: null,
+      comment: "",
       buyCurrencies: this.getBuyCurrencies(nextProps),
       sellCurrencies: this.getSellCurrencies(nextProps),
     }

@@ -35,7 +35,7 @@ class AddFundingDialog extends CommonFundingDialog {
       currencyError: null,
       date: new Date(),
       dateError: null,
-      comment: null,
+      comment: "",
       currencies: this.getDepositCurrencies()
     }
   }

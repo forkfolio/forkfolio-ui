@@ -308,22 +308,21 @@ class TradesView extends Component {
               <Card
                 title="What are my recent trades?"
                 rightSection={
-                  <div>
                   <Button
-                    bsSize="special"
+                    special
                     simple
                     onClick={() => this.props.showAddTradeDialog()}
                   >
                     <i className={"fa fa-plus"} /> Add trade
                   </Button>
-                  {/*<Button
+                  /*<Button
                     bsStyle="default"
-                    bsSize="special-large"
+                    speciallarge
+                    //pullRight
                     simple
                   >
                     <i className={"fa fa-question-circle"} />
-                  </Button>*/}
-                  </div>
+                  </Button>*/
                 }
                 category={tradeCount + " trade" + (tradeCount === 1 ? "" : "s")}
                 content={
@@ -333,7 +332,7 @@ class TradesView extends Component {
                     filterable
                     columns={this.getTableColumns()}
                     defaultPageSize={10}
-                    noDataText={() => formatUtils.getNoDataText('trades', this.props.userModel)}                    
+                    noDataText={formatUtils.getNoDataText('trades', this.props.userModel)}                    
                   />
                 }
               />

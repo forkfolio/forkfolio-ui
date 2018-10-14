@@ -194,22 +194,22 @@ class FundingView extends Component {
               <Card
                 title="What are my recent deposits and withdrawals?"
                 rightSection={
-                  <div>
                   <Button
-                    bsSize="special"
+                    special
+                    //pullRight
                     simple
                     onClick={() => this.props.showAddFundingDialog()}
                   >
                     <i className={"fa fa-plus"} /> Add funding
                   </Button>
-                  {/*<Button
+                  /*<Button
                     bsStyle="default"
-                    bsSize="special-large"
+                    speciallarge
+                    //pullRight
                     simple
                   >
                     <i className={"fa fa-question-circle"} />
-                  </Button>*/}
-                  </div>
+                  </Button>*/
                 }
                 category={fundingCount + " funding" + (fundingCount === 1 ? "" : "s")}
                 content={
@@ -219,7 +219,7 @@ class FundingView extends Component {
                     filterable
                     columns={this.getTableColumns()}
                     defaultPageSize={10}                    
-                    noDataText={() => this.getNoDataText('deposits or withdrawals', this.props.userModel)} 
+                    noDataText={this.getNoDataText('deposits or withdrawals', this.props.userModel)} 
                   />
                 }
               />
