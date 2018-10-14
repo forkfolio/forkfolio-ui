@@ -16,8 +16,12 @@ class Card extends Component {
           <div
             className={"header" + (this.props.textCenter ? " text-center" : "")}
           >
-            <h4 className="title">{this.props.title}</h4>
+            <div className="clearfix">
+              <h4 className="title">{this.props.title}</h4>      
+              <p className="rightsection">{this.props.rightSection}</p>
+            </div>
             <p className="category">{this.props.category}</p>
+            <div className="clearboth"></div>
           </div>
         ) : (
           ""

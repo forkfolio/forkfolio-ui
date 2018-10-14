@@ -95,6 +95,19 @@
         padding: $padding-base-vertical;
     }
 }
+
+/* added by forkfolio start */
+.btn-special-large{
+   @include btn-size($padding-xs-vertical, $padding-xs-horizontal, $font-size-large, $border-radius-small);
+   font-weight: $font-weight-normal;
+}
+
+.btn-special{
+   @include btn-size($padding-xs-vertical, $padding-xs-horizontal, $font-size-medium, $border-radius-small);
+   font-weight: $font-weight-normal;
+}
+/* added by forkfolio end */
+
 .btn-lg{
    @include btn-size($padding-large-vertical, $padding-large-horizontal, $font-size-large, $border-radius-large);
    font-weight: $font-weight-normal;

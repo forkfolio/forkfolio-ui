@@ -5477,6 +5477,28 @@ h1 .subtitle {
   .btn-simple.btn-icon {
     padding: 8px; }
 
+/* added by forkfolio start */
+.btn-special-large {
+  font-size: 23px;
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-weight: 400; }
+  .btn-special-large.btn-round {
+    padding: 2px 5px; }
+  .btn-special-large.btn-simple {
+    padding: 3px 5px; }
+
+.btn-special {
+  font-size: 17px;
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-weight: 400; }
+  .btn-special.btn-round {
+    padding: 2px 5px; }
+  .btn-special.btn-simple {
+    padding: 3px 5px; }
+
+/* added by forkfolio end */
 .btn-lg {
   font-size: 23px;
   border-radius: 6px;
@@ -7664,6 +7686,8 @@ form label.radio, form label.checkbox {
         top: 24px;
     }
 */
+  /* added by forkfolio start */
+  /* added by forkfolio end */
   /*
     .footer div{
         display: inline-block;
@@ -7747,7 +7771,27 @@ form label.radio, form label.checkbox {
   .card .title {
     margin: 0;
     color: #444444;
-    font-weight: 500; }
+    font-weight: 500;
+    float: left; }
+  .card .rightsection {
+    float: right; }
+  .card .clearfix:after {
+    content: "\00A0";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0; }
+  .card .clearfix {
+    display: inline-block; }
+  .card html[xmlns] .clearfix {
+    display: block; }
+  .card * html .clearfix {
+    height: 1%; }
+  .card .clearfix {
+    display: block; }
+  .card .clearboth {
+    clear: both; }
   .card .avatar {
     width: 30px;
     height: 30px;

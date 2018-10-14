@@ -123,7 +123,27 @@
         margin: $none;
         color: $black-hr;
         font-weight: $font-weight-semi;
+		float: left; // added by forkfolio
     }
+	
+	/* added by forkfolio start */
+	
+	.rightsection {
+		float: right;
+	}
+	
+	.clearfix:after { content: "\00A0"; display: block; clear: both; visibility: hidden; line-height: 0; height: 0;}  
+	.clearfix { display: inline-block }  
+	html[xmlns] .clearfix { display: block;}  
+	* html .clearfix{ height: 1%;}  
+	.clearfix { display: block } 
+	
+	.clearboth {
+		clear: both;
+	}
+	
+	/* added by forkfolio end */
+	
     .avatar{
         width: 30px;
         height: 30px;

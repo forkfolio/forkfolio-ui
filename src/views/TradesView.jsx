@@ -276,6 +276,24 @@ class TradesView extends Component {
             <Col md={12}>
               <Card
                 title="What are my recent trades?"
+                rightSection={
+                  <div>
+                  <Button
+                    bsSize="special"
+                    simple
+                    onClick={() => this.props.showAddTradeDialog()}
+                  >
+                    <i className={"fa fa-plus"} /> Add trade
+                  </Button>
+                  {/*<Button
+                    bsStyle="default"
+                    bsSize="special-large"
+                    simple
+                  >
+                    <i className={"fa fa-question-circle"} />
+                  </Button>*/}
+                  </div>
+                }
                 category={tradeCount + " trade" + (tradeCount === 1 ? "" : "s")}
                 content={
                   <ReactTable
@@ -292,14 +310,6 @@ class TradesView extends Component {
           </Row>
           <Row>
             <Col md={2} mdOffset={10}>
-              <Button
-                bsStyle="default"
-                fill
-                wd
-                onClick={() => this.props.showAddTradeDialog()}
-              >
-                Add Trade
-              </Button>
               <AddTradeDialog
                 isDialogShown={this.props.isAddTradeDialogShown}
                 hideDialog={this.props.hideAddTradeDialog}
