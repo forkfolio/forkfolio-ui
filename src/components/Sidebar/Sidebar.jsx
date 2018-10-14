@@ -61,6 +61,10 @@ class Sidebar extends Component {
     return false;
   }
 
+  getChangeCount() {
+    return this.props.changeCount > 0 ? " (" + this.props.changeCount + ")" : "";
+  }
+
   render() {
     return (
       <div className="sidebar" data-color="black" data-image={image}>
@@ -101,7 +105,7 @@ class Sidebar extends Component {
                     <a onClick={() => this.setState(st)}>
                       <i className={prop.icon} />
                       <p>
-                        {prop.name}
+                        {prop.name + (this.state[prop.state] ? "" : this.getChangeCount())}
                         <b
                           className={
                             this.state[prop.state]
@@ -128,7 +132,7 @@ class Sidebar extends Component {
                         <li className={""} key={7}>
                           <a class="nav-link" onClick={() => this.props.downloadPortfolio()}>
                             <i className={"fa fa-floppy-o"} />
-                            <p>Save {this.props.changeCount > 0 ? "(" + this.props.changeCount + ")" : ""}</p>
+                            <p>Save{this.getChangeCount()}</p>
                           </a>
                         </li>
                       </ul>
