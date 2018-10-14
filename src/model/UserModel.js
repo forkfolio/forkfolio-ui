@@ -16,7 +16,7 @@ export default class UserModel {
   }
 
   preparePortfolios(resModel) {
-    console.log("Preparing portfolios..");
+    //console.log("Preparing portfolios..");
     let empty = new Portfolio(null, null);
     empty.sortBalances(resModel);
     this.portfolios.push(empty);

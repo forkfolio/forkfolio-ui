@@ -120,7 +120,7 @@ class Dashboard extends Component {
         }
         // if there is update, render
         if(count > 0) {
-          console.log(count + " new recent prices updated. Updating UI..")
+          console.log("Recent prices updated (" + count + " tickers).")
           let newModel = new UserModel(this.state.userModel.transactions, this.state.resModel);
           this.setState({
             userModel: newModel,
@@ -191,7 +191,7 @@ class Dashboard extends Component {
   
     // resolve, then render
     Promise.all(promises).then(() => {
-      console.log("Histoday prices collected.");
+      console.log("History prices updated (" + promises.length + " series).");
 
       // re-render
       let newResModel = this.state.resModel.clone();
