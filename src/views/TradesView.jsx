@@ -269,6 +269,37 @@ class TradesView extends Component {
   render() {
     let currentPortfolio = this.props.userModel.portfolios.slice(-1)[0];
     let tradeCount = currentPortfolio.tradeCount;
+
+    let addTradeDialog = (
+      <AddTradeDialog
+        isDialogShown={this.props.isAddTradeDialogShown}
+        hideDialog={this.props.hideAddTradeDialog}
+        addTransaction={this.props.addTransaction}
+        userModel={this.props.userModel}
+        resModel={this.props.resModel}
+      />
+    );
+
+    let editTradeDialog = (
+      <EditTradeDialog
+        isDialogShown={this.props.isEditTradeDialogShown}
+        hideDialog={this.props.hideEditTradeDialog}
+        editedTransaction={this.props.editedTransaction}
+        updateTransaction={this.props.updateTransaction}
+        userModel={this.props.userModel}
+        resModel={this.props.resModel}
+      />
+    );
+    
+    let confirmRemoveTtansactionDialog = (
+      <ConfirmRemoveTransactionDialog
+        isDialogShown={this.state.isConfirmDialogShown}
+        hideDialog={this.hideConfirmDialog}
+        removedTransaction={this.state.removedTransaction}
+        removeTransaction={this.removeTransaction}
+      />
+    );
+
     return (
       <div className="main-content">
         <Grid fluid>
@@ -306,32 +337,11 @@ class TradesView extends Component {
                   />
                 }
               />
+              {this.props.isAddTradeDialogShown ? addTradeDialog : ""}
+              {this.props.isEditTradeDialogShown ? editTradeDialog : ""}
+              {this.state.isConfirmDialogShown ? confirmRemoveTtansactionDialog : ""}
             </Col>
-          </Row>
-          <Row>
-            <Col md={2} mdOffset={10}>
-              <AddTradeDialog
-                isDialogShown={this.props.isAddTradeDialogShown}
-                hideDialog={this.props.hideAddTradeDialog}
-                addTransaction={this.props.addTransaction}
-                userModel={this.props.userModel}
-                resModel={this.props.resModel}
-              />
-              <EditTradeDialog
-                isDialogShown={this.props.isEditTradeDialogShown}
-                hideDialog={this.props.hideEditTradeDialog}
-                editedTransaction={this.props.editedTransaction}
-                updateTransaction={this.props.updateTransaction}
-                userModel={this.props.userModel}
-                resModel={this.props.resModel}
-              />
-              <ConfirmRemoveTransactionDialog
-                isDialogShown={this.state.isConfirmDialogShown}
-                hideDialog={this.hideConfirmDialog}
-                removedTransaction={this.state.removedTransaction}
-                removeTransaction={this.removeTransaction}
-              />
-            </Col>
+
           </Row>
         </Grid>
       </div>
