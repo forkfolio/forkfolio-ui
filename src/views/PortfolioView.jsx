@@ -189,7 +189,7 @@ class PortfolioView extends Component {
           <Row>
             <Col md={8}>
               <Card
-                title="What is my asset allocation?"
+                title="What's my balance sheet today?"
                 category={assetCount + " asset" + (assetCount === 1 ? "" : "s")}
                 content={
                   <ReactTable
@@ -215,7 +215,7 @@ class PortfolioView extends Component {
           <Row>
             <Col md={12}>
               <Card
-                title="What is my portfolio history?"
+                title="What's my portfolio history?"
                 //category="24 Hours performance"
                 content={
                   <HighchartsReact
