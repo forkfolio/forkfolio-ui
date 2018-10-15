@@ -127,7 +127,8 @@ class CommonTradeDialog extends Component {
   }*/
 
   isEnabledDate(current) {
-    return current.isBefore(Datetime.moment());
+    // between 2009-01-01 and now
+    return current.isAfter(new Date(2008, 11, 31)) && current.isBefore(Datetime.moment());
   };
 
   getBuyFormGroup(name, placeholder) {
@@ -217,6 +218,7 @@ class CommonTradeDialog extends Component {
       <Col sm={5}>
         <Datetime
           isValidDate={this.isEnabledDate}
+          dateFormat={'YYYY-MM-DD'}
           timeFormat={false}
           closeOnSelect={true}
           inputProps={{ placeholder: "Click to select a date" }}
