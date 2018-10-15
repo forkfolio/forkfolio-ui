@@ -17,7 +17,7 @@ export const rangeSelectorModel = {
         x: 0,
         y: 0
     },
-    selected: 2,
+    //selected: 2,
     buttons: [ {
         type: 'day',
         count: 7,
@@ -34,20 +34,15 @@ export const rangeSelectorModel = {
         text: '3m',
         days: 90,
     }, {
+        type: 'ytd',
+        text: 'YTD'
+    }, {
         type: 'year',
         count: 1,
         text: '1y',
         days: 365,
     }, {
-        type: 'year',
-        count: 3,
-        text: '3y',
-        days: 3 * 365,
-    }, {
         type: 'all',
         text: 'All'
-    }, {
-        type: 'ytd',
-        text: 'YTD'
-    },]
+    }]
 }
