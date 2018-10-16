@@ -29,6 +29,7 @@ import cookie from 'react-cookies';
 import ConfirmNewPortfolioDialog from "../../views/dialogs/ConfirmNewPortfolioDialog";
 import Beforeunload from 'react-beforeunload';
 import ReactGA from 'react-ga';
+import moment from 'moment';
 
 
 var ps;
@@ -182,11 +183,12 @@ class Dashboard extends Component {
     return currencies;
   }
   
-  fetchAllAndRender(currencies) {
+  fetchAllAndRender(currencies, daysSince) {
+
     // prepare all promises
     const promises = [];
     for(let currency of currencies) {
-      promises.push(this.fetchHistoday(currency));
+      promises.push(this.fetchHistoday(currency, daysSince));
     }
   
     // resolve, then render
@@ -203,9 +205,9 @@ class Dashboard extends Component {
     });
   }
   
-  fetchHistoday(currency) {
+  fetchHistoday(currency, days) {
     return new Promise((accept, reject) => {
-      fetch(config.restURL + 'histoday?range=1096&tokens=' + currency.code)
+      fetch(config.restURL + 'histoday?range=' + days + '&tokens=' + currency.code)
       .then((response) => {
         return response.text()
       }).then((body) => {
@@ -223,7 +225,7 @@ class Dashboard extends Component {
         }
         accept();
         return;
-      })
+      });
     });
   }
 
@@ -263,10 +265,13 @@ class Dashboard extends Component {
   }
 
   componentWillMount() {
+    let firstDate = new Date(portfolioTransactions[0].time);
+    let daysSince = this.getDaysSince(firstDate);
+
     // start fetching prices based on user model
     this.fetchCurrencies().then(() => {
       this.updateUserModel(portfolioTransactions);
-      this.fetchAllAndRender(this.getCurrenciesToFetch());
+      this.fetchAllAndRender(this.getCurrenciesToFetch(), daysSince + 2);
       // start checking recent prices periodically
       setInterval(this.fetchRecentPrices, 2000);
     });
@@ -356,13 +361,21 @@ class Dashboard extends Component {
     this.setState({ isConfirmNewPortfolioDialogShown: false });
   }
 
+  getDaysSince(sinceDate) {
+    return moment(new Date()).diff(moment(sinceDate), 'days');
+  }
+
   addTransaction(tx) {
     // check if historic prices need to be updated
-    let shouldFetch = !this.state.userModel.portfolios.slice(-1)[0].balances.has(tx.pair.base);
+    let firstDate = new Date(this.state.userModel.portfolios[1].genesisTx.time);
+    let isOldest = this.getDaysSince(new Date(tx.time)) > this.getDaysSince(firstDate);
+    let hasNewBalance = !this.state.userModel.portfolios.slice(-1)[0].balances.has(tx.pair.base);
 
-    // add transaction 
-    // TODO sort maybe?
+    // add transaction and sort
     this.state.userModel.transactions.push(tx);
+    this.state.userModel.transactions.sort((a, b) => {
+      return a.time - b.time;
+    });
 
     // update userModel
     let newModel = new UserModel(this.state.userModel.transactions, this.state.resModel);
@@ -370,22 +383,29 @@ class Dashboard extends Component {
       userModel: newModel,
       changeCount: this.state.changeCount + 1
     });
+    console.log("Transaction added. " + newModel.transactions.length + " transactions in user model.");
 
-    console.log("Transaction added to user model.");
-    console.log(newModel.transactions.length + " transactions in userModel");
-
-    if(shouldFetch) {
-      this.fetchAllAndRender(this.getCurrenciesToFetch());
+    // updade historic prices if needed
+    if(hasNewBalance || isOldest) {
+      let firstDate = newModel.portfolios[1].genesisTx.time;
+      this.fetchAllAndRender(this.getCurrenciesToFetch(), this.getDaysSince(firstDate) + 2);
     }
   }
 
   updateTransaction(tx) {
-    // remove
+    // check if historic prices need to be updated
+    let firstDate = new Date(this.state.userModel.portfolios[1].genesisTx.time);
+    let isOldest = this.getDaysSince(new Date(tx.time)) > this.getDaysSince(firstDate);
+    let hasNewBalance = !this.state.userModel.portfolios.slice(-1)[0].balances.has(tx.pair.base);
+
+    // remove, add, sort
     let newTransactions = this.state.userModel.transactions.filter((item) => { 
       return item !== this.state.editedTransaction;
     })
-    // add
     newTransactions.push(tx);
+    newTransactions.sort((a, b) => {
+      return a.time - b.time;
+    });
 
     // update userModel
     let newModel = new UserModel(newTransactions, this.state.resModel);
@@ -393,16 +413,28 @@ class Dashboard extends Component {
       userModel: newModel,
       changeCount: this.state.changeCount + 1
     });
+    console.log("Transaction added. " + newModel.transactions.length + " transactions in user model.");
 
-    console.log("Transaction updated.");
-    console.log(newModel.transactions.length + " transactions in userModel");
+    // updade historic prices if needed
+    if(hasNewBalance || isOldest) {
+      let firstDate = newModel.portfolios[1].genesisTx.time;
+      this.fetchAllAndRender(this.getCurrenciesToFetch(), this.getDaysSince(firstDate) + 2);
+    }
   }
 
   removeTransaction(tx) {
-    // remove transaction
+    // check if historic prices need to be updated
+    let firstDate = new Date(this.state.userModel.portfolios[1].genesisTx.time);
+    let isOldest = this.getDaysSince(new Date(tx.time)) >= this.getDaysSince(firstDate);
+    let hasNewBalance = !this.state.userModel.portfolios.slice(-1)[0].balances.has(tx.pair.base);
+
+    // remove, and sort
     let newTransactions = this.state.userModel.transactions.filter((item) => { 
       return item !== tx;
-    })
+    });
+    newTransactions.sort((a, b) => {
+      return a.time - b.time;
+    });
   
     // update userModel
     let newModel = new UserModel(newTransactions, this.state.resModel);
@@ -410,9 +442,13 @@ class Dashboard extends Component {
       userModel: newModel,
       changeCount: this.state.changeCount + 1
     });
+    console.log("Transaction removed. " + newModel.transactions.length + " transactions in user model.");
 
-    console.log("Transaction removed from user model.");
-    console.log(newModel.transactions.length + " transactions in userModel");
+    // updade historic prices if needed
+    if(hasNewBalance || isOldest) {
+      let firstDate = newModel.portfolios[1].genesisTx.time;
+      this.fetchAllAndRender(this.getCurrenciesToFetch(), this.getDaysSince(firstDate) + 2);
+    }
   }
 
   setEditedTransaction(tx) {

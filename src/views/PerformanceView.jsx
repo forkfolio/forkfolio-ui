@@ -51,7 +51,7 @@ class PerformanceView extends Component {
   }
 
   getBestCurrentWorstPortfolio(props, days) {
-    // TODO check whats going on when first loaded on performance, chart not showing
+
     let since = new Date(2018,4,28);
     since.setHours(2,0,0,0);
     //console.log(since)
