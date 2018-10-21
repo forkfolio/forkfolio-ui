@@ -151,7 +151,9 @@ class Dashboard extends Component {
     this.setState({
       userModel: newModel,
       changeCount: 0
-    })
+    });
+
+    return newModel;
   }
   
   // fetches a list of all curencies, crypto and fiat, and stores them in resModel
@@ -479,8 +481,9 @@ class Dashboard extends Component {
     const reader = new FileReader();
     reader.addEventListener("load", () => {
       // TODO: check if format ok, version number
-      this.updateUserModel(JSON.parse(reader.result).transactions);
-      this.fetchAllAndRender(this.getCurrenciesToFetch());
+      let newModel = this.updateUserModel(JSON.parse(reader.result).transactions);
+      let firstDate = newModel.portfolios[1].genesisTx.time;
+      this.fetchAllAndRender(this.getCurrenciesToFetch(), this.getDaysSince(firstDate) + 2);
 
       ReactGA.event({category: 'User', action: 'Open'});
     }, false);
