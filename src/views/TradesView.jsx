@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 // react component for creating dynamic tables
 import ReactTable from "react-table";
-
 import { Grid, Row, Col, } from "react-bootstrap";
-
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import AddTradeDialog from "./dialogs/AddTradeDialog";
@@ -105,14 +103,6 @@ class TradesView extends Component {
     })
   }
 
-  getTotalProfit(rows) {
-    let total = 0;
-    for (let row of rows.data) {
-      total += row.profit[0];
-    }
-    return total;
-  }
-
   getTotalVolume(rows) {
     let total = 0;
     for (let row of rows.data) {
@@ -129,6 +119,35 @@ class TradesView extends Component {
     let total = 0;
     for (let row of rows.data) {
       total += row.cost[0] * (row.type === "Buy" ? 1 : -1);
+    }
+    return total;
+  }
+
+  getTotalProfitPercentage(rows) {
+    let pairStr = rows.data[0].pair.split('/');
+    let base = this.props.resModel.findCurrencyByCode(pairStr[0]);
+    let counter = this.props.resModel.findCurrencyByCode(pairStr[1]);
+    if(base !== null && counter !== null) {
+      let totalCost = this.getTotalCost(rows);
+      let totalCostInUsd = totalCost * this.props.resModel.getLastPrice(counter, this.props.resModel.usd);
+      let totalProfit = this.getTotalProfit(rows);
+
+      return (totalProfit / Math.abs(totalCostInUsd)) * 100; 
+
+      //let lastPrice = this.props.resModel.getLastPrice(base, counter);
+
+      //return (lastPrice - totalPrice) / totalPrice * 100 * (this.getTotalProfit(rows) >= 0 ? 1 : -1); 
+
+    }
+
+    //
+    return 0;
+  }
+
+  getTotalProfit(rows) {
+    let total = 0;
+    for (let row of rows.data) {
+      total += row.profit[0];
     }
     return total;
   }
@@ -161,6 +180,14 @@ class TradesView extends Component {
   getCostFooter(rows) {
     if(this.isOnePair(rows)) {
       return formatUtils.formatNumber(this.getTotalCost(rows), 2) + " " + rows.data[0].cost[1];
+    }
+
+    return "";
+  }
+
+  getProfitPercentageFooter(rows) {
+    if(this.isOnePair(rows)) {
+      return formatUtils.formatNumber(this.getTotalProfitPercentage(rows), 2) + "%";
     }
 
     return "";
@@ -234,7 +261,13 @@ class TradesView extends Component {
       ),
       sortMethod: (a, b) => {
         return b - a;
-      }},
+      }, Footer: rows => (
+        <span style={{ float: "right" }}>
+          <strong>
+            {this.getProfitPercentageFooter(rows)}
+          </strong>
+        </span>
+      )},
       { Header: "Profit", accessor: "profit", maxWidth: 160, filterable: false,
       Cell: row => (
         <span style={{ float: "right" }}>
