@@ -4874,7 +4874,7 @@ h1 .subtitle {
     padding-left: 10px;
     padding-right: 10px;
     margin: 5px 15px 0px;
-    border-radius: 4px;
+    border-radius: 2px;
     color: #FFFFFF;
     opacity: .86; }
   .sidebar .nav li:hover > a {
@@ -5727,6 +5727,10 @@ legend {
 .Select-placeholder {
   color: #C6C6C6; }
 
+.container-fluid {
+  padding-right: 2px;
+  padding-left: 2px; }
+
 .form-control::-moz-placeholder {
   color: #C3C3C3;
   opacity: 1;
@@ -5751,7 +5755,7 @@ legend {
   font-size: 17px;
   background-color: #FFFFFF;
   border: 1px solid #E3E3E3;
-  border-radius: 4px;
+  border-radius: 2px;
   color: #565656;
   padding: 8px 12px;
   height: 40px;
@@ -5788,7 +5792,7 @@ legend {
     top: 50%;
     vertical-align: middle; }
   .open .form-control {
-    border-radius: 4px 4px 0 0;
+    border-radius: 2px 2px 0 0;
     border-bottom-color: transparent; }
 
 .input-sm {
@@ -5817,7 +5821,7 @@ legend {
 .input-group-addon {
   background-color: #FFFFFF;
   border: 1px solid #E3E3E3;
-  border-radius: 4px; }
+  border-radius: 2px; }
   .has-success .input-group-addon,
   .has-error .input-group-addon {
     background-color: #FFFFFF;
@@ -6164,7 +6168,7 @@ form label.radio, form label.checkbox {
     max-width: 89%; }
   .alert[data-notify="container"] {
     padding: 10px 10px 10px 20px;
-    border-radius: 4px; }
+    border-radius: 2px; }
   .alert.alert-with-icon {
     padding-left: 65px; }
 
@@ -7113,7 +7117,7 @@ form label.radio, form label.checkbox {
     color: #E3E3E3;
     font-size: 16px;
     padding: 0 7px;
-    border-radius: 4px 0 0 4px; }
+    border-radius: 2px 0 0 2px; }
   .navbar-form .input-group-focus .input-group-addon,
   .navbar-form .form-control:focus {
     color: #666666; }
@@ -7681,7 +7685,7 @@ form label.radio, form label.checkbox {
   overflow: visible; }
 
 .card {
-  border-radius: 4px;
+  border-radius: 2px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(63, 63, 68, 0.1);
   background-color: #FFFFFF;
   margin-bottom: 30px;
@@ -7715,7 +7719,7 @@ form label.radio, form label.checkbox {
     width: 100%;
     overflow: hidden;
     height: 260px;
-    border-radius: 4px 4px 0 0;
+    border-radius: 2px 2px 0 0;
     position: relative;
     -webkit-transform-style: preserve-3d;
     -moz-transform-style: preserve-3d;
@@ -7750,7 +7754,7 @@ form label.radio, form label.checkbox {
     filter: alpha(opacity=100); }
   .card .map {
     height: 280px;
-    border-radius: 4px; }
+    border-radius: 2px; }
     .card .map.map-big {
       height: 420px; }
   .card .content {
@@ -7863,7 +7867,7 @@ form label.radio, form label.checkbox {
     .card .table tbody td.bs-checkbox:first-child {
       padding-left: 23px !important; }
   .card .alert {
-    border-radius: 4px;
+    border-radius: 2px;
     position: relative; }
     .card .alert.alert-with-icon {
       padding-left: 65px; }
@@ -8417,7 +8421,7 @@ form label.radio, form label.checkbox {
         .bootstrap-navbar .navbar-form .input-group .form-control,
         .off-canvas-sidebar .navbar-collapse .navbar-form .input-group .form-control {
           background: rgba(255, 255, 255, 0.13);
-          border-radius: 0 4px 4px 0;
+          border-radius: 0 2px 2px 0;
           padding-left: 0;
           padding-right: 0;
           color: #FFFFFF; }
@@ -8434,7 +8438,7 @@ form label.radio, form label.checkbox {
         color: #FFFFFF;
         padding: 0 20px;
         background: rgba(255, 255, 255, 0.13);
-        border-radius: 4px 0 0 4px; }
+        border-radius: 2px 0 0 2px; }
       .sidebar .navbar-form .input-group-focus .input-group-addon,
       .bootstrap-navbar .navbar-form .input-group-focus .input-group-addon,
       .off-canvas-sidebar .navbar-collapse .navbar-form .input-group-focus .input-group-addon {
@@ -8509,7 +8513,7 @@ form label.radio, form label.checkbox {
       color: #FFFFFF;
       margin: 5px 15px;
       opacity: .86;
-      border-radius: 4px;
+      border-radius: 2px;
       line-height: 30px;
       font-size: 12px;
       font-weight: 600;
