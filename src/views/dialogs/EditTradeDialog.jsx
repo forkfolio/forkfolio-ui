@@ -59,7 +59,7 @@ class EditTradeDialog extends CommonTradeDialog {
   getSelectObject(currency) {
     return { 
       value: currency, 
-      label: currency.code + " - " + currency.name 
+      label: currency.code
     };
   }
 

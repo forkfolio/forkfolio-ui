@@ -52,7 +52,7 @@ class EditFundingDialog extends CommonFundingDialog {
   getSelectObject(currency) {
     return { 
       value: currency, 
-      label: currency.code + " - " + currency.name 
+      label: currency.code
     };
   }
 

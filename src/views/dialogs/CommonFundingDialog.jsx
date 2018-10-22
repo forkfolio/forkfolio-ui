@@ -66,7 +66,7 @@ class CommonFundingDialog extends Component {
   getDepositCurrencies() {
     const currencies = [];
     for (let c of this.props.resModel.dailyTickers.keys()) {
-      currencies.push({ value: c, label: c.code + " - " + c.name });
+      currencies.push({ value: c, label: c.code });
     }
 
     return currencies;
@@ -76,7 +76,7 @@ class CommonFundingDialog extends Component {
     let currentPortfolio = this.props.userModel.portfolios.slice(-1)[0];
     let currencies = [];
     for (const c of currentPortfolio.balances.keys()) {
-      currencies.push({ value: c, label: c.code + " - " + c.name });
+      currencies.push({ value: c, label: c.code });
     }
 
     return currencies;

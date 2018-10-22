@@ -84,7 +84,7 @@ class CommonTradeDialog extends Component {
   getBuyCurrencies(nextProps) {
     let buyCurrencies = [];
     for(let c of nextProps.resModel.dailyTickers.keys()) {
-      buyCurrencies.push({ value: c, label: c.code + " - " + c.name });
+      buyCurrencies.push({ value: c, label: c.code });
     }
 
     return buyCurrencies;
@@ -94,7 +94,7 @@ class CommonTradeDialog extends Component {
     let currentPortfolio = nextProps.userModel.portfolios.slice(-1)[0];
     let sellCurrencies = [];
     for (const c of currentPortfolio.balances.keys()) {
-      sellCurrencies.push({ value: c, label: c.code + " - " + c.name });
+      sellCurrencies.push({ value: c, label: c.code });
     }
 
     return sellCurrencies;
