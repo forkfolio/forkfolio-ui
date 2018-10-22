@@ -38,7 +38,7 @@ class CommonTradeDialog extends Component {
     isInvalid ? this.setState({
       buyCurrencyError: (
         <small className="text-danger">
-          Please select buy currency.
+          Please select a currency.
         </small>)
       })
     : this.setState({ buyCurrencyError: null });
@@ -62,7 +62,7 @@ class CommonTradeDialog extends Component {
     isInvalid ? this.setState({
       sellCurrencyError: (
         <small className="text-danger">
-          Please select sell currency.
+          Please select a currency.
         </small>)
       })
     : this.setState({ sellCurrencyError: null });
@@ -284,16 +284,16 @@ class CommonTradeDialog extends Component {
                         <Tab.Content animation>
                           <Tab.Pane eventKey="buy">
                             <Form horizontal>  
-                              {this.getBuyFormGroup("Buy amount", "How much did you buy?")}
-                              {this.getSellFormGroup("Cost", "How much did it cost you?")}
+                              {this.getBuyFormGroup("Buy amount", "How much to buy?")}
+                              {this.getSellFormGroup("Cost", "How much is cost?")}
                               {this.getDateFormGroup()}
                               {this.getCommentFormGroup()}
                             </Form>
                           </Tab.Pane>
                           <Tab.Pane eventKey="sell">
                             <Form horizontal>  
-                              {this.getSellFormGroup("Sell amount", "How much did you sell?")}
-                              {this.getBuyFormGroup("Proceeds", "How much did you receive?")}
+                              {this.getSellFormGroup("Sell amount", "How much to sell?")}
+                              {this.getBuyFormGroup("Proceeds", "How much to receive?")}
                               {this.getDateFormGroup()}
                               {this.getCommentFormGroup()}
                             </Form>
