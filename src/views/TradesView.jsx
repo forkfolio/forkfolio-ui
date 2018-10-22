@@ -131,16 +131,12 @@ class TradesView extends Component {
       let totalCost = this.getTotalCost(rows);
       let totalCostInUsd = totalCost * this.props.resModel.getLastPrice(counter, this.props.resModel.usd);
       let totalProfit = this.getTotalProfit(rows);
-
-      return (totalProfit / Math.abs(totalCostInUsd)) * 100; 
-
-      //let lastPrice = this.props.resModel.getLastPrice(base, counter);
-
-      //return (lastPrice - totalPrice) / totalPrice * 100 * (this.getTotalProfit(rows) >= 0 ? 1 : -1); 
-
+      let isBuy = this.getTypeFooter(rows) === "Buy";
+      totalCostInUsd = totalCostInUsd * (isBuy ? 1 : -1);
+      // check eth/usd and rep/usd
+      return (totalProfit / Math.max(0, totalCostInUsd)) * 100; 
     }
 
-    //
     return 0;
   }
 
@@ -161,9 +157,25 @@ class TradesView extends Component {
     return rows.data.length !== 0;
   }
 
+  getPairFooter(rows) {
+    if(this.isOnePair(rows)) {
+      return rows.data[0].pair;
+    }
+
+    return "";
+  }
+
+  getTypeFooter(rows) {
+    if(this.isOnePair(rows)) {
+      return this.getTotalVolume(rows) >= 0 ? "Buy" : "Sell";
+    }
+
+    return "";
+  }
+
   getVolumeFooter(rows) {
     if(this.isOnePair(rows)) {
-      return formatUtils.formatNumber(this.getTotalVolume(rows), 2) + " " + rows.data[0].volume[1];
+      return formatUtils.formatNumber(Math.abs(this.getTotalVolume(rows)), 2) + " " + rows.data[0].volume[1];
     }
 
     return "";
@@ -179,7 +191,8 @@ class TradesView extends Component {
 
   getCostFooter(rows) {
     if(this.isOnePair(rows)) {
-      return formatUtils.formatNumber(this.getTotalCost(rows), 2) + " " + rows.data[0].cost[1];
+      let isBuy = this.getTypeFooter(rows) === "Buy";
+      return formatUtils.formatNumber(this.getTotalCost(rows) * (isBuy ? 1 : -1), 2) + " " + rows.data[0].cost[1];
     }
 
     return "";
@@ -199,10 +212,24 @@ class TradesView extends Component {
         filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
       },
       { Header: "Pair", accessor: "pair", maxWidth: 100,
-        filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
+        filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
+        Footer: rows => (
+        <span>
+          <strong>
+            {this.getPairFooter(rows)}
+          </strong>
+        </span>
+        )
       },
       { Header: "Type", accessor: "type", maxWidth: 50,
-        filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
+        filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
+        Footer: rows => (
+          <span>
+            <strong>
+              {this.getTypeFooter(rows)}
+            </strong>
+          </span>
+        )
       },
       { Header: "Comment", accessor: "comment", maxWidth: 300,
         filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
