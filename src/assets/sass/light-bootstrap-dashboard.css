@@ -4754,7 +4754,7 @@ h1 .subtitle {
   top: 0;
   bottom: 0;
   left: 0;
-  width: 260px;
+  width: 230px;
   display: block;
   z-index: 1;
   color: #fff;
@@ -4773,7 +4773,7 @@ h1 .subtitle {
     overflow: auto;
     position: relative;
     z-index: 4;
-    width: 260px;
+    width: 230px;
     height: calc(100% - 64px);
     padding-bottom: 30px;
     box-shadow: inset -1px 0px 0px 0px #cfcfca; }
@@ -5116,7 +5116,7 @@ h1 .subtitle {
 .main-panel {
   position: relative;
   float: right;
-  width: calc(100% - 260px);
+  width: calc(100% - 230px);
   min-height: 100%; }
   .main-panel .main-content {
     padding: 15px 0px;
@@ -5187,7 +5187,7 @@ h1 .subtitle {
       transform: translate3d(-25px, 0, 0);
       opacity: 0; }
   .sidebar-mini .sidebar:hover {
-    width: 260px; }
+    width: 230px; }
     .sidebar-mini .sidebar:hover .logo a.logo-normal {
       opacity: 1;
       -webkit-transform: translate3d(0px, 0, 0);
@@ -5196,7 +5196,7 @@ h1 .subtitle {
       -ms-transform: translate3d(0px, 0, 0);
       transform: translate3d(0px, 0, 0); }
     .sidebar-mini .sidebar:hover .sidebar-wrapper {
-      width: 260px; }
+      width: 230px; }
       .sidebar-mini .sidebar:hover .sidebar-wrapper > .nav li > a p,
       .sidebar-mini .sidebar:hover .sidebar-wrapper > .nav ul > li > a .sidebar-normal,
       .sidebar-mini .sidebar:hover .sidebar-wrapper .user .info ul > li > a .sidebar-normal,

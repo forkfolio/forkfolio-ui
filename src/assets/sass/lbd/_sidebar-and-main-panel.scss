@@ -3,7 +3,7 @@
     top: 0;
     bottom: 0;
     left: 0;
-    width: 260px;
+    width: 230px;
     display: block;
     z-index: 1;
     color: #fff;
@@ -28,7 +28,7 @@
         overflow: auto;
         position: relative;
         z-index: 4;
-        width: 260px;
+        width: 230px;
         height: calc(100% - 64px);
         padding-bottom: 30px;
         box-shadow: inset -1px 0px 0px 0px #cfcfca;
@@ -475,7 +475,7 @@
         }
 
         .sidebar:hover{
-            width: 260px;
+            width: 230px;
 
             .logo{
                 a.logo-normal{
@@ -485,7 +485,7 @@
             }
 
             .sidebar-wrapper{
-                width: 260px;
+                width: 230px;
 
                 > .nav li > a p,
                 > .nav ul > li > a .sidebar-normal,
