@@ -6938,7 +6938,7 @@ form label.radio, form label.checkbox {
 
 .main-panel .navbar-fixed {
   position: fixed;
-  width: calc(100% - 260px);
+  width: calc(100% - 230px);
   right: 0;
   z-index: 1031; }
 
@@ -8378,7 +8378,7 @@ form label.radio, form label.checkbox {
     display: block;
     top: 0;
     height: auto;
-    width: 260px;
+    width: 230px;
     right: 0;
     left: auto;
     z-index: 1032;
@@ -8549,11 +8549,11 @@ form label.radio, form label.checkbox {
   .nav-open .main-panel,
   .nav-open .wrapper-full-page {
     left: 0;
-    -webkit-transform: translate3d(-260px, 0, 0);
-    -moz-transform: translate3d(-260px, 0, 0);
-    -o-transform: translate3d(-260px, 0, 0);
-    -ms-transform: translate3d(-260px, 0, 0);
-    transform: translate3d(-260px, 0, 0); }
+    -webkit-transform: translate3d(-230px, 0, 0);
+    -moz-transform: translate3d(-230px, 0, 0);
+    -o-transform: translate3d(-230px, 0, 0);
+    -ms-transform: translate3d(-230px, 0, 0);
+    transform: translate3d(-230px, 0, 0); }
   .nav-open .sidebar,
   .nav-open .bootstrap-navbar {
     -webkit-transform: translate3d(0px, 0, 0);

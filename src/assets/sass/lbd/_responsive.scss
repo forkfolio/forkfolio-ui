@@ -195,7 +195,7 @@
         display: block;
         top: 0;
         height: auto;
-        width: 260px;
+        width: 230px;
         right: 0;
         left: auto;
         z-index: 1032;
@@ -386,7 +386,7 @@
         .main-panel,
         .wrapper-full-page{
             left: 0;
-            @include transform-translate-x(-260px);
+            @include transform-translate-x(-230px);
         }
 
         .sidebar,
