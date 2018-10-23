@@ -33,6 +33,8 @@ body,
 
 body{
     background-color: $smoke-bg;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 a{

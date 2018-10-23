@@ -5591,7 +5591,9 @@ body,
   position: relative; }
 
 body {
-  background-color: #F5F5F5; }
+  background-color: #F5F5F5;
+  overflow-x: hidden;
+  overflow-y: scroll; }
 
 a {
   color: #23CCEF; }
@@ -6925,7 +6927,7 @@ form label.radio, form label.checkbox {
   .navbar .btn-simple {
     font-size: 17px; }
   .navbar.fixed {
-    width: calc(100% - $sidebar-width);
+    width: calc(100% - 100px);
     right: 0;
     left: auto;
     border-radius: 0; }

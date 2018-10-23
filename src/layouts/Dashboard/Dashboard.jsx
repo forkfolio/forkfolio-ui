@@ -235,23 +235,23 @@ class Dashboard extends Component {
     this.setState({ 
       _notificationSystem: this.refs.notificationSystem,
     });
-    if (navigator.platform.indexOf("Win") > -1) {
+    /*if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.mainPanel);
-    }    
+    }  */
   }
 
   componentWillUnmount() {
-    if (navigator.platform.indexOf("Win") > -1) {
+    /*if (navigator.platform.indexOf("Win") > -1) {
       ps.destroy();
-    }
+    }*/
   }
 
   componentDidUpdate(e) {
-    if (navigator.platform.indexOf("Win") > -1) {
+    /*if (navigator.platform.indexOf("Win") > -1) {
       setTimeout(() => {
         ps.update();
       }, 350);
-    }
+    }*/
     if (e.history.action === "PUSH") {
       document.documentElement.scrollTop = 0;
       document.scrollingElement.scrollTop = 0;
