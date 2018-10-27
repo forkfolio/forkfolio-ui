@@ -25,15 +25,24 @@ export default class ResModel {
     }
 
     if(counter === this.usd) {
+      // counter usd, there is recent base
       if(this.recentTickers.get(base) != null) {
-        //console.log("Returning recent")
-        //console.log(this.recentTickers.get(base).price);
         return this.recentTickers.get(base).price;
       }
+      // counter usd, there is no recent base
       if(this.dailyTickers.get(base).slice(-1)[0] != null) {
         return this.dailyTickers.get(base).slice(-1)[0].price;
       }
     } else {
+      // counter not usd, there is recent base
+      if(this.recentTickers.get(base) != null && 
+          this.recentTickers.get(counter) != null) {
+        let baseUsd = this.recentTickers.get(base).price;
+        let counterUsd = this.recentTickers.get(counter).price;
+        return baseUsd / counterUsd;
+      }
+
+      // counter not usd, there is no recent base
       if(this.dailyTickers.get(base).slice(-1)[0] != null && 
           this.dailyTickers.get(counter).slice(-1)[0] != null) {
         let baseUsd = this.dailyTickers.get(base).slice(-1)[0].price;

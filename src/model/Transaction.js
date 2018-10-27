@@ -24,7 +24,6 @@ export default class Transaction {
   getProfit(resModel, denomination) {
     let priceThen = this.getPrice();
     let priceNow = resModel.getLastPrice(this.pair.base, this.pair.counter);
-
     let profit = this.baseAmount * (priceNow - priceThen) * (this.isBuy ? 1 : -1);
 
     if(this.pair.counter !== denomination) {
