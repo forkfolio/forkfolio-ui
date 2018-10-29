@@ -54,6 +54,33 @@ export default class ResModel {
     return 0;
   }
 
+  sameDay(d1, d2) {
+    return d1.getFullYear() === d2.getFullYear() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getDate() === d2.getDate();
+  }
+
+  // returns the price of base denominated in counter on date
+  getPastPrice(base, counter, date) {
+    // if base and counter equal
+    if(base.code === counter.code) {
+      return 1;
+    }
+
+    if(counter === this.usd) {
+      for(let t of this.dailyTickers.get(base)) {
+        if(this.sameDay(date, t.time)) {
+          return t.price;
+        }
+      }
+    } else {
+      // counter not usd, there is recent base
+      // not implemented for now
+    }
+
+    return 0;
+  }
+
   // puts usd tickers at value 1 for all the timestamps in other
   calculateUsdTickers(other) {
     const usdTickers = [];

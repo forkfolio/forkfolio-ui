@@ -7,28 +7,7 @@ import { formatUtils } from './../../utils/FormatUtils';
 
 class HeaderLinks extends Component {
 
-  toShortFormat(balance) {
-    let short = balance;
-    let adder = "";
-    if(balance > 10000000000) {
-      short = balance / 1000000000;
-      adder = "B";
-    } else if(balance > 10000000) {
-      short = balance / 1000000;
-      adder = "M";
-    } else if(balance > 10000) {
-      short = balance / 1000;
-      adder = "K";
-    }
 
-    // special case if portfolio is negative
-    if(balance < 0) {
-      let value = formatUtils.formatNumber(short, 2) + adder;
-      return "-$" + value.slice(1, value.length);
-    }
-
-    return "$" + formatUtils.formatNumber(short, 2) + adder;
-  }
 
   getTotalBalance() {
     if(this.props.userModel != null) {
@@ -46,7 +25,7 @@ class HeaderLinks extends Component {
       <div>
         <Nav pullRight>
           <NavItem eventKey={3} href="#/portfolio">
-            <p>{this.toShortFormat(this.getTotalBalance())}</p>
+            <p>{formatUtils.toShortFormat(this.getTotalBalance())}</p>
           </NavItem>
         </Nav>
       </div>

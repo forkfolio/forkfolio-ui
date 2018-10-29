@@ -10,6 +10,29 @@ class FormatUtils {
     return "0";
   }
 
+  toShortFormat(balance) {
+    let short = balance;
+    let adder = "";
+    if(balance > 10000000000) {
+      short = balance / 1000000000;
+      adder = "B";
+    } else if(balance > 10000000) {
+      short = balance / 1000000;
+      adder = "M";
+    } else if(balance > 10000) {
+      short = balance / 1000;
+      adder = "K";
+    }
+
+    // special case if portfolio is negative
+    if(balance < 0) {
+      let value = formatUtils.formatNumber(short, 2) + adder;
+      return "-$" + value.slice(1, value.length);
+    }
+
+    return "$" + formatUtils.formatNumber(short, 2) + adder;
+  }
+
   getNoDataText(name, userModel) {
     let currentPortfolio = userModel.portfolios.slice(-1)[0];
     if(currentPortfolio.tradeCount === 0) {
