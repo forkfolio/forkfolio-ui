@@ -6205,9 +6205,10 @@ form label.radio, form label.checkbox {
 .table > thead > tr > td,
 .table > tbody > tr > td,
 .table > tfoot > tr > td {
-  padding: 12px 8px;
+  padding: 7px 5px;
   vertical-align: middle;
-  border-color: #E3E3E3; }
+  border-top: solid 1px rgba(0, 0, 0, 0.05);
+  border-bottom: solid 1px rgba(0, 0, 0, 0.05); }
 
 .table > thead > tr > th {
   border-bottom-width: 1px;
