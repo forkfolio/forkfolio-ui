@@ -389,7 +389,7 @@ class TradesView extends Component {
                 category={tradeCount + " trade" + (tradeCount === 1 ? "" : "s")}
                 content={
                   <ReactTable
-                    className="-striped -highlight"
+                    className="-highlight"
                     data={this.state.data}
                     filterable
                     columns={this.getTableColumns()}

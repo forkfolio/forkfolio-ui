@@ -194,7 +194,7 @@ class PortfolioView extends Component {
                 category={assetCount + " asset" + (assetCount === 1 ? "" : "s")}
                 content={
                   <ReactTable
-                    className="-striped -highlight"
+                    className="-highlight"
                     data={this.getTableData(this.props)}
                     columns={this.getTableColumns(this.props)}
                     defaultPageSize={10}

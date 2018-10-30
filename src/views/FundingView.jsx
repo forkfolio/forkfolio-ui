@@ -216,7 +216,7 @@ class FundingView extends Component {
                 category={fundingCount + " funding" + (fundingCount === 1 ? "" : "s")}
                 content={
                   <ReactTable
-                    className="-striped -highlight"
+                    className="-highlight"
                     data={this.state.data}
                     filterable
                     columns={this.getTableColumns()}

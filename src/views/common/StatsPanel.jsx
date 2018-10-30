@@ -37,7 +37,7 @@ class PortfolioPie extends Component {
     return totalProfit;
   }
 
-  getTotal(props) {
+  getTotal(props, totalBalance) {
     // sum all deposits, and withdrawals on their transaction date
     let newestFirst = props.userModel.transactions.slice(0, props.userModel.transactions.length);
     newestFirst.sort((a, b) => b.time.getTime() - a.time.getTime());
@@ -52,38 +52,44 @@ class PortfolioPie extends Component {
         }
       }
     }
-    console.log('totalDeposits: ' + totalDeposits);
-    console.log('totalWithdrawals: ' + totalWithdrawals);
-
-    // get final balance today
-    let currentPortfolio = this.props.userModel.portfolios.slice(-1)[0];
-    let totalBalance = currentPortfolio.getTotalBalance(this.props.resModel, this.props.resModel.usd);
 
     // subtract deposits, add withdrawals to final balance 
     return totalBalance - totalDeposits + totalWithdrawals;
   }
 
+  getExposureToCryptoPercentage(props, currentPortfolio, totalBalance) {
+    let totalCryptoBalance = currentPortfolio.getTotalCryptoBalance(props.resModel, props.resModel.usd);
+    return totalCryptoBalance / totalBalance * 100;
+  }
+
   render() {
+    let currentPortfolio = this.props.userModel.portfolios.slice(-1)[0];
+    let totalBalance = currentPortfolio.getTotalBalance(this.props.resModel, this.props.resModel.usd);
+
     let tradingProfit = this.getTradingProfit(this.props);
-    let total = this.getTotal(this.props);
+    let total = this.getTotal(this.props, totalBalance);
     let capitalAppreciation = total - tradingProfit;
+    let tradeCount = this.props.userModel.portfolios.slice(-1)[0].tradeCount;
+    let exposureToCrypto = this.getExposureToCryptoPercentage(this.props, currentPortfolio, totalBalance);
     return (
       <Card
         title={this.props.title}
         category='All time'
         content={
+          <div>
           <Row>
             <Col md={12}>
               <div className="table-responsive">
-                <table className="table">
+                <h5>How do I make profit?</h5>
+                <table className="table table-hover">
                   <tbody>
                     <tr>
-                      <td>Capital appreciation</td>
+                      <td>buy and hold</td>
                       <td className="text-right">{formatUtils.toShortFormat(capitalAppreciation)}</td>
                       <td className="text-right">{formatUtils.formatNumber(capitalAppreciation / total * 100, 2)}%</td>
                     </tr>
                     <tr>
-                      <td>Trading profit</td>
+                      <td>trade</td>
                       <td className="text-right">{formatUtils.toShortFormat(tradingProfit)}</td>
                       <td className="text-right">{formatUtils.formatNumber(tradingProfit / total * 100, 2)}%</td>
                     </tr>
@@ -96,7 +102,36 @@ class PortfolioPie extends Component {
                 </table>
               </div>
             </Col>
-          </Row>}
+          </Row>
+          <Row>
+          <Col md={12}>
+            <div className="table-responsive">
+              <h5>What are some key insights?</h5>
+              <table className="table table-hover">
+                <tbody>
+                  <tr>
+                    <td>Most profitable pair</td>
+                    <td className="text-right">ETH/USD</td>
+                  </tr>
+                  <tr>
+                    <td>Withdrawn</td>
+                    <td className="text-right">$18.43K</td>
+                  </tr>
+                  <tr>
+                    <td>Exposure to crypto</td>
+                    <td className="text-right">{formatUtils.formatNumber(exposureToCrypto, 2)}%</td>
+                  </tr>
+                  <tr>
+                    <td>Average profit per trade</td>
+                    <td className="text-right">{formatUtils.toShortFormat(tradingProfit / tradeCount)}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </Col>
+        </Row>
+        </div>
+          }
         /*stats={
           <div>
             <i className="fa fa-clock-o" /> Campaign sent 2 days ago

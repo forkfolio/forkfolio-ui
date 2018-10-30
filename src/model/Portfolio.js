@@ -72,6 +72,17 @@ export default class Portfolio {
         return totalBalance;
     }
 
+    getTotalCryptoBalance(resModel, denomination) {
+        let totalBalance = 0;
+        for (const k of this.balances.keys()) {
+            if(!k.isFiat) {
+                totalBalance += this.getCurrencyBalance(resModel, k, denomination);
+            }
+        }
+
+        return totalBalance;
+    }
+
     // returns balance of the currency on a date
     getPastBalance(currency, date) {
         let currencyBalance = 0;

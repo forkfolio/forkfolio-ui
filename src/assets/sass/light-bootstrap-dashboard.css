@@ -7762,7 +7762,7 @@ form label.radio, form label.checkbox {
   .card .content {
     padding: 15px; }
     .card .content .table-responsive {
-      padding: 15px; }
+      padding: 0px; }
   .card .content-no-padding {
     padding: 0; }
     .card .content-no-padding .map {
