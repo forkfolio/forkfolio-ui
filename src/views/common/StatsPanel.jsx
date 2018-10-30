@@ -25,10 +25,10 @@ class PortfolioPie extends Component {
   }
 
   getTradingProfit(props) {
-    let newestFirst = props.userModel.transactions.slice(0, props.userModel.transactions.length);
-    newestFirst.sort((a, b) => b.time.getTime() - a.time.getTime());
+    //let newestFirst = props.userModel.transactions.slice(0, props.userModel.transactions.length);
+    //newestFirst.sort((a, b) => b.time.getTime() - a.time.getTime());
     let totalProfit = 0;
-    for (let tx of newestFirst) {
+    for (let tx of props.userModel.transactions) {
       if (tx.isTrade) {
         totalProfit += tx.getProfit(props.resModel, props.resModel.usd);
       }
@@ -37,12 +37,10 @@ class PortfolioPie extends Component {
     return totalProfit;
   }
 
-  getTotal(props, totalBalance) {
+  getTotalFundings(props) {
     // sum all deposits, and withdrawals on their transaction date
-    let newestFirst = props.userModel.transactions.slice(0, props.userModel.transactions.length);
-    newestFirst.sort((a, b) => b.time.getTime() - a.time.getTime());
     let totalDeposits = 0, totalWithdrawals = 0;
-    for (let tx of newestFirst) {
+    for (let tx of props.userModel.transactions) {
       if (!tx.isTrade) {
         let lastPrice = props.resModel.getPastPrice(tx.pair.base, props.resModel.usd, tx.time);
         if (tx.isBuy) {
@@ -53,8 +51,10 @@ class PortfolioPie extends Component {
       }
     }
 
-    // subtract deposits, add withdrawals to final balance 
-    return totalBalance - totalDeposits + totalWithdrawals;
+    return {
+      totalDeposits: totalDeposits,
+      totalWithdrawals: totalWithdrawals
+    }
   }
 
   getExposureToCryptoPercentage(props, currentPortfolio, totalBalance) {
@@ -62,13 +62,35 @@ class PortfolioPie extends Component {
     return totalCryptoBalance / totalBalance * 100;
   }
 
+  getWithdrawn() {
+
+  }
+
+  toShortFormatStyled(value) {
+    let style1 = "font-" + (value >= 0 ? "green" : "red" );
+    return (
+      <div className={style1}>
+        {formatUtils.toShortFormat(value)}
+      </div>
+    );
+  }
+
+  toDecimalFormatStyled(value, addon) {
+    let style1 = "font-" + (value >= 0 ? "green" : "red" );
+    return (
+      <div className={style1}>
+        {formatUtils.formatNumber(value, 2) + addon}
+      </div>
+    );
+  }
+
   render() {
     let currentPortfolio = this.props.userModel.portfolios.slice(-1)[0];
     let totalBalance = currentPortfolio.getTotalBalance(this.props.resModel, this.props.resModel.usd);
-
     let tradingProfit = this.getTradingProfit(this.props);
-    let total = this.getTotal(this.props, totalBalance);
-    let capitalAppreciation = total - tradingProfit;
+    let fundings = this.getTotalFundings(this.props);
+    let totalProfit = totalBalance - fundings.totalDeposits + fundings.totalWithdrawals;
+    let holdingProfit = totalProfit - tradingProfit;
     let tradeCount = this.props.userModel.portfolios.slice(-1)[0].tradeCount;
     let exposureToCrypto = this.getExposureToCryptoPercentage(this.props, currentPortfolio, totalBalance);
     return (
@@ -84,19 +106,19 @@ class PortfolioPie extends Component {
                 <table className="table table-hover">
                   <tbody>
                     <tr>
-                      <td>buy and hold</td>
-                      <td className="text-right">{formatUtils.toShortFormat(capitalAppreciation)}</td>
-                      <td className="text-right">{formatUtils.formatNumber(capitalAppreciation / total * 100, 2)}%</td>
+                      <td>by holding</td>
+                      <td className="text-right">{this.toDecimalFormatStyled(holdingProfit / totalProfit * 100, '%')}</td>
+                      <td className="text-right">{this.toShortFormatStyled(holdingProfit)}</td>
                     </tr>
                     <tr>
-                      <td>trade</td>
-                      <td className="text-right">{formatUtils.toShortFormat(tradingProfit)}</td>
-                      <td className="text-right">{formatUtils.formatNumber(tradingProfit / total * 100, 2)}%</td>
+                      <td>by trading</td>
+                      <td className="text-right">{this.toDecimalFormatStyled(tradingProfit / totalProfit * 100, '%')}</td>
+                      <td className="text-right">{this.toShortFormatStyled(tradingProfit)}</td>
                     </tr>
                     <tr>
                       <td></td>
-                      <td className="text-right">{formatUtils.toShortFormat(total)}</td>
                       <td className="text-right">100.00%</td>
+                      <td className="text-right">{this.toShortFormatStyled(totalProfit)}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -106,24 +128,24 @@ class PortfolioPie extends Component {
           <Row>
           <Col md={12}>
             <div className="table-responsive">
-              <h5>What are some key insights?</h5>
+              <h5>What are my key insights?</h5>
               <table className="table table-hover">
                 <tbody>
                   <tr>
+                    <td>Average profit per trade</td>
+                    <td className="text-right">{this.toShortFormatStyled(tradingProfit / tradeCount)}</td>
+                  </tr>
+                  {/*<tr>
                     <td>Most profitable pair</td>
                     <td className="text-right">ETH/USD</td>
-                  </tr>
+                  </tr>*/}
                   <tr>
                     <td>Withdrawn</td>
-                    <td className="text-right">$18.43K</td>
+                    <td className="text-right">{formatUtils.toShortFormat(fundings.totalWithdrawals)}</td>
                   </tr>
                   <tr>
                     <td>Exposure to crypto</td>
                     <td className="text-right">{formatUtils.formatNumber(exposureToCrypto, 2)}%</td>
-                  </tr>
-                  <tr>
-                    <td>Average profit per trade</td>
-                    <td className="text-right">{formatUtils.toShortFormat(tradingProfit / tradeCount)}</td>
                   </tr>
                 </tbody>
               </table>
