@@ -102,7 +102,7 @@ class Dashboard extends Component {
   }
   
   fetchRecentPrices() {
-    let currencies = this.getCurrenciesToFetch();
+    let currencies = this.getCurrenciesToFetch(this.state.userModel);
     if(currencies.length > 0) {
       fetch(config.restURL + 'recent?tokens=' + this.toTokensString(currencies))
       .then((response) => {
@@ -175,9 +175,10 @@ class Dashboard extends Component {
     });
   }
   
-  getCurrenciesToFetch() {
-    let currentPortfolio = this.state.userModel.portfolios.slice(-1)[0];
+  getCurrenciesToFetch(userModel) {
+    let currentPortfolio = userModel.portfolios.slice(-1)[0];
     let currencies = [];
+    console.log(currentPortfolio.balances)
     for (const k of currentPortfolio.balances.keys()) {
       currencies.push(k);
     }
@@ -267,7 +268,7 @@ class Dashboard extends Component {
     // start fetching prices based on user model
     this.fetchCurrencies().then(() => {
       this.updateUserModel(portfolioTransactions);
-      this.fetchAllAndRender(this.getCurrenciesToFetch(), daysSince + 2);
+      this.fetchAllAndRender(this.getCurrenciesToFetch(this.state.userModel), daysSince + 2);
       // start checking recent prices periodically
       setInterval(this.fetchRecentPrices, 2000);
     });
@@ -387,7 +388,7 @@ class Dashboard extends Component {
     // updade historic prices if needed
     if(hasNewBalance || isOldest) {
       let firstDate = newModel.portfolios[1].genesisTx.time;
-      this.fetchAllAndRender(this.getCurrenciesToFetch(), this.getDaysSince(firstDate) + 2);
+      this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), this.getDaysSince(firstDate) + 2);
     }
   }
 
@@ -417,7 +418,7 @@ class Dashboard extends Component {
     // updade historic prices if needed
     if(hasNewBalance || isOldest) {
       let firstDate = newModel.portfolios[1].genesisTx.time;
-      this.fetchAllAndRender(this.getCurrenciesToFetch(), this.getDaysSince(firstDate) + 2);
+      this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), this.getDaysSince(firstDate) + 2);
     }
   }
 
@@ -446,7 +447,7 @@ class Dashboard extends Component {
     // updade historic prices if needed
     if(hasNewBalance || isOldest) {
       let firstDate = newModel.portfolios[1].genesisTx.time;
-      this.fetchAllAndRender(this.getCurrenciesToFetch(), this.getDaysSince(firstDate) + 2);
+      this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), this.getDaysSince(firstDate) + 2);
     }
   }
 
@@ -480,7 +481,7 @@ class Dashboard extends Component {
       // TODO: check if format ok, version number
       let newModel = this.updateUserModel(JSON.parse(reader.result).transactions);
       let firstDate = newModel.portfolios[1].genesisTx.time;
-      this.fetchAllAndRender(this.getCurrenciesToFetch(), this.getDaysSince(firstDate) + 2);
+      this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), this.getDaysSince(firstDate) + 2);
 
       ReactGA.event({category: 'User', action: 'Open'});
     }, false);
