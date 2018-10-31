@@ -1,32 +1,15 @@
 import React, { Component } from "react";
-import Highcharts from 'highcharts'
-import HighchartsReact from 'highcharts-react-official'
 import Card from "components/Card/Card.jsx";
-import { Grid, Col, Row } from "react-bootstrap";
-import { formatUtils } from './../../utils/FormatUtils';
-//import { resModel } from "../../model/init/ResModelInit.js";
+import { Col, Row } from "react-bootstrap";
+import { formatUtils } from '../../utils/FormatUtils';
 
-// TODO remove resModel, use props
-
-class PortfolioPie extends Component {
+class InsightsCard extends Component {
   constructor(props) {
     super(props);
     this.getTradingProfit = this.getTradingProfit.bind(this);
-    this.state = {
-      chartOptions: null
-    };
-  }
-
-  // safely change state here
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-        chartOptions: null
-    });
   }
 
   getTradingProfit(props) {
-    //let newestFirst = props.userModel.transactions.slice(0, props.userModel.transactions.length);
-    //newestFirst.sort((a, b) => b.time.getTime() - a.time.getTime());
     let totalProfit = 0;
     for (let tx of props.userModel.transactions) {
       if (tx.isTrade) {
@@ -60,10 +43,6 @@ class PortfolioPie extends Component {
   getExposureToCryptoPercentage(props, currentPortfolio, totalBalance) {
     let totalCryptoBalance = currentPortfolio.getTotalCryptoBalance(props.resModel, props.resModel.usd);
     return totalCryptoBalance / totalBalance * 100;
-  }
-
-  getWithdrawn() {
-
   }
 
   toShortFormatStyled(value) {
@@ -164,4 +143,4 @@ class PortfolioPie extends Component {
   }
 }
 
-export default PortfolioPie;
+export default InsightsCard;

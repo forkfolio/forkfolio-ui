@@ -4,8 +4,7 @@ import ReactTable from "react-table";
 import Highstock from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 import Card from "components/Card/Card.jsx";
-import PortfolioPie from './common/PortfolioPie';
-import StatsPanel from './common/StatsPanel';
+import InsightsCard from './common/InsightsCard';
 import HelpCard from './common/HelpCard';
 import { formatUtils } from './../utils/FormatUtils';
 import { rangeSelectorModel } from "../model/init/ResModelInit.js";
@@ -206,7 +205,7 @@ class PortfolioView extends Component {
               />
             </Col>
             <Col md={4}>
-              <StatsPanel
+              <InsightsCard
                 title="Portfolio insights"
                 portfolio={this.props.userModel.portfolios.slice(-1)[0]}
                 resModel={this.props.resModel}
