@@ -126,7 +126,7 @@ class Dashboard extends Component {
           this.setState({
             userModel: newModel,
             resModel: this.state.resModel.clone()
-          })
+          });
         }
       });
     }
@@ -219,12 +219,6 @@ class Dashboard extends Component {
           repacked.push(new Ticker(pair, t.l, new Date(parseInt(t.t, 10) * 1000)));
         }
         resModel.dailyTickers.set(currency, repacked);
-  
-        // after updating ether, add tickers for usd (use ETH times)
-        // TODO: if no eth in portfoli, it's a bug
-        if(currency.code === 'ETH') {
-          resModel.calculateUsdTickers(currency);
-        }
         accept();
         return;
       });

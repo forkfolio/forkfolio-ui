@@ -117,7 +117,7 @@ class PortfolioPie extends Component {
                     </tr>
                     <tr>
                       <td></td>
-                      <td className="text-right">100.00%</td>
+                      <td></td>
                       <td className="text-right">{this.toShortFormatStyled(totalProfit)}</td>
                     </tr>
                   </tbody>

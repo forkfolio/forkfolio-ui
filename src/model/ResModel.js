@@ -81,18 +81,6 @@ export default class ResModel {
     return 0;
   }
 
-  // puts usd tickers at value 1 for all the timestamps in other
-  calculateUsdTickers(other) {
-    const usdTickers = [];
-    const usd_usd = new CurrencyPair(this.usd, this.usd);
-    for(let t of this.dailyTickers.get(other)) {
-      usdTickers.push(new Ticker(usd_usd, 1, new Date(t.time.getTime())));
-    }
-    this.dailyTickers.set(this.usd, usdTickers);
-    console.log("Usd tickers calculated. " + usdTickers.length + " USD tickers added.");
-    //console.log(this.currencyTickers.get(this.usd))
-  }
-
   findCurrencyByCode(code) {
     for (const key of this.dailyTickers.keys()) {
       if(key.code === code) {
