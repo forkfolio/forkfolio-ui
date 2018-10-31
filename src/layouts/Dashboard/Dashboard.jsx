@@ -368,10 +368,13 @@ class Dashboard extends Component {
   }
 
   addTransaction(tx) {
+    let isOldest = true, hasNewBalance = true;
     // check if historic prices need to be updated
-    let firstDate = new Date(this.state.userModel.portfolios[1].genesisTx.time);
-    let isOldest = this.getDaysSince(new Date(tx.time)) > this.getDaysSince(firstDate);
-    let hasNewBalance = !this.state.userModel.portfolios.slice(-1)[0].balances.has(tx.pair.base);
+    if(this.state.userModel.portfolios[1] != null) {
+      let firstDate = new Date(this.state.userModel.portfolios[1].genesisTx.time);
+      isOldest = this.getDaysSince(new Date(tx.time)) > this.getDaysSince(firstDate);
+      hasNewBalance = !this.state.userModel.portfolios.slice(-1)[0].balances.has(tx.pair.base);
+    }
 
     // add transaction and sort
     this.state.userModel.transactions.push(tx);
