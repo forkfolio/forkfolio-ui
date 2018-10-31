@@ -35,14 +35,6 @@ class PortfolioView extends Component {
   getTableColumns() {
     const tableColumns = [
       { Header: "Name", accessor: "name", maxWidth: 180, },
-      { Header: "Balance", accessor: "balance", maxWidth: 160, sortable: false, 
-      Cell: row => (
-        <span style={{
-          float: "right"
-        }}>
-          {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
-        </span>
-      )},
       { Header: "Price", accessor: "price", maxWidth: 120,
       Cell: row => (
         <span style={{
@@ -54,6 +46,14 @@ class PortfolioView extends Component {
       sortMethod: (a, b) => {
         return b - a;
       }},
+      { Header: "Balance", accessor: "balance", maxWidth: 160, sortable: false, 
+      Cell: row => (
+        <span style={{
+          float: "right"
+        }}>
+          {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
+        </span>
+      )},
       { Header: "Share", accessor: "share", maxWidth: 80, 
       Footer: (
         <span style={{
@@ -103,15 +103,15 @@ class PortfolioView extends Component {
     for (let [k, v] of currentPortfolio.balances) {
       let currencyBalance = currentPortfolio.getCurrencyBalance(props.resModel, k, props.resModel.usd);
       let name = k.name;
-      let balance = [v, k.code];
       let price = props.resModel.getLastPrice(k, props.resModel.usd);
+      let balance = [v, k.code];
       let share = (currencyBalance / totalBalance * 100);
       let total = currencyBalance;
       tableData.push({
         id: tableData.length, 
         name: name, 
-        balance: balance,
         price: price,
+        balance: balance,
         share: share,
         total: total
       });
