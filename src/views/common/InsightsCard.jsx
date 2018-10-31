@@ -46,7 +46,10 @@ class InsightsCard extends Component {
   }
 
   toShortFormatStyled(value) {
+    value = isNaN(value) ? 0 : value;
+    value = Math.abs(value) < 0.0001 ? 0 : value;
     let style1 = "font-" + (value >= 0 ? "green" : "red" );
+    style1 = Math.abs(value) < 0.001 ? "" : style1;
     return (
       <div className={style1}>
         {formatUtils.toShortFormat(value)}
@@ -55,9 +58,10 @@ class InsightsCard extends Component {
   }
 
   toDecimalFormatStyled(value, addon) {
-    let style1 = "font-" + (value >= 0 ? "green" : "red" );
+    value = isNaN(value) ? 0 : value;
+    value = Math.abs(value) < 0.0001 ? 0 : value;
     return (
-      <div className={style1}>
+      <div>
         {formatUtils.formatNumber(value, 2) + addon}
       </div>
     );
@@ -124,7 +128,7 @@ class InsightsCard extends Component {
                   </tr>
                   <tr>
                     <td>Exposure to crypto</td>
-                    <td className="text-right">{formatUtils.formatNumber(exposureToCrypto, 2)}%</td>
+                    <td className="text-right">{this.toDecimalFormatStyled(exposureToCrypto, '%')}</td>
                   </tr>
                 </tbody>
               </table>
