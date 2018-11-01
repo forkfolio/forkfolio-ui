@@ -6889,7 +6889,7 @@ form label.radio, form label.checkbox {
   border-radius: 0; }
   .navbar .navbar-minimize {
     float: left;
-    margin: 3px 15px; }
+    margin: 0px 15px; }
   .navbar .navbar-brand {
     color: #666666;
     font-weight: 400;
@@ -6899,7 +6899,7 @@ form label.radio, form label.checkbox {
     text-transform: capitalize; }
   .navbar .navbar-nav > li > a {
     padding: 10px 15px;
-    margin: 10px 3px;
+    margin: 5px 3px;
     position: relative; }
   .navbar .navbar-nav > li > a.btn {
     margin: 15px 3px;
