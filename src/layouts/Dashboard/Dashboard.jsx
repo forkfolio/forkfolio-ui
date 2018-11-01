@@ -178,7 +178,6 @@ class Dashboard extends Component {
   getCurrenciesToFetch(userModel) {
     let currentPortfolio = userModel.portfolios.slice(-1)[0];
     let currencies = [];
-    console.log(currentPortfolio.balances)
     for (const k of currentPortfolio.balances.keys()) {
       currencies.push(k);
     }

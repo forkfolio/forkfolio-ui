@@ -24,23 +24,33 @@ export default class Portfolio {
             this.balances = new Map(this.previous.balances);
         }
         if(this.genesisTx !== null) {
+            // add usd to balances only if not funding
+            let isNotFunding = this.genesisTx.pair.counter.code !== 'USD' || 
+            (this.genesisTx.pair.counter.code === 'USD' && this.genesisTx.isTrade);
+
             // if no base and counter in map, add them first
             if(this.balances.get(this.genesisTx.pair.base) === undefined) {
                 this.balances.set(this.genesisTx.pair.base, 0);
             }
             if(this.balances.get(this.genesisTx.pair.counter) === undefined) {
-                this.balances.set(this.genesisTx.pair.counter, 0);
+                if(isNotFunding) {
+                    this.balances.set(this.genesisTx.pair.counter, 0);
+                }
             }
 
             // then do the calculation
             if(this.genesisTx.isBuy) {
                 //  add base and subtract counter
                 this.balances.set(this.genesisTx.pair.base, this.balances.get(this.genesisTx.pair.base) + this.genesisTx.baseAmount);
-                this.balances.set(this.genesisTx.pair.counter, this.balances.get(this.genesisTx.pair.counter) - this.genesisTx.counterAmount);
+                if(isNotFunding) {
+                    this.balances.set(this.genesisTx.pair.counter, this.balances.get(this.genesisTx.pair.counter) - this.genesisTx.counterAmount);
+                }
             } else {
                 //  subtract base and add counter
                 this.balances.set(this.genesisTx.pair.base, this.balances.get(this.genesisTx.pair.base) - this.genesisTx.baseAmount);
-                this.balances.set(this.genesisTx.pair.counter, this.balances.get(this.genesisTx.pair.counter) + this.genesisTx.counterAmount);
+                if(isNotFunding) {
+                    this.balances.set(this.genesisTx.pair.counter, this.balances.get(this.genesisTx.pair.counter) + this.genesisTx.counterAmount);
+                }
             }            
         }
     }
