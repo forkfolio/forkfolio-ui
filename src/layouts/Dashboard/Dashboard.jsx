@@ -68,8 +68,8 @@ class Dashboard extends Component {
     this.fetchHistoday = this.fetchHistoday.bind(this);
 
     this.newPortfolio = this.newPortfolio.bind(this);
-    this.uploadPortfolioFromFile = this.uploadPortfolioFromFile.bind(this);
-    this.downloadPortfolio = this.downloadPortfolio.bind(this);
+    this.openPortfolio = this.openPortfolio.bind(this);
+    this.savePortfolio = this.savePortfolio.bind(this);
     this.saveCurrentAndCreateNewPortfolio = this.saveCurrentAndCreateNewPortfolio.bind(this);
 
     // check if cookie is not set, then it's the first load
@@ -130,30 +130,6 @@ class Dashboard extends Component {
         }
       });
     }
-  }
-  
-  updateUserModel(fileFormatTransactions) {
-    // got through file transactions, and create objects from pair strings
-    let transactions = [];
-    for(let t of fileFormatTransactions) {
-      let pairStr = t.pair.split('/');
-      let base = resModel.findCurrencyByCode(pairStr[0]);
-      let counter = resModel.findCurrencyByCode(pairStr[1]);
-      if(base !== null && counter !== null) {
-        let pair = new CurrencyPair(base, counter);
-        let tx = new Transaction(t.isTrade, t.isBuy, pair, t.baseAmount, t.counterAmount, new Date(t.time), t.comment);
-        transactions.push(tx);
-      }
-    }
-    
-    // update userModel with new transactions
-    let newModel = new UserModel(transactions, this.state.resModel);
-    this.setState({
-      userModel: newModel,
-      changeCount: 0
-    });
-
-    return newModel;
   }
   
   // fetches a list of all curencies, crypto and fiat, and stores them in resModel
@@ -229,23 +205,9 @@ class Dashboard extends Component {
     this.setState({ 
       _notificationSystem: this.refs.notificationSystem,
     });
-    /*if (navigator.platform.indexOf("Win") > -1) {
-      ps = new PerfectScrollbar(this.refs.mainPanel);
-    }  */
-  }
-
-  componentWillUnmount() {
-    /*if (navigator.platform.indexOf("Win") > -1) {
-      ps.destroy();
-    }*/
   }
 
   componentDidUpdate(e) {
-    /*if (navigator.platform.indexOf("Win") > -1) {
-      setTimeout(() => {
-        ps.update();
-      }, 350);
-    }*/
     if (e.history.action === "PUSH") {
       document.documentElement.scrollTop = 0;
       document.scrollingElement.scrollTop = 0;
@@ -261,13 +223,26 @@ class Dashboard extends Component {
   }
 
   componentWillMount() {
-    let firstDate = new Date(portfolioTransactions[0].time);
-    let daysSince = this.getDaysSince(firstDate);
+    // load to local storage
+    let portfolioStringified = localStorage.getItem('portfolio01');
+
 
     // start fetching prices based on user model
     this.fetchCurrencies().then(() => {
-      this.updateUserModel(portfolioTransactions);
-      this.fetchAllAndRender(this.getCurrenciesToFetch(this.state.userModel), daysSince + 2);
+      let newModel;
+      if(portfolioStringified !== '') {
+        newModel = this.updateUserModel(JSON.parse(portfolioStringified).transactions);
+        console.log('Loaded portfolio from local storage.')
+      } else {
+        newModel = this.updateUserModel(portfolioTransactions);
+        console.log('Loaded default portfolio.')
+      }
+
+      let firstDate = new Date(newModel.transactions[0].time);
+      let daysSince = this.getDaysSince(firstDate);
+  
+
+      this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), daysSince + 2);
       // start checking recent prices periodically
       setInterval(this.fetchRecentPrices, 2000);
     });
@@ -382,13 +357,17 @@ class Dashboard extends Component {
       userModel: newModel,
       changeCount: this.state.changeCount + 1
     });
-    console.log("Transaction added. " + newModel.transactions.length + " transactions in user model.");
+
+    // save to local storage
+    localStorage.setItem('portfolio01', this.getPortfolioStringified(newModel));
 
     // updade historic prices if needed
     if(hasNewBalance || isOldest) {
       let firstDate = newModel.portfolios[1].genesisTx.time;
       this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), this.getDaysSince(firstDate) + 2);
     }
+
+    console.log("Transaction added. " + newModel.transactions.length + " transactions in user model.");
   }
 
   updateTransaction(tx) {
@@ -412,13 +391,17 @@ class Dashboard extends Component {
       userModel: newModel,
       changeCount: this.state.changeCount + 1
     });
-    console.log("Transaction added. " + newModel.transactions.length + " transactions in user model.");
+
+    // save to local storage
+    localStorage.setItem('portfolio01', this.getPortfolioStringified(newModel));
 
     // updade historic prices if needed
     if(hasNewBalance || isOldest) {
       let firstDate = newModel.portfolios[1].genesisTx.time;
       this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), this.getDaysSince(firstDate) + 2);
     }
+
+    console.log("Transaction added. " + newModel.transactions.length + " transactions in user model.");
   }
 
   removeTransaction(tx) {
@@ -441,13 +424,17 @@ class Dashboard extends Component {
       userModel: newModel,
       changeCount: this.state.changeCount + 1
     });
-    console.log("Transaction removed. " + newModel.transactions.length + " transactions in user model.");
+
+    // save to local storage
+    localStorage.setItem('portfolio01', this.getPortfolioStringified(newModel));
 
     // updade historic prices if needed
     if(hasNewBalance || isOldest) {
       let firstDate = newModel.portfolios[1].genesisTx.time;
       this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), this.getDaysSince(firstDate) + 2);
     }
+
+    console.log("Transaction removed. " + newModel.transactions.length + " transactions in user model.");
   }
 
   setEditedTransaction(tx) {
@@ -465,16 +452,32 @@ class Dashboard extends Component {
       this.updateUserModel([]);
       this.setState({ isConfirmNewPortfolioDialogShown: false });
 
+      // save to local storage
+      localStorage.setItem('portfolio01', '');
+
       ReactGA.event({category: 'User', action: 'New'});
     }
   }
 
   saveCurrentAndCreateNewPortfolio() {
-    this.downloadPortfolio();
+    this.savePortfolio();
     this.newPortfolio();
   }
 
-  uploadPortfolioFromFile(files) {
+
+  updateUserModel(fileFormatTransactions) {
+    let transactions = this.stringifiedToObjectsTransactions(fileFormatTransactions);
+    // update userModel with new transactions
+    let newModel = new UserModel(transactions, this.state.resModel);
+    this.setState({
+      userModel: newModel,
+      changeCount: 0
+    });
+
+    return newModel;
+  }
+
+  openPortfolio(files) {
     const reader = new FileReader();
     reader.addEventListener("load", () => {
       // TODO: check if format ok, version number
@@ -482,35 +485,21 @@ class Dashboard extends Component {
       let firstDate = newModel.portfolios[1].genesisTx.time;
       this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), this.getDaysSince(firstDate) + 2);
 
+      // save to local storage
+      localStorage.setItem('portfolio01', this.getPortfolioStringified(newModel));
+
       ReactGA.event({category: 'User', action: 'Open'});
     }, false);
     if (files.length > 0) {
       reader.readAsText(files[0]);
     } else {
-      //this.props.showError(new InputValidationError("Portfolio file should be in JSON file format."));
+      //this.props.showError(new InpulidationError("Portfolio file should be in JSON file format."));
     }
   }
 
-  downloadPortfolio() {
-    let fileTransactions = [];
-    for(let t of this.state.userModel.transactions) {
-      let trade = {
-        isTrade: t.isTrade,
-        isBuy: t.isBuy,
-        pair: t.pair.base.code + "/" + t.pair.counter.code,
-        baseAmount: t.baseAmount,
-        counterAmount: t.counterAmount,
-        time: t.time.getTime(),
-        comment: t.comment
-      }
-      fileTransactions.push(trade);
-    }
-    let portfolioFile = {
-      version: 1,
-      transactions: fileTransactions
-    }
-    let formattedFile = JSON.stringify(portfolioFile, null, "\t");
-    let file = new File([formattedFile], "portfolio" + fileTransactions.length + ".json", {type: "text/plain;charset=utf-8"});
+  savePortfolio() {
+    let portfolioStringified = this.getPortfolioStringified(this.state.userModel);
+    let file = new File([portfolioStringified], "portfolio" + this.state.userModel.transactions.length + ".json", {type: "text/plain;charset=utf-8"});
     FileSaver.saveAs(file);
 
     this.setState({
@@ -518,6 +507,45 @@ class Dashboard extends Component {
     });
 
     ReactGA.event({category: 'User', action: 'Save'});
+  }
+
+  getPortfolioStringified(userModel) {
+    let fileTransactions = [];
+    for(let tx of userModel.transactions) {
+      let trade = {
+        isTrade: tx.isTrade,
+        isBuy: tx.isBuy,
+        pair: tx.pair.base.code + "/" + tx.pair.counter.code,
+        baseAmount: tx.baseAmount,
+        counterAmount: tx.counterAmount,
+        time: tx.time.getTime(),
+        comment: tx.comment
+      }
+      fileTransactions.push(trade);
+    }
+    let portfolioFile = {
+      version: 1,
+      transactions: fileTransactions
+    }
+
+    return JSON.stringify(portfolioFile, null, "\t");
+  }
+
+  stringifiedToObjectsTransactions(fileFormatTransactions) {
+    // got through file transactions, and create objects from pair strings
+    let transactions = [];
+    for(let t of fileFormatTransactions) {
+      let pairStr = t.pair.split('/');
+      let base = resModel.findCurrencyByCode(pairStr[0]);
+      let counter = resModel.findCurrencyByCode(pairStr[1]);
+      if(base !== null && counter !== null) {
+        let pair = new CurrencyPair(base, counter);
+        let tx = new Transaction(t.isTrade, t.isBuy, pair, t.baseAmount, t.counterAmount, new Date(t.time), t.comment);
+        transactions.push(tx);
+      }
+    }
+
+    return transactions;
   }
 
   render() {
@@ -542,8 +570,8 @@ class Dashboard extends Component {
         <NotificationSystem ref="notificationSystem" style={style} />
         <Sidebar {...this.props}
           newPortfolio={this.newPortfolio} 
-          uploadPortfolioFromFile={this.uploadPortfolioFromFile} 
-          downloadPortfolio={this.downloadPortfolio} 
+          uploadPortfolioFromFile={this.openPortfolio} 
+          downloadPortfolio={this.savePortfolio} 
           showHelpPanel={this.showHelpPanel} 
           userModel={this.state.userModel}
           resModel={this.state.resModel}
