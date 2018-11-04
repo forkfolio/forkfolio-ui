@@ -172,3 +172,9 @@ legend{
 .font-green {
 	color: #1b9a78;
 }
+
+@media screen and (max-width:767px) {
+	.table-responsive {
+		border: 0px;
+	}
+}

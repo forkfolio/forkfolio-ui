@@ -5739,6 +5739,10 @@ legend {
 .font-green {
   color: #1b9a78; }
 
+@media screen and (max-width: 767px) {
+  .table-responsive {
+    border: 0px; } }
+
 .form-control::-moz-placeholder {
   color: #C3C3C3;
   opacity: 1;
@@ -8876,7 +8880,6 @@ form label.radio, form label.checkbox {
   .table-responsive {
     width: 100%;
     margin-bottom: 15px;
-    overflow-x: scroll;
     overflow-y: hidden;
     -ms-overflow-style: -ms-autohiding-scrollbar;
     -webkit-overflow-scrolling: touch; }
