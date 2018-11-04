@@ -74,7 +74,6 @@ class EditTradeDialog extends CommonTradeDialog {
       console.log("All inputs valid. Saving trade.."); 
 
       let pair = new CurrencyPair(this.state.buyCurrency.value, this.state.sellCurrency.value);
-      // TODO not always isBuy = true
       let tx = new Transaction(true, this.state.editedTransaction.isBuy, pair, parseFloat(this.state.buyAmount), parseFloat(this.state.sellAmount), this.state.date, this.state.comment);
       this.props.updateTransaction(tx);
       this.props.hideDialog();

@@ -31,7 +31,8 @@ class PerformanceView extends Component {
   // safely change state here
   componentWillReceiveProps(nextProps) {
     console.log("componentWillReceiveProps PerformanceView")
-    let portfolios = this.getBestCurrentWorstPortfolio(nextProps, 90); // TODO 90 should be from props, move up 
+    // TODO 90 should be from props, move up 
+    let portfolios = this.getBestCurrentWorstPortfolio(nextProps, 90); 
     this.setState({
       bestPortfolio: portfolios.best,
       currentPortfolio: portfolios.current,
@@ -52,6 +53,7 @@ class PerformanceView extends Component {
 
   getBestCurrentWorstPortfolio(props, days) {
 
+    // TODO: what's this
     let since = new Date(2018,4,28);
     since.setHours(2,0,0,0);
     //console.log(since)

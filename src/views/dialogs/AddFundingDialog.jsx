@@ -49,7 +49,6 @@ class AddFundingDialog extends CommonFundingDialog {
       console.log("All inputs valid. Saving funding.."); 
 
       let pair = new CurrencyPair(this.state.currency.value, this.props.resModel.usd);
-      // TODO not always isBuy = true
       let tx = new Transaction(false, this.state.isDeposit, pair, parseFloat(this.state.amount), 0, this.state.date, this.state.comment);
       this.props.addTransaction(tx);
       this.props.hideDialog();

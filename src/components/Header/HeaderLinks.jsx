@@ -7,8 +7,6 @@ import { formatUtils } from './../../utils/FormatUtils';
 
 class HeaderLinks extends Component {
 
-
-
   getTotalBalance() {
     if(this.props.userModel != null) {
       let currentPortfolio = this.props.userModel.portfolios.slice(-1)[0];
@@ -17,8 +15,6 @@ class HeaderLinks extends Component {
 
     return 0;
   }
-
-  // TODO: bigger font
 
   render() {
     return (

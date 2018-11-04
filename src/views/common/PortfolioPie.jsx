@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Card from "components/Card/Card.jsx";
-//import { resModel } from "../../model/init/ResModelInit.js";
-
-// TODO remove resModel, use props
 
 class PortfolioPie extends Component {
   constructor(props) {

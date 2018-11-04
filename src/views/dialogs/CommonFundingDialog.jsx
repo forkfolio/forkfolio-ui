@@ -61,8 +61,6 @@ class CommonFundingDialog extends Component {
     return !isInvalid;
   }
 
-  // TODO: on first load resModel empty, it's a bug, deposit currencies select is empty
-
   getDepositCurrencies() {
     const currencies = [];
     for (let c of this.props.resModel.dailyTickers.keys()) {

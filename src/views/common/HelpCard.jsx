@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import Card from "components/Card/Card.jsx";
 import { Grid, Row, Col } from "react-bootstrap";
 import Button from "components/CustomButton/CustomButton.jsx";
-//import { resModel } from "../../model/init/ResModelInit.js";
-
-// TODO remove resModel, use props
 
 class HelpCard extends Component {
    render() {
