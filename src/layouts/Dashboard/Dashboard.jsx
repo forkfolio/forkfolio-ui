@@ -219,7 +219,6 @@ class Dashboard extends Component {
   componentWillMount() {
     // load to local storage
     let portfolioJson = localStorage.getItem('portfolio01');
-    console.log(portfolioJson);
 
     // start fetching prices based on user model
     this.fetchCurrencies().then(() => {
