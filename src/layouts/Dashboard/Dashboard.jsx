@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-// this is used to create scrollbars on windows devices like the ones from apple devices
-import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 // react component that creates notifications (like some alerts with messages)
 import NotificationSystem from "react-notification-system";
@@ -27,12 +25,9 @@ import { config } from "../../config/Config.js";
 import FileSaver from 'file-saver';
 import cookie from 'react-cookies';
 import ConfirmNewPortfolioDialog from "../../views/dialogs/ConfirmNewPortfolioDialog";
-import Beforeunload from 'react-beforeunload';
 import ReactGA from 'react-ga';
 import moment from 'moment';
 
-
-var ps;
 
 class Dashboard extends Component {
   constructor(props) {
@@ -104,8 +99,7 @@ class Dashboard extends Component {
   fetchRecentPrices() {
     let currencies = this.getCurrenciesToFetch(this.state.userModel);
     if(currencies.length > 0) {
-      fetch(config.restURL + 'recent?tokens=' + this.toTokensString(currencies))
-      .then((response) => {
+      fetch(config.restURL + 'recent?tokens=' + this.toTokensString(currencies)).then((response) => {
         return response.text()
       }).then((body) => {
         let tickers = JSON.parse(body);
@@ -116,7 +110,7 @@ class Dashboard extends Component {
             newPrice !== resModel.recentTickers.get(currencies[i]).price) {
             let pair = new CurrencyPair(currencies[i], resModel.usd);
             resModel.recentTickers.set(currencies[i], new Ticker(pair, newPrice, new Date(parseInt(tickers[i].t, 10) * 1000)))
-            count++
+            count++;
           }
         }
         // if there is update, render
@@ -224,17 +218,18 @@ class Dashboard extends Component {
 
   componentWillMount() {
     // load to local storage
-    let portfolioStringified = localStorage.getItem('portfolio01');
-
+    let portfolioJson = localStorage.getItem('portfolio01');
+    console.log(portfolioJson);
 
     // start fetching prices based on user model
     this.fetchCurrencies().then(() => {
       let newModel;
-      if(portfolioStringified !== '') {
-        newModel = this.updateUserModel(JSON.parse(portfolioStringified).transactions);
+      if(portfolioJson != null) {
+        let portfolioObject = JSON.parse(portfolioJson);
+        newModel = this.updateUserModel(portfolioObject.transactions, portfolioObject.changeCount);
         console.log('Loaded portfolio from local storage.')
       } else {
-        newModel = this.updateUserModel(portfolioTransactions);
+        newModel = this.updateUserModel(portfolioTransactions, 0);
         console.log('Loaded default portfolio.')
       }
 
@@ -353,13 +348,14 @@ class Dashboard extends Component {
 
     // update userModel
     let newModel = new UserModel(this.state.userModel.transactions, this.state.resModel);
+    let newChangeCount = this.state.changeCount + 1;
     this.setState({
       userModel: newModel,
-      changeCount: this.state.changeCount + 1
+      changeCount: newChangeCount
     });
 
     // save to local storage
-    localStorage.setItem('portfolio01', this.getPortfolioStringified(newModel));
+    localStorage.setItem('portfolio01', this.getPortfolioJson(newModel, newChangeCount));
 
     // updade historic prices if needed
     if(hasNewBalance || isOldest) {
@@ -387,13 +383,14 @@ class Dashboard extends Component {
 
     // update userModel
     let newModel = new UserModel(newTransactions, this.state.resModel);
+    let newChangeCount = this.state.changeCount + 1;
     this.setState({
       userModel: newModel,
-      changeCount: this.state.changeCount + 1
+      changeCount: newChangeCount
     });
 
     // save to local storage
-    localStorage.setItem('portfolio01', this.getPortfolioStringified(newModel));
+    localStorage.setItem('portfolio01', this.getPortfolioJson(newModel, newChangeCount));
 
     // updade historic prices if needed
     if(hasNewBalance || isOldest) {
@@ -420,13 +417,14 @@ class Dashboard extends Component {
   
     // update userModel
     let newModel = new UserModel(newTransactions, this.state.resModel);
+    let newChangeCount = this.state.changeCount + 1;
     this.setState({
       userModel: newModel,
-      changeCount: this.state.changeCount + 1
+      changeCount: newChangeCount
     });
 
     // save to local storage
-    localStorage.setItem('portfolio01', this.getPortfolioStringified(newModel));
+    localStorage.setItem('portfolio01', this.getPortfolioJson(newModel, newChangeCount));
 
     // updade historic prices if needed
     if(hasNewBalance || isOldest) {
@@ -449,11 +447,13 @@ class Dashboard extends Component {
       });
     } else {
       console.log("New portfolio created");
-      this.updateUserModel([]);
-      this.setState({ isConfirmNewPortfolioDialogShown: false });
+      // save to model
+      this.updateUserModel([], 0);
 
       // save to local storage
       localStorage.setItem('portfolio01', '');
+
+      this.setState({ isConfirmNewPortfolioDialogShown: false });
 
       ReactGA.event({category: 'User', action: 'New'});
     }
@@ -465,13 +465,13 @@ class Dashboard extends Component {
   }
 
 
-  updateUserModel(fileFormatTransactions) {
+  updateUserModel(fileFormatTransactions, changeCount) {
     let transactions = this.stringifiedToObjectsTransactions(fileFormatTransactions);
     // update userModel with new transactions
     let newModel = new UserModel(transactions, this.state.resModel);
     this.setState({
       userModel: newModel,
-      changeCount: 0
+      changeCount: changeCount
     });
 
     return newModel;
@@ -481,12 +481,17 @@ class Dashboard extends Component {
     const reader = new FileReader();
     reader.addEventListener("load", () => {
       // TODO: check if format ok, version number
-      let newModel = this.updateUserModel(JSON.parse(reader.result).transactions);
-      let firstDate = newModel.portfolios[1].genesisTx.time;
-      this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), this.getDaysSince(firstDate) + 2);
 
       // save to local storage
-      localStorage.setItem('portfolio01', this.getPortfolioStringified(newModel));
+      localStorage.setItem('portfolio01', reader.result);
+
+      // parse json string to object
+      let portfolioObj = JSON.parse(reader.result);
+
+      // set new model, and get prices
+      let newModel = this.updateUserModel(portfolioObj.transactions, 0);
+      let firstDate = newModel.portfolios[1].genesisTx.time;
+      this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), this.getDaysSince(firstDate) + 2);
 
       ReactGA.event({category: 'User', action: 'Open'});
     }, false);
@@ -498,8 +503,14 @@ class Dashboard extends Component {
   }
 
   savePortfolio() {
-    let portfolioStringified = this.getPortfolioStringified(this.state.userModel);
-    let file = new File([portfolioStringified], "portfolio" + this.state.userModel.transactions.length + ".json", {type: "text/plain;charset=utf-8"});
+    // create json string
+    let portfolioJson = this.getPortfolioJson(this.state.userModel, 0);
+
+    // save to local storage
+    localStorage.setItem('portfolio01', portfolioJson);
+
+    // save to file
+    let file = new File([portfolioJson], "portfolio" + this.state.userModel.transactions.length + ".json", {type: "text/plain;charset=utf-8"});
     FileSaver.saveAs(file);
 
     this.setState({
@@ -509,7 +520,7 @@ class Dashboard extends Component {
     ReactGA.event({category: 'User', action: 'Save'});
   }
 
-  getPortfolioStringified(userModel) {
+  getPortfolioJson(userModel, changeCount) {
     let fileTransactions = [];
     for(let tx of userModel.transactions) {
       let trade = {
@@ -525,7 +536,8 @@ class Dashboard extends Component {
     }
     let portfolioFile = {
       version: 1,
-      transactions: fileTransactions
+      transactions: fileTransactions,
+      changeCount: changeCount
     }
 
     return JSON.stringify(portfolioFile, null, "\t");
@@ -561,12 +573,6 @@ class Dashboard extends Component {
 
     return (
       <div className="wrapper">
-        <Beforeunload onBeforeunload={e => { 
-          if(this.state.changeCount > 0) {
-            e.preventDefault();
-            e.returnValue = '';
-          }
-        }} />
         <NotificationSystem ref="notificationSystem" style={style} />
         <Sidebar {...this.props}
           newPortfolio={this.newPortfolio} 

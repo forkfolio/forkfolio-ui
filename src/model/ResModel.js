@@ -1,8 +1,5 @@
 /*jshint esversion: 6 */
 
-import Ticker from './Ticker' 
-import CurrencyPair from './CurrencyPair' 
-
 export default class ResModel {
   constructor() {
     this.usd = null;
