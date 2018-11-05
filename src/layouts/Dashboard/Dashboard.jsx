@@ -223,7 +223,7 @@ class Dashboard extends Component {
     // start fetching prices based on user model
     this.fetchCurrencies().then(() => {
       let newModel;
-      if(portfolioJson != null) {
+      if(portfolioJson != null && portfolioJson !== '') {
         let portfolioObject = JSON.parse(portfolioJson);
         newModel = this.updateUserModel(portfolioObject.transactions, portfolioObject.changeCount);
         console.log('Loaded portfolio from local storage.')
