@@ -1,0 +1,1320 @@
+﻿{
+	"version": 1,
+	"transactions": [
+		{
+			"isTrade": false,
+			"isBuy": true,
+			"pair": "USD/USD",
+			"baseAmount": 1000,
+			"counterAmount": 0,
+			"time": 1484607600000,
+			"comment": "Live cash"
+		},
+		{
+			"isTrade": false,
+			"isBuy": true,
+			"pair": "REP/USD",
+			"baseAmount": 14,
+			"counterAmount": 0,
+			"time": 1484607600000,
+			"comment": "null"
+		},
+		{
+			"isTrade": false,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 130,
+			"counterAmount": 0,
+			"time": 1484607600000,
+			"comment": "ICO ether"
+		},
+		{
+			"isTrade": false,
+			"isBuy": true,
+			"pair": "BTC/USD",
+			"baseAmount": 1,
+			"counterAmount": 0,
+			"time": 1484607600000,
+			"comment": "holding from 2013, mined"
+		},
+		{
+			"isTrade": false,
+			"isBuy": true,
+			"pair": "USD/USD",
+			"baseAmount": 1000,
+			"counterAmount": 0,
+			"time": 1484607600000,
+			"comment": "Extra cash"
+		},
+		{
+			"isTrade": false,
+			"isBuy": true,
+			"pair": "MAID/USD",
+			"baseAmount": 692,
+			"counterAmount": 0,
+			"time": 1484607600000,
+			"comment": "Maid holdings"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 32.5,
+			"counterAmount": 1387,
+			"time": 1489532400000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "USD/USD",
+			"baseAmount": 37.96,
+			"counterAmount": 0,
+			"time": 1489791600000,
+			"comment": "Profit taking"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 8,
+			"counterAmount": 313,
+			"time": 1489878000000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "REP/BTC",
+			"baseAmount": 10.08,
+			"counterAmount": 0.1142,
+			"time": 1490997600000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "BTC/BTC",
+			"baseAmount": 0.0978,
+			"counterAmount": 0,
+			"time": 1491343200000,
+			"comment": "BCU profit"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/BTC",
+			"baseAmount": 9.14,
+			"counterAmount": 0.33378,
+			"time": 1491688800000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "REP/BTC",
+			"baseAmount": 9.1,
+			"counterAmount": 0.1,
+			"time": 1494885600000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/BTC",
+			"baseAmount": 2.8,
+			"counterAmount": 0.2,
+			"time": 1495404000000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/BTC",
+			"baseAmount": 2.86,
+			"counterAmount": 0.11242,
+			"time": 1495404000000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "USD/USD",
+			"baseAmount": 288,
+			"counterAmount": 0,
+			"time": 1495663200000,
+			"comment": "profit taking"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "USD/USD",
+			"baseAmount": 53.1,
+			"counterAmount": 0,
+			"time": 1495836000000,
+			"comment": "profit taking"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 10,
+			"counterAmount": 1520,
+			"time": 1495836000000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "MAID/BTC",
+			"baseAmount": 692.36,
+			"counterAmount": 0.12648,
+			"time": 1496700000000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 8.4,
+			"counterAmount": 2089.82,
+			"time": 1496786400000,
+			"comment": "hedge 2"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "BTC/USD",
+			"baseAmount": 0.078,
+			"counterAmount": 230.46,
+			"time": 1496786400000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "BAT/BTC",
+			"baseAmount": 2022.9,
+			"counterAmount": 0.2,
+			"time": 1496786400000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 22.8,
+			"counterAmount": 8550,
+			"time": 1497304800000,
+			"comment": "hedge 3"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 12,
+			"counterAmount": 3048,
+			"time": 1498860000000,
+			"comment": "hedge 3 buyback 1/3"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 8,
+			"counterAmount": 1968,
+			"time": 1499378400000,
+			"comment": "hedge 3 buyback 2/3"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "BAT/USD",
+			"baseAmount": 4601,
+			"counterAmount": 500,
+			"time": 1499378400000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "USD/USD",
+			"baseAmount": 100.7,
+			"counterAmount": 0,
+			"time": 1499637600000,
+			"comment": "profit taking"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "REP/USD",
+			"baseAmount": 12,
+			"counterAmount": 199.56,
+			"time": 1499724000000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 2.8,
+			"counterAmount": 574,
+			"time": 1499724000000,
+			"comment": "hedge 3 buyback 3/3"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 9.94,
+			"counterAmount": 2089,
+			"time": 1499724000000,
+			"comment": "hedge 2 buyback"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 2,
+			"counterAmount": 370,
+			"time": 1499724000000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "USD/USD",
+			"baseAmount": 13.2,
+			"counterAmount": 0,
+			"time": 1499810400000,
+			"comment": "profit taking"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "BTC/USD",
+			"baseAmount": 0.47268,
+			"counterAmount": 986.5,
+			"time": 1499810400000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/ETH",
+			"baseAmount": 0.10800000000000001,
+			"counterAmount": 0,
+			"time": 1499810400000,
+			"comment": "profit taking"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "REP/USD",
+			"baseAmount": 12,
+			"counterAmount": 246,
+			"time": 1499896800000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/ETH",
+			"baseAmount": 0.2,
+			"counterAmount": 0,
+			"time": 1499896800000,
+			"comment": "profit taking"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 2,
+			"counterAmount": 334,
+			"time": 1500069600000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "USD/USD",
+			"baseAmount": 65.8,
+			"counterAmount": 0,
+			"time": 1500069600000,
+			"comment": "profit taking"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "REP/USD",
+			"baseAmount": 10.46,
+			"counterAmount": 173,
+			"time": 1500156000000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/ETH",
+			"baseAmount": 0.2,
+			"counterAmount": 0,
+			"time": 1500156000000,
+			"comment": "profit taking"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 4,
+			"counterAmount": 604,
+			"time": 1500156000000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 5.24,
+			"counterAmount": 1044,
+			"time": 1500242400000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 3.58,
+			"counterAmount": 604,
+			"time": 1500242400000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "REP/ETH",
+			"baseAmount": 60,
+			"counterAmount": 5.48,
+			"time": 1500415200000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "REP/ETH",
+			"baseAmount": 120.58,
+			"counterAmount": 10.22,
+			"time": 1500415200000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "USD/USD",
+			"baseAmount": 116.94,
+			"counterAmount": 0,
+			"time": 1501106400000,
+			"comment": "profit taking"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "BTC/BTC",
+			"baseAmount": 0.0146,
+			"counterAmount": 0,
+			"time": 1501106400000,
+			"comment": "profit taking"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "REP/ETH",
+			"baseAmount": 47.1,
+			"counterAmount": 4,
+			"time": 1501279200000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "REP/ETH",
+			"baseAmount": 24.92,
+			"counterAmount": 2,
+			"time": 1501538400000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 4,
+			"counterAmount": 880,
+			"time": 1501624800000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "REP/ETH",
+			"baseAmount": 27.72,
+			"counterAmount": 2,
+			"time": 1502056800000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "BAT/ETH",
+			"baseAmount": 14959.32,
+			"counterAmount": 10,
+			"time": 1502316000000,
+			"comment": "[invest] Init Bat invest"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "BAT/USD",
+			"baseAmount": 987.52,
+			"counterAmount": 200,
+			"time": 1503180000000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 2,
+			"counterAmount": 572,
+			"time": 1504476000000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 2,
+			"counterAmount": 636,
+			"time": 1504562400000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 2,
+			"counterAmount": 591,
+			"time": 1504821600000,
+			"comment": "null"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 21.712,
+			"counterAmount": 6274,
+			"time": 1505253600000,
+			"comment": "China ban sell-off #1"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 10,
+			"counterAmount": 2878,
+			"time": 1505253600000,
+			"comment": "China ban sell-off #2"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 0.8,
+			"counterAmount": 200,
+			"time": 1505340000000,
+			"comment": "China ban buy T1"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 0.98,
+			"counterAmount": 219,
+			"time": 1505340000000,
+			"comment": "China ban buy T3"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 21.712,
+			"counterAmount": 6064,
+			"time": 1505340000000,
+			"comment": "China ban buyback #1"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 0.6,
+			"counterAmount": 137,
+			"time": 1505340000000,
+			"comment": "China ban buy T2"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 10,
+			"counterAmount": 2511,
+			"time": 1505340000000,
+			"comment": "China ban buyback #2"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 2.24,
+			"counterAmount": 474,
+			"time": 1505426400000,
+			"comment": "China ban buy T4"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 4.62,
+			"counterAmount": 1335,
+			"time": 1505772000000,
+			"comment": "China ban sell T1 + T2 + T3 + T4"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 1.006,
+			"counterAmount": 260,
+			"time": 1505944800000,
+			"comment": "China ban dip #2"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "BAT/ETH",
+			"baseAmount": 1509,
+			"counterAmount": 0.7494,
+			"time": 1508104800000,
+			"comment": "[trade/open] Step buy in "
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "BAT/ETH",
+			"baseAmount": 1205,
+			"counterAmount": 0.5196,
+			"time": 1510354800000,
+			"comment": "[trade/open] Step buy in - part 2"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "REP/USD",
+			"baseAmount": 40,
+			"counterAmount": 1016,
+			"time": 1511478000000,
+			"comment": "Waiting the dip.."
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 3.84,
+			"counterAmount": 1506,
+			"time": 1512601200000,
+			"comment": "Crazy btc gains to make money on eth part 1"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 3.84,
+			"counterAmount": 1660,
+			"time": 1512687600000,
+			"comment": "Crazy btc gains to make money on eth part 2"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 4,
+			"counterAmount": 1864,
+			"time": 1512946800000,
+			"comment": "Hedge after flatting on 450"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 1.72,
+			"counterAmount": 840,
+			"time": 1513033200000,
+			"comment": "Hedge after flatting on 450 - step sell 467-510"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 6.04,
+			"counterAmount": 3050,
+			"time": 1513033200000,
+			"comment": "Arbing1"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 6.04,
+			"counterAmount": 2899,
+			"time": 1513033200000,
+			"comment": "Arbing1"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 6,
+			"counterAmount": 3516,
+			"time": 1513119600000,
+			"comment": "$700 GDAX pump"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 5,
+			"counterAmount": 3070,
+			"time": 1513119600000,
+			"comment": "$700 GDAX pump"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "XMR/USD",
+			"baseAmount": 0.131,
+			"counterAmount": 40,
+			"time": 1513206000000,
+			"comment": "Diversify #1"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "GNO/USD",
+			"baseAmount": 0.1378,
+			"counterAmount": 20,
+			"time": 1513206000000,
+			"comment": "Diversify #1"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "EOS/USD",
+			"baseAmount": 2.63,
+			"counterAmount": 20,
+			"time": 1513206000000,
+			"comment": "Diversify #1"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "SALT/USD",
+			"baseAmount": 2.71,
+			"counterAmount": 20,
+			"time": 1513206000000,
+			"comment": "Diversify #1"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "MAID/USD",
+			"baseAmount": 33.98,
+			"counterAmount": 20,
+			"time": 1513206000000,
+			"comment": "Diversify #1"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ZEC/USD",
+			"baseAmount": 0.185,
+			"counterAmount": 80,
+			"time": 1513206000000,
+			"comment": "Diversify #1"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "FUN/USD",
+			"baseAmount": 466.26,
+			"counterAmount": 20,
+			"time": 1513206000000,
+			"comment": "Diversify #1"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "STORJ/USD",
+			"baseAmount": 20.26,
+			"counterAmount": 20,
+			"time": 1513206000000,
+			"comment": "Diversify #1"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "GNT/USD",
+			"baseAmount": 55.76,
+			"counterAmount": 20,
+			"time": 1513206000000,
+			"comment": "Diversify #1"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "DOGE/USD",
+			"baseAmount": 5900,
+			"counterAmount": 20,
+			"time": 1513206000000,
+			"comment": "Diversify #1"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 9.82,
+			"counterAmount": 7876,
+			"time": 1513638000000,
+			"comment": "Arbing2 back to eur"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "REP/USD",
+			"baseAmount": 20.15,
+			"counterAmount": 1666,
+			"time": 1513638000000,
+			"comment": "Rep pump hedge"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 9.82,
+			"counterAmount": 8176,
+			"time": 1513638000000,
+			"comment": "Arbing2 back to eur"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "BAT/USD",
+			"baseAmount": 4601,
+			"counterAmount": 1227,
+			"time": 1513897200000,
+			"comment": "Hedge against crash"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 2,
+			"counterAmount": 1300,
+			"time": 1513983600000,
+			"comment": "Hedge against crash"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "REP/USD",
+			"baseAmount": 20.14,
+			"counterAmount": 1342,
+			"time": 1514156400000,
+			"comment": "Rep pump hedge buyback"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "BAT/USD",
+			"baseAmount": 2522.64,
+			"counterAmount": 1227,
+			"time": 1514847600000,
+			"comment": "[invest] Bat FOMO"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "REP/USD",
+			"baseAmount": 12,
+			"counterAmount": 1038,
+			"time": 1515193200000,
+			"comment": "[trade/open] Riding the Rep wave"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "REP/USD",
+			"baseAmount": 14.706,
+			"counterAmount": 1038,
+			"time": 1515279600000,
+			"comment": "[trade/close] Riding the Rep wave"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "REP/USD",
+			"baseAmount": 24,
+			"counterAmount": 2286,
+			"time": 1515452400000,
+			"comment": "[trade/open] Step sell rep"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/BTC",
+			"baseAmount": 4,
+			"counterAmount": 0.3562,
+			"time": 1515538800000,
+			"comment": "[trade/open] Back to grandpa"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 11.464,
+			"counterAmount": 14628,
+			"time": 1515538800000,
+			"comment": "[trade/open] Eth too high - 15% hedge"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "REP/USD",
+			"baseAmount": 20.06,
+			"counterAmount": 0,
+			"time": 1515538800000,
+			"comment": "[trade] Play around"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "REP/USD",
+			"baseAmount": 24,
+			"counterAmount": 1973,
+			"time": 1515625200000,
+			"comment": "[trade/close] Step sell rep"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 11.464,
+			"counterAmount": 12381,
+			"time": 1516057200000,
+			"comment": "[trade/close] Eth too high - 15% hedge"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "REP/USD",
+			"baseAmount": 4,
+			"counterAmount": 279,
+			"time": 1516057200000,
+			"comment": "[invest] Blood on the streets REP"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "BAT/USD",
+			"baseAmount": 1900.44,
+			"counterAmount": 822,
+			"time": 1516057200000,
+			"comment": "[invest] Blood on the streets BAT"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "USD/USD",
+			"baseAmount": 164.14,
+			"counterAmount": 0,
+			"time": 1516057200000,
+			"comment": "[trade] Arb - move usdt to eur"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "BAT/ETH",
+			"baseAmount": 486.16,
+			"counterAmount": 0.2026,
+			"time": 1516057200000,
+			"comment": "[trade/open] Blood on the streets BAT moar"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "USD/USD",
+			"baseAmount": 869.44,
+			"counterAmount": 0,
+			"time": 1516143600000,
+			"comment": "[trade] Blood on the streets #2"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 12,
+			"counterAmount": 12824,
+			"time": 1517439600000,
+			"comment": "[trade/open] Facebook ads ban"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 12,
+			"counterAmount": 10784,
+			"time": 1517526000000,
+			"comment": "[trade/close] Facebook ads ban"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "BAT/USD",
+			"baseAmount": 1061.18,
+			"counterAmount": 400,
+			"time": 1517698800000,
+			"comment": "[invest] Blood on the streets #3 BAT"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 1.56,
+			"counterAmount": 1000,
+			"time": 1517871600000,
+			"comment": "[invest] Blood on the streets #3 ETH"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "BAT/USD",
+			"baseAmount": 1337.4,
+			"counterAmount": 441,
+			"time": 1517871600000,
+			"comment": "[invest] Blood on the streets #3 BAT #2"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 7.992,
+			"counterAmount": 6287,
+			"time": 1517958000000,
+			"comment": "[trade/open] Blood on the streets #4 ETH"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "XLM/USD",
+			"baseAmount": 478.28,
+			"counterAmount": 189,
+			"time": 1518217200000,
+			"comment": "[invest] Little bit stellar"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/BTC",
+			"baseAmount": 4.68,
+			"counterAmount": 0.3556,
+			"time": 1520377200000,
+			"comment": "[trade/close] Back to grandpa"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "BAT/USD",
+			"baseAmount": 1476,
+			"counterAmount": 483,
+			"time": 1520377200000,
+			"comment": "[invest] MtGox/Binance dip"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 7.992000000000001,
+			"counterAmount": 5890.88,
+			"time": 1520377200000,
+			"comment": "[trade/close] Blood on the streets #4 ETH"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "BAT/ETH",
+			"baseAmount": 746.4,
+			"counterAmount": 0.2786,
+			"time": 1520550000000,
+			"comment": "[trade/open] MtGox/Binance dip"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "BAT/USD",
+			"baseAmount": 1311.28,
+			"counterAmount": 224,
+			"time": 1521327600000,
+			"comment": "[invest] Everything dip #1"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 2.8056,
+			"counterAmount": 1340,
+			"time": 1521327600000,
+			"comment": "[trade/open] Everything dip #2"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 0.944,
+			"counterAmount": 517,
+			"time": 1521500400000,
+			"comment": "[invest] Everything dip #3"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 2,
+			"counterAmount": 810,
+			"time": 1522274400000,
+			"comment": "[trade/open] Everything dip #4"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 1.7114,
+			"counterAmount": 640,
+			"time": 1522360800000,
+			"comment": "[trade/open] Step buy (316-292e)"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 2,
+			"counterAmount": 1136,
+			"time": 1524088800000,
+			"comment": "[trade/close] Everything dip #4"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 1.7114,
+			"counterAmount": 972,
+			"time": 1524088800000,
+			"comment": "[trade/close] Step buy (316-292e)"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 2.8056,
+			"counterAmount": 1973,
+			"time": 1524520800000,
+			"comment": "[trade/close] Everything dip #2"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "REP/USD",
+			"baseAmount": 64.71,
+			"counterAmount": 4109,
+			"time": 1525903200000,
+			"comment": "[trade/open] Binance added Rep"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "REP/USD",
+			"baseAmount": 77.192,
+			"counterAmount": 4109,
+			"time": 1525903200000,
+			"comment": "[trade/close] Binance added Rep"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "REP/USD",
+			"baseAmount": 40.0612,
+			"counterAmount": 2077,
+			"time": 1526853600000,
+			"comment": "[trade/open] Market slowdown "
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "REP/USD",
+			"baseAmount": 48.8032,
+			"counterAmount": 2073,
+			"time": 1526940000000,
+			"comment": "[trade/close] Market slowdown "
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 1.8944,
+			"counterAmount": 1030,
+			"time": 1527112800000,
+			"comment": "[invest] Step buy #2 "
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 2.1496,
+			"counterAmount": 1038,
+			"time": 1528754400000,
+			"comment": "[invest] Step buy #3 (down to 385e) "
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 1.535,
+			"counterAmount": 655,
+			"time": 1530223200000,
+			"comment": "[trade/o] Step buy #4 (down to 350e)"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "REP/USD",
+			"baseAmount": 25.39,
+			"counterAmount": 861,
+			"time": 1530828000000,
+			"comment": "[invest] Pre-launch (2 days) Rep"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "BAT/ETH",
+			"baseAmount": 3946.72,
+			"counterAmount": 2.8864,
+			"time": 1531605600000,
+			"comment": "[trade/c] Coinbase experimenting post - 4 bat dips sellback"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 1.5354,
+			"counterAmount": 769,
+			"time": 1531692000000,
+			"comment": "[trade/c] Step buy #4 (down to 350e)"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 0.899,
+			"counterAmount": 232.5,
+			"time": 1534273343001,
+			"comment": "[trade/o] Rock bottom"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 10.647,
+			"counterAmount": 3720,
+			"time": 1534274931376,
+			"comment": "[invest] Step buy (7.20 - 14.8)"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "ETH/USD",
+			"baseAmount": 0.899,
+			"counterAmount": 284,
+			"time": 1534620531376,
+			"comment": "[trade/c] Rock bottom"
+		},
+		{
+			"isTrade": true,
+			"isBuy": true,
+			"pair": "ETH/USD",
+			"baseAmount": 1.56,
+			"counterAmount": 310,
+			"time": 1536363539805,
+			"comment": "[invest] $198 ether"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "BAT/ETH",
+			"baseAmount": 2000,
+			"counterAmount": 1.9391399999999999,
+			"time": 1539728907502,
+			"comment": "[trade/c] Init Bat invest - over 50% profit, lower the risk"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "BAT/ETH",
+			"baseAmount": 2588,
+			"counterAmount": 3.1408,
+			"time": 1540149066513,
+			"comment": "[trade/c] Init Bat invest - bat doubled"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "BAT/ETH",
+			"baseAmount": 400,
+			"counterAmount": 0.54264,
+			"time": 1540197835796,
+			"comment": "[trade/c] Init Bat Invest - step sell-off"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "BAT/ETH",
+			"baseAmount": 400,
+			"counterAmount": 0.5666,
+			"time": 1540243328784,
+			"comment": "[trade/c] Init Bat Invest - step sell-off #2"
+		},
+		{
+			"isTrade": true,
+			"isBuy": false,
+			"pair": "BAT/ETH",
+			"baseAmount": 1600,
+			"counterAmount": 2.5056,
+			"time": 1541191482465,
+			"comment": "[trade/c] Init Bat Invest - step selloff"
+		},
+		{
+			"isTrade": false,
+			"isBuy": false,
+			"pair": "USD/USD",
+			"baseAmount": 3000,
+			"counterAmount": 0,
+			"time": 1541199600000,
+			"comment": "Live a little"
+		}
+	],
+	"changeCount": 0
+}
