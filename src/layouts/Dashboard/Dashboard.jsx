@@ -16,7 +16,7 @@ import { style } from "variables/Variables.jsx";
 import { userModel, resModel } from "../../model/init/ResModelInit.js";
 
 import Ticker from "../../model/Ticker";
-import portfolioTransactions from '../../model/init/portfolio.json';
+import demofolio from '../../model/init/demofolio.json';
 import Currency from "../../model/Currency";
 import CurrencyPair from "../../model/CurrencyPair";
 import Transaction from "../../model/Transaction";
@@ -56,25 +56,22 @@ class Dashboard extends Component {
     this.setEditedTransaction = this.setEditedTransaction.bind(this);
 
     this.fetchRecentPrices = this.fetchRecentPrices.bind(this);
-    this.updateUserModel = this.updateUserModel.bind(this);
     this.fetchCurrencies = this.fetchCurrencies.bind(this);
     this.getCurrenciesToFetch = this.getCurrenciesToFetch.bind(this);
     this.fetchAllAndRender = this.fetchAllAndRender.bind(this);
     this.fetchHistoday = this.fetchHistoday.bind(this);
+    this.isDemo = this.isDemo.bind(this);
+
+    this.updateUserModel = this.updateUserModel.bind(this);
 
     this.newPortfolio = this.newPortfolio.bind(this);
     this.openPortfolio = this.openPortfolio.bind(this);
     this.savePortfolio = this.savePortfolio.bind(this);
     this.saveCurrentAndCreateNewPortfolio = this.saveCurrentAndCreateNewPortfolio.bind(this);
 
-    // check if cookie is not set, then it's the first load
-    let showHelpPanel = cookie.load('showGettingStarted') === undefined;
-    // add cookie on load
-    cookie.save('showGettingStarted', "1", { path: '/', maxAge: 31536000});
-
     this.state = {
       _notificationSystem: null,
-      isHelpPanelShown: showHelpPanel,
+      isHelpPanelShown: false,
       isAddTradeDialogShown: false,
       isAddFundingDialogShown: false,
       isEditTradeDialogShown: false,
@@ -94,6 +91,18 @@ class Dashboard extends Component {
     }
   
     return str.slice(0,-1);
+  }
+
+  isDemo() {
+    return new Promise((accept, reject) => {
+      fetch('appversion.json').then(res => res.json()).then((out) => {
+        accept(out.isDemo);
+        return;
+      }).catch(err => { 
+        reject(err);
+        return;  
+      });
+    });
   }
   
   fetchRecentPrices() {
@@ -217,28 +226,44 @@ class Dashboard extends Component {
   }
 
   componentWillMount() {
-    // load to local storage
-    let portfolioJson = localStorage.getItem('portfolio01');
 
     // start fetching prices based on user model
     this.fetchCurrencies().then(() => {
-      let newModel;
-      if(portfolioJson != null && portfolioJson !== '') {
-        let portfolioObject = JSON.parse(portfolioJson);
-        newModel = this.updateUserModel(portfolioObject.transactions, portfolioObject.changeCount);
-        console.log('Loaded portfolio from local storage.')
-      } else {
-        newModel = this.updateUserModel(portfolioTransactions, 0);
-        console.log('Loaded default portfolio.')
-      }
+      this.isDemo().then((isDemo) => {
+        let showHelpPanel = false;
+        let newModel;
+        if(!isDemo) {
+          // check if cookie is not set, then it's the first load, and set it always
+          showHelpPanel = cookie.load('showGettingStarted') === undefined;
+          cookie.save('showGettingStarted', "1", { path: '/', maxAge: 31536000});
 
-      let firstDate = new Date(newModel.transactions[0].time);
-      let daysSince = this.getDaysSince(firstDate);
-  
+          // if app, set model from local storage if any, or empty
+          let portfolioJson = localStorage.getItem('portfolio01');
+          if(portfolioJson != null && portfolioJson !== '') {
+            let portfolioObject = JSON.parse(portfolioJson);
+            newModel = this.updateUserModel(portfolioObject.transactions, portfolioObject.changeCount);
+            console.log('Loaded portfolio from local storage.')
+          } else {
+            newModel = this.updateUserModel([], 0);
+          }
+        } else {
+          // if demo, set model from demofolio file
+          newModel = this.updateUserModel(demofolio.transactions, 0);
+          console.log('Loaded default portfolio.')
+        }
 
-      this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), daysSince + 2);
-      // start checking recent prices periodically
-      setInterval(this.fetchRecentPrices, 2000);
+        this.setState({
+          isHelpPanelShown: showHelpPanel,
+          isDemo: isDemo,
+        });
+
+        let firstDate = new Date(newModel.transactions[0].time);
+        let daysSince = this.getDaysSince(firstDate);
+
+        this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), daysSince + 2);
+        // start checking recent prices periodically
+        setInterval(this.fetchRecentPrices, 2000);
+      });
     });
     
 
