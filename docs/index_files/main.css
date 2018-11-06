@@ -472,11 +472,7 @@ h5 {
     background-image: none
 }
 
-.btn-yellow,
-.btn-yellow:disabled {
-    background-color: #ffd262;
-    border-color: #e4b34f
-}
+
 
 .btn-lg {
     padding: 1rem 2rem;
@@ -493,6 +489,12 @@ h5 {
 .btn-lg {
     font-size: 1.25rem;
     border-width: 2px 2px 5px
+}
+
+.btn-yellow,
+.btn-yellow:disabled {
+    background-color: #ffd262;
+    border-color: #e4b34f
 }
 
 .btn-yellow {
@@ -515,6 +517,28 @@ h5 {
 .btn-yellow:hover {
     background-color: #ffe08c;
     border-color: #e4b34f;
+    color: #552600
+}
+
+.btn-demo,
+.btn-demo:disabled {
+    background-color: #e6867a;
+    border-color: rgb(202, 96, 82)
+}
+
+.btn-demo {
+    color: #552600
+}
+
+.btn-demo:focus {
+    box-shadow: 0 0 0 2px rgba(228, 256, 256, .5)
+}
+
+.btn-demo:active,
+.btn-demo:focus,
+.btn-demo:hover {
+    background-color: #E2918A;
+    border-color: rgb(199, 98, 85);
     color: #552600
 }
 
@@ -752,7 +776,10 @@ nav ul {
     align-items: center
 }
 
-
 .thumb img {
     border: 1px solid #DBDBDB;
+}
+
+.header-left-button {
+    text-align: right;
 }
