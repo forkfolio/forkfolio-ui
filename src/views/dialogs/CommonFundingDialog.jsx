@@ -163,9 +163,10 @@ class CommonFundingDialog extends Component {
       </Col>
       <Col sm={5}>
         <FormControl
+          placeholder="What's going on?"
           type="text"
           name="comment"
-          value={this.state.comment}
+          value={this.state.comment !== "null" ? this.state.comment : ""}
           onChange={event => {
             this.setState({ comment: event.target.value });
           }}
