@@ -5121,6 +5121,9 @@ h1 .subtitle {
   .main-panel .main-content {
     padding: 15px 0px;
     min-height: calc(100vh - 136px); }
+  .main-panel .demo-content {
+    padding: 15px 0px;
+    height: 78px; }
   .main-panel > .content-no-padding {
     padding: 0; }
   .main-panel > .footer {
@@ -5738,6 +5741,9 @@ legend {
 
 .font-green {
   color: #1b9a78; }
+
+.font-orange {
+  color: #ff9a15; }
 
 @media screen and (max-width: 767px) {
   .table-responsive {

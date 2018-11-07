@@ -25,6 +25,7 @@ import { config } from "../../config/Config.js";
 import FileSaver from 'file-saver';
 import cookie from 'react-cookies';
 import ConfirmNewPortfolioDialog from "../../views/dialogs/ConfirmNewPortfolioDialog";
+import DemoCard from "../../views/common/DemoCard";
 import ReactGA from 'react-ga';
 import moment from 'moment';
 
@@ -621,6 +622,12 @@ class Dashboard extends Component {
             userModel={this.state.userModel}
             resModel={this.state.resModel}
           />
+          {this.state.isDemo ? (
+          <div className="demo-content">
+            <DemoCard />
+          </div>) : ""
+          }
+          
           <Switch>
             {dashboardRoutes.map((prop, key) => {
               if (prop.collapse) {
