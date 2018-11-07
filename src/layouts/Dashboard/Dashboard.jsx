@@ -380,7 +380,9 @@ class Dashboard extends Component {
     });
 
     // save to local storage
-    localStorage.setItem('portfolio01', this.getPortfolioJson(newModel, newChangeCount));
+    if(!this.state.isDemo) {
+      localStorage.setItem('portfolio01', this.getPortfolioJson(newModel, newChangeCount));
+    }
 
     // updade historic prices if needed
     if(hasNewBalance || isOldest) {
@@ -415,7 +417,9 @@ class Dashboard extends Component {
     });
 
     // save to local storage
-    localStorage.setItem('portfolio01', this.getPortfolioJson(newModel, newChangeCount));
+    if(!this.state.isDemo) {
+      localStorage.setItem('portfolio01', this.getPortfolioJson(newModel, newChangeCount));
+    }
 
     // updade historic prices if needed
     if(hasNewBalance || isOldest) {
@@ -449,7 +453,9 @@ class Dashboard extends Component {
     });
 
     // save to local storage
-    localStorage.setItem('portfolio01', this.getPortfolioJson(newModel, newChangeCount));
+    if(!this.state.isDemo) {
+      localStorage.setItem('portfolio01', this.getPortfolioJson(newModel, newChangeCount));
+    }
 
     // updade historic prices if needed
     if(hasNewBalance || isOldest) {
@@ -476,7 +482,9 @@ class Dashboard extends Component {
       this.updateUserModel([], 0);
 
       // save to local storage
-      localStorage.setItem('portfolio01', '');
+      if(!this.state.isDemo) {
+        localStorage.setItem('portfolio01', '');
+      }
 
       this.setState({ isConfirmNewPortfolioDialogShown: false });
 
@@ -508,7 +516,9 @@ class Dashboard extends Component {
       // TODO: check if format ok, version number
 
       // save to local storage
-      localStorage.setItem('portfolio01', reader.result);
+      if(!this.state.isDemo) {
+        localStorage.setItem('portfolio01', reader.result);
+      }
 
       // parse json string to object
       let portfolioObj = JSON.parse(reader.result);
@@ -532,7 +542,9 @@ class Dashboard extends Component {
     let portfolioJson = this.getPortfolioJson(this.state.userModel, 0);
 
     // save to local storage
-    localStorage.setItem('portfolio01', portfolioJson);
+    if(!this.state.isDemo) {
+      localStorage.setItem('portfolio01', portfolioJson);
+    }
 
     // save to file
     let file = new File([portfolioJson], "portfolio" + this.state.userModel.transactions.length + ".json", {type: "text/plain;charset=utf-8"});
