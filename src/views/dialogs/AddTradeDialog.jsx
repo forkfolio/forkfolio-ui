@@ -8,7 +8,8 @@ class AddTradeDialog extends CommonTradeDialog {
     super(props);
     this.state = this.getInitialState(props);
 
-    ReactGA.modalview('/#/addTrade');
+    console.log("Navigate to: " + window.location.pathname + "/#/addTrade");
+    ReactGA.modalview(window.location.pathname + '/#/addTrade');
   }
 
   // safely change state here
