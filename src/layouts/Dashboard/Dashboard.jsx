@@ -3,6 +3,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 // react component that creates notifications (like some alerts with messages)
 import NotificationSystem from "react-notification-system";
+import { Grid, Row, Col } from "react-bootstrap";
 
 import Sidebar from "components/Sidebar/Sidebar.jsx";
 import Header from "components/Header/Header.jsx";
@@ -635,9 +636,10 @@ class Dashboard extends Component {
             resModel={this.state.resModel}
           />
           {this.state.isDemo ? (
-          <div className="demo-content">
-            <DemoCard />
-          </div>) : ""
+            <div className="demo-content">
+              <DemoCard />
+            </div>
+          ) : ""
           }
           
           <Switch>

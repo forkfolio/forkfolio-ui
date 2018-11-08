@@ -5122,8 +5122,11 @@ h1 .subtitle {
     padding: 15px 0px;
     min-height: calc(100vh - 136px); }
   .main-panel .demo-content {
-    padding: 15px 0px;
-    height: 78px; }
+    padding: 15px 2px;
+    margin-bottom: -45px; }
+  @media screen and (max-width: 992px) {
+    .main-panel .demo-content {
+      margin-bottom: -30px; } }
   .main-panel > .content-no-padding {
     padding: 0; }
   .main-panel > .footer {

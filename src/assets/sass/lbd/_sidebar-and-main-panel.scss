@@ -389,8 +389,14 @@
     }
 
     .demo-content{
-        padding: 15px 0px;
-        height: 78px;
+        padding: 15px 2px;
+        margin-bottom: -45px;
+    }
+
+    @media screen and (max-width: 992px) {
+        .demo-content{
+            margin-bottom: -30px;
+        }
     }
 
     > .content-no-padding{
