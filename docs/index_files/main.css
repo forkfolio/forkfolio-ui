@@ -493,52 +493,31 @@ h5 {
 
 .btn-yellow,
 .btn-yellow:disabled {
-    background-color: #ffd262;
-    border-color: #e4b34f
-}
-
-.btn-yellow {
+    background-color: #f6fba2;
+    border-color: #e4d64f;
     color: #552600
-}
-
-.btn-yellow:focus {
-    box-shadow: 0 0 0 2px rgba(228, 179, 79, .5)
-}
-
-.btn-yellow:active {
-    color: #552600;
-    background-color: #ffc32f;
-    background-image: none;
-    border-color: #d59a21
 }
 
 .btn-yellow:active,
 .btn-yellow:focus,
 .btn-yellow:hover {
-    background-color: #ffe08c;
-    border-color: #e4b34f;
+    background-color: #e3e78b;
+    border-color: #e4d64f;
     color: #552600
 }
 
 .btn-demo,
 .btn-demo:disabled {
-    background-color: #e6867a;
-    border-color: rgb(202, 96, 82)
-}
-
-.btn-demo {
+    background-color: #c1edaa;
+    border-color: rgb(132, 198, 108);
     color: #552600
-}
-
-.btn-demo:focus {
-    box-shadow: 0 0 0 2px rgba(228, 256, 256, .5)
 }
 
 .btn-demo:active,
 .btn-demo:focus,
 .btn-demo:hover {
-    background-color: #E2918A;
-    border-color: rgb(199, 98, 85);
+    background-color: #b1dc9b;
+    border-color: rgb(132, 198, 108);
     color: #552600
 }
 
