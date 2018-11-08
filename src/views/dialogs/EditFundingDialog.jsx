@@ -22,8 +22,8 @@ class EditFundingDialog extends CommonFundingDialog {
     };
 
     // track ga
-    console.log("Navigate to: " + window.location.pathname + "/#/editFunding");
-    ReactGA.modalview(window.location.pathname + '/#/editFunding');
+    console.log("Navigate to: " + window.location.pathname + "#/editFunding");
+    ReactGA.modalview(window.location.pathname + '#/editFunding');
   }
 
   // safely change state here

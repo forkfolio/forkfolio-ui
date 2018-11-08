@@ -10,8 +10,8 @@ class AddFundingDialog extends CommonFundingDialog {
     super(props);
     this.state = this.getInitialState();
 
-    console.log("Navigate to: " + window.location.pathname + "/#/addFunding");
-    ReactGA.modalview(window.location.pathname + '/#/addFunding');
+    console.log("Navigate to: " + window.location.pathname + "#/addFunding");
+    ReactGA.modalview(window.location.pathname + '#/addFunding');
   }
 
   // safely change state here

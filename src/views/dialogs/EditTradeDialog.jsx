@@ -25,8 +25,8 @@ class EditTradeDialog extends CommonTradeDialog {
       comment: props.editedTransaction.comment
     };
 
-    console.log("Navigate to: " + window.location.pathname + "/#/editTrade");
-    ReactGA.modalview(window.location.pathname + '/#/editTrade');
+    console.log("Navigate to: " + window.location.pathname + "#/editTrade");
+    ReactGA.modalview(window.location.pathname + '#/editTrade');
   }
 
   // safely change state here
