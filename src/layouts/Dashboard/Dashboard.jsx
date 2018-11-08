@@ -3,7 +3,6 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 // react component that creates notifications (like some alerts with messages)
 import NotificationSystem from "react-notification-system";
-import { Grid, Row, Col } from "react-bootstrap";
 
 import Sidebar from "components/Sidebar/Sidebar.jsx";
 import Header from "components/Header/Header.jsx";
@@ -263,8 +262,9 @@ class Dashboard extends Component {
         let daysSince = this.getDaysSince(firstDate);
 
         this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), daysSince + 2);
+        this.fetchRecentPrices();
         // start checking recent prices periodically
-        setInterval(this.fetchRecentPrices, 2000);
+        setInterval(this.fetchRecentPrices, 20000);
       });
     });
     
