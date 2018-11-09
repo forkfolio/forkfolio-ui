@@ -49,6 +49,13 @@ class Header extends Component {
     document.documentElement.classList.toggle("nav-open");
   }
 
+  updateWidth() {
+    this.setState({ width: window.innerWidth });
+  }
+  componentDidMount() {
+    window.addEventListener("resize", this.updateWidth.bind(this));
+  }
+
   render() {
     return (
       <Navbar fluid>
@@ -71,7 +78,7 @@ class Header extends Component {
         </Navbar.Header>
 
         {/* Here we import the links that appear in navbar */}
-        {window.innerWidth > 300 ? (
+        {window.innerWidth > 992 ? (
           <HeaderLinks 
             {...this.props}
           />
