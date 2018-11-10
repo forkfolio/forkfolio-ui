@@ -52,6 +52,7 @@ class Header extends Component {
   updateWidth() {
     this.setState({ width: window.innerWidth });
   }
+  
   componentDidMount() {
     window.addEventListener("resize", this.updateWidth.bind(this));
   }
