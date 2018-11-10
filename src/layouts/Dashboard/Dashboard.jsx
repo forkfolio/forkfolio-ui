@@ -258,12 +258,15 @@ class Dashboard extends Component {
           isDemo: isDemo,
         });
 
-        let firstDate = new Date(newModel.transactions[0].time);
-        let daysSince = this.getDaysSince(firstDate);
+        if(newModel.transactions[0] != null) {
+          let firstDate = new Date(newModel.transactions[0].time);
+          let daysSince = this.getDaysSince(firstDate);
 
-        this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), daysSince + 2);
-        this.fetchRecentPrices();
+          this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), daysSince + 2);
+        }
+
         // start checking recent prices periodically
+        this.fetchRecentPrices();
         setInterval(this.fetchRecentPrices, 20000);
       });
     });
