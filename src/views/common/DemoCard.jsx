@@ -11,7 +11,7 @@ class DemoCard extends Component {
             <Grid fluid>
               <Row>
                 <Col lg={12} md={12}>
-                  <p><i className="fa fa-exclamation-triangle font-orange" aria-hidden="true"></i> You're seeing a live demo, showcasing features on a sample portfolio. <a href="https://forkfol.io/app/">Click here to create your portfolio now <i className="fa fa-check" aria-hidden="true"></i></a></p>            
+                  <p><i class="fa fa-info-circle" aria-hidden="true"></i> You're seeing a live demo, showcasing features on a sample portfolio. <a href="https://forkfol.io/app/">Click here to create your portfolio now <i className="fa fa-check" aria-hidden="true"></i></a></p>            
                 </Col>
               </Row>
             </Grid>
