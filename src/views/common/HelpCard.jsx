@@ -29,7 +29,7 @@ class HelpCard extends Component {
                   </ol>                  
                 </Col>
                 <Col lg={7} md={9} sm={12} xs={12} >
-                  <iframe title="Getting started with ForkFolio" width="600" height="370" src="https://www.useloom.com/embed/f4f07be58c954532b3d3d9e62cde3dfd" frameBorder="0" webkitallowfullscreen mozallowfullscreen allowFullScreen></iframe>
+                  <iframe title="Getting started with ForkFolio" width="600" height="370" src="https://www.useloom.com/embed/87407d8535bd43b7b5c8a67da8c99d77" frameBorder="0" webkitallowfullscreen mozallowfullscreen allowFullScreen></iframe>
                 </Col>
               </Row>
               <Row>
