@@ -395,6 +395,9 @@ h5 {
     .offset-lg-1 {
         margin-left: 8.33333%
     }
+    .offset-lg-3 {
+        margin-left: 25%
+    }
 }
 
 @media (max-width:767px) {
@@ -641,12 +644,24 @@ html {
 
 .jumbotron h1 {
     margin-top: 0;
-    color: #89D6F3
+    /*color: #89D6F3*/
 }
 
 .jumbotron .jumbotron-subtitle {
     margin-bottom: 3rem
 }
+
+.jumbotron .jumbotron-list {
+    text-align: left;
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+
+.jumbotron strong {
+    color: #f9a78b!important;
+    font-weight: 400
+}
+
 
 @media (max-width:959px) {
     .jumbotron .jumbotron-subtitle br {
@@ -678,7 +693,7 @@ html {
 
 .theme-pro .jumbotron .jumbotron-product-title,
 .theme-pro .jumbotron .jumbotron-title {
-    color: #89D6F3
+    /*color: #89D6F3*/
 }
 
 .theme-pro .jumbotron .jumbotron-product-title+.jumbotron-title {
