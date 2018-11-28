@@ -21,14 +21,14 @@ class HelpCard extends Component {
                     that showcases all features, or click on a play button to watch a short 
                     introductory video.</p>
                   <h4 class="help-card-title">Quick start</h4> 
-                  <p class="help-card-paragraph">Your portfolio is like a bank account - first you need to deposit tokens to 
+                  <p class="help-card-paragraph">Your portfolio is like a bank account - first, you need to deposit tokens to 
                     your portfolio to be able to trade them for another one. </p>
                   <Button
                     danger
                     bsStyle="danger"
                     fill
                     wd                    
-                    onClick={() => this.props.hideHelpPanel()}
+                    onClick={() => this.props.showAddFundingDialog()}
                   >
                     Add Your First Deposit Now
                   </Button>

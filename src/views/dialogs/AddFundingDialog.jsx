@@ -8,7 +8,7 @@ import ReactGA from 'react-ga';
 class AddFundingDialog extends CommonFundingDialog {
   constructor(props) {
     super(props);
-    this.state = this.getInitialState();
+    this.state = this.getInitialState(props.isInitialDeposit);
 
     console.log("Navigate to: " + window.location.pathname + "#/addFunding");
     ReactGA.modalview(window.location.pathname + '#/addFunding');
@@ -25,7 +25,7 @@ class AddFundingDialog extends CommonFundingDialog {
     }*/
   }
 
-  getInitialState() {
+  getInitialState(isInitialDeposit) {
     return {
       title: "Add funding",
       buttonText: "Add",
@@ -36,7 +36,7 @@ class AddFundingDialog extends CommonFundingDialog {
       currencyError: null,
       date: new Date(),
       dateError: null,
-      comment: "",
+      comment: isInitialDeposit == null ? "" : "It's my first deposit",
       currencies: this.getDepositCurrencies()
     }
   }

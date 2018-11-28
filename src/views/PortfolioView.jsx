@@ -6,6 +6,7 @@ import HighchartsReact from 'highcharts-react-official';
 import Card from "components/Card/Card.jsx";
 import InsightsCard from './common/InsightsCard';
 import HelpCard from './common/HelpCard';
+import AddFundingDialog from "./dialogs/AddFundingDialog";
 import { formatUtils } from './../utils/FormatUtils';
 import { rangeSelectorModel } from "../model/init/ResModelInit.js";
 import ReactGA from 'react-ga';
@@ -234,6 +235,18 @@ class PortfolioView extends Component {
     const showPagination = assetCount > 10;
     const isMobile = window.innerWidth <= 992;
     //console.log("Render called. isMobile: " + isMobile)
+
+    let addFundingDialog = (
+      <AddFundingDialog
+        isDialogShown={this.props.isAddFundingDialogShown}
+        hideDialog={this.props.hideAddFundingDialog}
+        addTransaction={this.props.addTransaction}
+        userModel={this.props.userModel}
+        resModel={this.props.resModel}
+        isInitialDeposit
+      />
+    );
+
     return (
       <div className="main-content">
         <Grid fluid>
@@ -242,6 +255,7 @@ class PortfolioView extends Component {
               <HelpCard 
                 isHelpPanelShown={this.props.isHelpPanelShown}
                 hideHelpPanel={this.props.hideHelpPanel}
+                showAddFundingDialog={this.props.showAddFundingDialog}
               />
             </Col>
           </Row>
@@ -285,6 +299,7 @@ class PortfolioView extends Component {
                   />
                 }
               />
+              {this.props.isAddFundingDialogShown ? addFundingDialog : ""}
             </Col>
           </Row>
         </Grid>
