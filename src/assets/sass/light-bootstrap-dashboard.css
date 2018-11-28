@@ -5752,6 +5752,14 @@ legend {
   .table-responsive {
     border: 0px; } }
 
+.help-card-title {
+  margin-bottom: 10px;
+  color: #444444;
+  font-weight: 500; }
+
+.help-card-paragraph {
+  margin-bottom: 20px; }
+
 .form-control::-moz-placeholder {
   color: #C3C3C3;
   opacity: 1;

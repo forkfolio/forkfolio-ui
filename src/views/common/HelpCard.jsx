@@ -14,11 +14,24 @@ class HelpCard extends Component {
             <Grid fluid>
               <Row>
                 <Col lg={5} md={3} sm={0} xs={0}>
-                  <p>Welcome to Forkfolio app, a private-by-design crypto portfolio manager you can use to watch live crypto prices, track your trades, and get insights into your trading performance. </p><p>If you haven't seen Forkfolio in action, visit <a href="https://forkfol.io/demo/">demo app</a> loaded with public portfolio that showcases all features.</p>
-                  <h5>Quick start</h5> 
-                  <p>Your portfolio is like a bank account - first you need to fund your portfolio with tokens to be able to trade them for another one. </p>
-                  <p>We recommend that you start by adding deposits of all tokens you own on the <a href="#/funding">Funding</a> page. </p>
-                  <p>Click on a Play button to watch a short video that will show you how to add deposits and trades. </p>
+                  <p>Welcome to Forkfolio app, a private-by-design crypto portfolio manager you 
+                    can use to watch live crypto prices, track your trades, and get insights 
+                    into your trading performance. </p>
+                  <p>If you haven't seen Forkfolio in action, visit <a href="https://forkfol.io/demo/">demo app</a> loaded with public portfolio 
+                    that showcases all features, or click on a play button to watch a short 
+                    introductory video.</p>
+                  <h4 class="help-card-title">Quick start</h4> 
+                  <p class="help-card-paragraph">Your portfolio is like a bank account - first you need to deposit tokens to 
+                    your portfolio to be able to trade them for another one. </p>
+                  <Button
+                    danger
+                    bsStyle="danger"
+                    fill
+                    wd                    
+                    onClick={() => this.props.hideHelpPanel()}
+                  >
+                    Add Your First Deposit Now
+                  </Button>
                 </Col>
                 <Col lg={7} md={9} sm={12} xs={12} >
                   <iframe title="Getting started with ForkFolio" width="600" height="370" src="https://www.useloom.com/embed/87407d8535bd43b7b5c8a67da8c99d77" frameBorder="0" webkitallowfullscreen mozallowfullscreen allowFullScreen></iframe>
