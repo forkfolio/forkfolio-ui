@@ -51,6 +51,14 @@ export default class ResModel {
     return 0;
   }
 
+  getPercentChange24h(currency) {
+    if(this.recentTickers.get(currency) != null) {
+      return this.recentTickers.get(currency).percentChange24h;;
+    }
+
+    return 0;
+  }
+
   sameDay(d1, d2) {
     return d1.getFullYear() === d2.getFullYear() &&
       d1.getMonth() === d2.getMonth() &&

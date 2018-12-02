@@ -42,15 +42,32 @@ class PortfolioView extends Component {
     return total;
   }
 
+  toGreenRedStyle(value) {
+    let style1 = "font-" + (value >= 0 ? "green" : "red" );
+    style1 = Math.abs(value) < 0.001 ? "" : style1;
+    return (
+      <div className={style1}>
+        {formatUtils.formatNumber(value, 2) + "%"}
+      </div>
+    );
+  }
+
   getTableColumnsDesktop() {
     const tableColumns = [
       { Header: "Name", accessor: "name", maxWidth: 180, },
       { Header: "Price", accessor: "price", maxWidth: 120,
       Cell: row => (
-        <span style={{
-          float: "right"
-        }}>
+        <span style={{ float: "right" }}>
           {"$" + formatUtils.formatNumber(row.value, 2)}
+        </span>
+      ),
+      sortMethod: (a, b) => {
+        return b - a;
+      }},
+      { Header: "24h", accessor: "percentChange24h", maxWidth: 80,
+      Cell: row => (
+        <span style={{ float: "right" }}>
+          {this.toGreenRedStyle(row.value)}
         </span>
       ),
       sortMethod: (a, b) => {
@@ -58,24 +75,18 @@ class PortfolioView extends Component {
       }},
       { Header: "Balance", accessor: "balance", maxWidth: 160, sortable: false, 
       Cell: row => (
-        <span style={{
-          float: "right"
-        }}>
+        <span style={{ float: "right" }}>
           {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
         </span>
       )},
       { Header: "Share", accessor: "share", maxWidth: 80, 
       Footer: (
-        <span style={{
-          float: "right"
-        }}>
+        <span style={{ float: "right" }}>
           <strong>100%</strong>{" "}
         </span>
       ),
       Cell: row => (
-        <span style={{
-          float: "right"
-        }}>
+        <span style={{ float: "right" }}>
           {formatUtils.formatNumber(row.value, 2) + "%"}
         </span>
       ),
@@ -84,9 +95,7 @@ class PortfolioView extends Component {
       }},
       { Header: "Total", accessor: "total", minWidth: 120, maxWidth: 140, 
       Footer: rows => (
-        <span style={{
-          float: "right"
-        }}>
+        <span style={{ float: "right" }}>
           <strong>{"$" + formatUtils.formatNumber(this.getTotalBalance(rows), 2)}</strong>
         </span>
       ),
@@ -161,6 +170,7 @@ class PortfolioView extends Component {
       let name = k.name;
       let code = k.code;
       let price = props.resModel.getLastPrice(k, props.resModel.usd);
+      let percentChange24h = props.resModel.getPercentChange24h(k);
       let balance = [v, k.code];
       let share = (currencyBalance / totalBalance * 100);
       let total = [currencyBalance, balance];
@@ -169,6 +179,7 @@ class PortfolioView extends Component {
         name: name, 
         code: code, 
         price: price,
+        percentChange24h: percentChange24h,
         balance: balance,
         share: share,
         total: total

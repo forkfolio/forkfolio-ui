@@ -119,7 +119,7 @@ class Dashboard extends Component {
           if(resModel.recentTickers.get(currencies[i]) == null ||
             newPrice !== resModel.recentTickers.get(currencies[i]).price) {
             let pair = new CurrencyPair(currencies[i], resModel.usd);
-            resModel.recentTickers.set(currencies[i], new Ticker(pair, newPrice, new Date(parseInt(tickers[i].t, 10) * 1000)))
+            resModel.recentTickers.set(currencies[i], new Ticker(pair, newPrice, new Date(parseInt(tickers[i].t, 10) * 1000), tickers[i].p))
             count++;
           }
         }
