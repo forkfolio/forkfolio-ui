@@ -551,7 +551,7 @@ class Dashboard extends Component {
     }
 
     // save to file
-    let file = new File([portfolioJson], "portfolio" + this.state.userModel.transactions.length + ".json", {type: "text/plain;charset=utf-8"});
+    let file = new File([portfolioJson], "MyForkFolio" + this.state.userModel.transactions.length + ".json", {type: "text/plain;charset=utf-8"});
     FileSaver.saveAs(file);
 
     this.setState({
@@ -577,6 +577,7 @@ class Dashboard extends Component {
     }
     let portfolioFile = {
       version: 1,
+      credit: "This json file is created by ForkFolio App at https://forkfol.io",
       transactions: fileTransactions,
       changeCount: changeCount
     }
