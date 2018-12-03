@@ -112,7 +112,7 @@ class PortfolioView extends Component {
             {"$" + formatUtils.formatNumber(row.value[0], 4)}
           </span><br/>
           <span style={{ float: "right" }}>
-            {this.toGreenRedStyle(row.value[1])}
+            {formatUtils.toGreenRedPercentStyle(row.value[1])}
           </span>
         </div>
       ),
