@@ -58,7 +58,7 @@ class PortfolioView extends Component {
       { Header: "Price", accessor: "price", maxWidth: 120,
       Cell: row => (
         <span style={{ float: "right" }}>
-          {"$" + formatUtils.formatNumber(row.value, 2)}
+          {"$" + formatUtils.formatNumber(row.value[0], 4)}
         </span>
       ),
       sortMethod: (a, b) => {
@@ -100,9 +100,7 @@ class PortfolioView extends Component {
         </span>
       ),
       Cell: row => (
-        <span style={{
-          float: "right"
-        }}>
+        <span style={{ float: "right" }}>
           {"$" + formatUtils.formatNumber(row.value[0], 2)}
         </span>
       ),
@@ -119,11 +117,14 @@ class PortfolioView extends Component {
       { Header: "Name", accessor: "code", maxWidth: 60, },
       { Header: "Price", accessor: "price", maxWidth: 100,
       Cell: row => (
-        <span style={{
-          float: "right"
-        }}>
-          {"$" + formatUtils.formatNumber(row.value, 2)}
-        </span>
+        <div>
+          <span style={{ float: "right" }}>
+            {"$" + formatUtils.formatNumber(row.value[0], 4)}
+          </span><br/>
+          <span style={{ float: "right" }}>
+            {this.toGreenRedStyle(row.value[1])}
+          </span>
+        </div>
       ),
       sortMethod: (a, b) => {
         return b - a;
@@ -131,24 +132,18 @@ class PortfolioView extends Component {
       
       { Header: "Balance", accessor: "total", minWidth: 120, maxWidth: 140, 
       Footer: rows => (
-        <span style={{
-          float: "right"
-        }}>
+        <span style={{ float: "right" }}>
           <strong>{"$" + formatUtils.formatNumber(this.getTotalBalance(rows), 2)}</strong>
         </span>
       ),
       Cell: row => (
         <div>
-        <span style={{
-          float: "right"
-        }}>
-          {"$" + formatUtils.formatNumber(row.value[0], 2)}
-        </span><br/>
-        <span style={{
-          float: "right"
-        }}>
-          {formatUtils.toShortFormat(row.value[1][0], 2).substr(1)}
-        </span>
+          <span style={{ float: "right" }}>
+            {"$" + formatUtils.formatNumber(row.value[0], 2)}
+          </span><br/>
+          <span style={{ float: "right" }}>
+            {formatUtils.toShortFormat(row.value[1][0], 2).substr(1)}
+          </span>
         </div>
       ),
       sortMethod: (a, b) => {
@@ -169,8 +164,8 @@ class PortfolioView extends Component {
       let currencyBalance = currentPortfolio.getCurrencyBalance(props.resModel, k, props.resModel.usd);
       let name = k.name;
       let code = k.code;
-      let price = props.resModel.getLastPrice(k, props.resModel.usd);
       let percentChange24h = props.resModel.getPercentChange24h(k);
+      let price = [props.resModel.getLastPrice(k, props.resModel.usd), percentChange24h];
       let balance = [v, k.code];
       let share = (currencyBalance / totalBalance * 100);
       let total = [currencyBalance, balance];

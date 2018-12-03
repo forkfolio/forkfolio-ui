@@ -53,7 +53,7 @@ export default class ResModel {
 
   getPercentChange24h(currency) {
     if(this.recentTickers.get(currency) != null) {
-      return this.recentTickers.get(currency).percentChange24h;;
+      return this.recentTickers.get(currency).percentChange24h;
     }
 
     return 0;
