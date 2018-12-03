@@ -42,16 +42,6 @@ class PortfolioView extends Component {
     return total;
   }
 
-  toGreenRedStyle(value) {
-    let style1 = "font-" + (value >= 0 ? "green" : "red" );
-    style1 = Math.abs(value) < 0.001 ? "" : style1;
-    return (
-      <div className={style1}>
-        {formatUtils.formatNumber(value, 2) + "%"}
-      </div>
-    );
-  }
-
   getTableColumnsDesktop() {
     const tableColumns = [
       { Header: "Name", accessor: "name", maxWidth: 180, },
@@ -67,7 +57,7 @@ class PortfolioView extends Component {
       { Header: "24h", accessor: "percentChange24h", maxWidth: 80,
       Cell: row => (
         <span style={{ float: "right" }}>
-          {this.toGreenRedStyle(row.value)}
+          {formatUtils.toGreenRedPercentStyle(row.value)}
         </span>
       ),
       sortMethod: (a, b) => {

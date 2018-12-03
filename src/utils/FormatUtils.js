@@ -33,6 +33,16 @@ class FormatUtils {
     return "$" + formatUtils.formatNumber(short, 2) + adder;
   }
 
+  toGreenRedPercentStyle(value) {
+    let style1 = "font-" + (value >= 0 ? "green" : "red" );
+    style1 = Math.abs(value) < 0.001 ? "" : style1;
+    return (
+      <div className={style1}>
+        {formatUtils.formatNumber(value, 2) + "%"}
+      </div>
+    );
+  }
+
   getNoDataText(name, userModel) {
     let currentPortfolio = userModel.portfolios.slice(-1)[0];
     if(currentPortfolio.tradeCount === 0) {

@@ -283,7 +283,7 @@ class TradesView extends Component {
       { Header: "Profit [%]", accessor: "profitpercentage", maxWidth: 80, filterable: false,
       Cell: row => (
         <span style={{ float: "right" }}>
-          {formatUtils.formatNumber(row.value, 2) + "%"}
+          {formatUtils.toGreenRedPercentStyle(row.value)}
         </span>
       ),
       sortMethod: (a, b) => {
