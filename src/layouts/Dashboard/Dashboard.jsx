@@ -27,8 +27,7 @@ import cookie from 'react-cookies';
 import ConfirmNewPortfolioDialog from "../../views/dialogs/ConfirmNewPortfolioDialog";
 import DemoCard from "../../views/common/DemoCard";
 import ReactGA from 'react-ga';
-import moment from 'moment';
-
+import { dateUtils } from './../../utils/DateUtils';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -259,9 +258,7 @@ class Dashboard extends Component {
         });
 
         if(newModel.transactions[0] != null) {
-          let firstDate = new Date(newModel.transactions[0].time);
-          let daysSince = this.getDaysSince(firstDate);
-
+          let daysSince = newModel.getDaysSinceFirstTx();
           this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), daysSince + 2);
         }
 
@@ -356,16 +353,12 @@ class Dashboard extends Component {
     this.setState({ isConfirmNewPortfolioDialogShown: false });
   }
 
-  getDaysSince(sinceDate) {
-    return moment(new Date()).diff(moment(sinceDate), 'days');
-  }
-
   addTransaction(tx) {
     let isOldest = true, hasNewBalance = true;
     // check if historic prices need to be updated
     if(this.state.userModel.portfolios[1] != null) {
       let firstDate = new Date(this.state.userModel.portfolios[1].genesisTx.time);
-      isOldest = this.getDaysSince(new Date(tx.time)) > this.getDaysSince(firstDate);
+      isOldest = dateUtils.getDaysSince(new Date(tx.time)) > dateUtils.getDaysSince(firstDate);
       hasNewBalance = !this.state.userModel.portfolios.slice(-1)[0].balances.has(tx.pair.base);
     }
 
@@ -391,7 +384,7 @@ class Dashboard extends Component {
     // updade historic prices if needed
     if(hasNewBalance || isOldest) {
       let firstDate = newModel.portfolios[1].genesisTx.time;
-      this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), this.getDaysSince(firstDate) + 2);
+      this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), dateUtils.getDaysSince(firstDate) + 2);
     }
 
     console.log("Transaction added. " + newModel.transactions.length + " transactions in user model.");
@@ -400,7 +393,7 @@ class Dashboard extends Component {
   updateTransaction(tx) {
     // check if historic prices need to be updated
     let firstDate = new Date(this.state.userModel.portfolios[1].genesisTx.time);
-    let isOldest = this.getDaysSince(new Date(tx.time)) > this.getDaysSince(firstDate);
+    let isOldest = dateUtils.getDaysSince(new Date(tx.time)) > dateUtils.getDaysSince(firstDate);
     let hasNewBalance = !this.state.userModel.portfolios.slice(-1)[0].balances.has(tx.pair.base);
 
     // remove, add, sort
@@ -428,7 +421,7 @@ class Dashboard extends Component {
     // updade historic prices if needed
     if(hasNewBalance || isOldest) {
       let firstDate = newModel.portfolios[1].genesisTx.time;
-      this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), this.getDaysSince(firstDate) + 2);
+      this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), dateUtils.getDaysSince(firstDate) + 2);
     }
 
     console.log("Transaction added. " + newModel.transactions.length + " transactions in user model.");
@@ -437,7 +430,7 @@ class Dashboard extends Component {
   removeTransaction(tx) {
     // check if historic prices need to be updated
     let firstDate = new Date(this.state.userModel.portfolios[1].genesisTx.time);
-    let isOldest = this.getDaysSince(new Date(tx.time)) >= this.getDaysSince(firstDate);
+    let isOldest = dateUtils.getDaysSince(new Date(tx.time)) >= dateUtils.getDaysSince(firstDate);
     let hasNewBalance = !this.state.userModel.portfolios.slice(-1)[0].balances.has(tx.pair.base);
 
     // remove, and sort
@@ -464,7 +457,7 @@ class Dashboard extends Component {
     // updade historic prices if needed
     if(hasNewBalance || isOldest) {
       let firstDate = newModel.portfolios[1].genesisTx.time;
-      this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), this.getDaysSince(firstDate) + 2);
+      this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), dateUtils.getDaysSince(firstDate) + 2);
     }
 
     console.log("Transaction removed. " + newModel.transactions.length + " transactions in user model.");
@@ -530,7 +523,7 @@ class Dashboard extends Component {
       // set new model, and get prices
       let newModel = this.updateUserModel(portfolioObj.transactions, 0);
       let firstDate = newModel.portfolios[1].genesisTx.time;
-      this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), this.getDaysSince(firstDate) + 2);
+      this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), dateUtils.getDaysSince(firstDate) + 2);
 
       ReactGA.event({category: 'User', action: 'Open'});
     }, false);

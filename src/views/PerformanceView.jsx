@@ -14,7 +14,8 @@ class PerformanceView extends Component {
 
     this.rangeClickHandler = this.rangeClickHandler.bind(this);
 
-    let portfolios = this.getBestCurrentWorstPortfolio(props, 90);
+    let daysSince = props.userModel.getDaysSinceFirstTx();
+    let portfolios = this.getBestCurrentWorstPortfolio(props, daysSince);
     this.state = {
       bestPortfolio: portfolios.best,
       currentPortfolio: portfolios.current,
@@ -30,9 +31,8 @@ class PerformanceView extends Component {
 
   // safely change state here
   componentWillReceiveProps(nextProps) {
-    console.log("componentWillReceiveProps PerformanceView")
-    // TODO 90 should be from props, move up 
-    let portfolios = this.getBestCurrentWorstPortfolio(nextProps, 90); 
+    let daysSince = nextProps.userModel.getDaysSinceFirstTx();
+    let portfolios = this.getBestCurrentWorstPortfolio(nextProps, daysSince); 
     this.setState({
       bestPortfolio: portfolios.best,
       currentPortfolio: portfolios.current,

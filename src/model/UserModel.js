@@ -1,5 +1,7 @@
 /*jshint esversion: 6 */
-import Portfolio from './Portfolio'
+import Portfolio from './Portfolio';
+import { dateUtils } from './../utils/DateUtils';
+
 
 export default class UserModel {
   constructor(transactions = [], resModel) {
@@ -47,5 +49,14 @@ export default class UserModel {
     }
 
     return selected;
+  }
+
+  getDaysSinceFirstTx() {
+    if(this.transactions.length > 0) {
+      let firstDate = new Date(this.transactions[0].time);
+      return dateUtils.getDaysSince(firstDate);
+    }
+
+    return 0;
   }
 }
