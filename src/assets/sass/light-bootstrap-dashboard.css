@@ -4683,7 +4683,7 @@ button.close {
   -webkit-font-smoothing: antialiased;
   font-family: "Roboto","Helvetica Neue",Arial,sans-serif;
   font-weight: 400;
-  font-size: 17px; }
+  font-size: 16px; }
 
 h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
   font-weight: 300;
@@ -5478,7 +5478,7 @@ h1 .subtitle {
 
 .btn-simple {
   border: 0;
-  font-size: 17px;
+  font-size: 16px;
   padding: 8px 16px; }
   .btn-simple.btn-icon {
     padding: 8px; }
@@ -5505,7 +5505,7 @@ h1 .subtitle {
     padding: 3px 5px; }
 
 .btn-special {
-  font-size: 17px;
+  font-size: 15px;
   border-radius: 3px;
   padding: 1px 5px;
   font-weight: 400; }
@@ -6928,7 +6928,7 @@ form label.radio, form label.checkbox {
   .navbar .navbar-nav > li > a.btn-round {
     margin: 16px 3px; }
   .navbar .navbar-nav > li > a [class^="fa"] {
-    font-size: 17px;
+    font-size: 16px;
     position: relative;
     line-height: 16px; }
   .navbar .navbar-nav p {
@@ -6953,7 +6953,7 @@ form label.radio, form label.checkbox {
     margin: 10px 3px;
     font-size: 16px; }
   .navbar .btn-simple {
-    font-size: 17px; }
+    font-size: 16px; }
   .navbar.fixed {
     width: calc(100% - 100px);
     right: 0;
