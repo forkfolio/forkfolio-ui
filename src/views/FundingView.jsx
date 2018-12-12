@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 // react component for creating dynamic tables
 import ReactTable from "react-table";
-import { Grid, Row, Col } from "react-bootstrap";
+import { Grid, Row, Col, Tooltip, OverlayTrigger } from "react-bootstrap";
 
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
@@ -188,6 +188,12 @@ class FundingView extends Component {
       />
     );
 
+    const tooltipHelpText1 = <Tooltip id="edit_tooltip">
+      Funding panel displays all your portfolio fundings: deposits and withdrawals. Deposit is when you add currency to your portfolio, and withdrawal is when you remove it. <br/><br/> 
+      To add a funding, click on the Add funding button. To edit or remove a funding, click on the edit/remove icon found in ACTIONS column.<br/><br/> 
+      Fundings can be sorted, and filtered in multiple ways. For example, to show all USD withdrawals in 2018, enter United States Dollar in the NAME filter, and 2018 in the DATE filter.
+    </Tooltip>; 
+
     return (
       <div className="main-content">
         <Grid fluid>
@@ -208,15 +214,17 @@ class FundingView extends Component {
                   >
                     <i className={"fa fa-plus"} /> Add funding
                   </Button>
-                  <Button
-                    bsStyle="default"
-                    special // for share button: fa fa-share-alt
-                    //speciallarge 
-                    //pullRight
-                    simple
-                  >
-                    <i className={"fa fa-question-circle"} /> Help 
-                  </Button> 
+                  <OverlayTrigger placement="bottom" overlay={tooltipHelpText1}>
+                    <Button
+                      bsStyle="default"
+                      special // for share button: fa fa-share-alt
+                      //speciallarge 
+                      //pullRight
+                      simple
+                    >
+                      <i className={"fa fa-question-circle"} /> Help 
+                    </Button> 
+                  </OverlayTrigger>
                   </div>
                 }
                 category={fundingCount + " funding" + (fundingCount === 1 ? "" : "s")}

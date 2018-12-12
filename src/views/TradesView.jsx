@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 // react component for creating dynamic tables
 import ReactTable from "react-table";
-import { Grid, Row, Col, } from "react-bootstrap";
+import { Grid, Row, Col, Tooltip, OverlayTrigger } from "react-bootstrap";
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import AddTradeDialog from "./dialogs/AddTradeDialog";
@@ -362,6 +362,13 @@ class TradesView extends Component {
       />
     );
 
+    const tooltipHelpText1 = <Tooltip id="edit_tooltip">
+      Trades panel displays all your trades. A trade is when you exchange one currency for another. <br/><br/> 
+      To add a trade, click on the Add trade button. To edit or remove a trade, click on the edit/remove icon found in ACTIONS column.<br/><br/> 
+      PROFIT column will give you a trade's profit in USD for prices right now. There's also a total profit for all trades on the bottom. <br/><br/> 
+      Trades can be sorted, and filtered in multiple ways. For example, to show all ETH/USD trades in 2018, enter ETH/USD in the PAIR filter, and 2018 in the DATE filter.
+    </Tooltip>; 
+
     return (
       <div className="main-content">
         <Grid fluid>
@@ -382,15 +389,17 @@ class TradesView extends Component {
                   >
                     <i className={"fa fa-plus"} /> Add trade
                   </Button>
-                  <Button
-                  bsStyle="default"
-                  special // for share button: fa fa-share-alt
-                  //speciallarge 
-                  //pullRight
-                  simple
-                >
-                  <i className={"fa fa-question-circle"} /> Help 
-                </Button> 
+                  <OverlayTrigger placement="bottom" overlay={tooltipHelpText1}>
+                    <Button
+                      bsStyle="default"
+                      special // for share button: fa fa-share-alt
+                      //speciallarge 
+                      //pullRight
+                      simple
+                    >
+                    <i className={"fa fa-question-circle"} /> Help 
+                  </Button> 
+                </OverlayTrigger>
                 </div>
                 }
                 category={tradeCount + " trade" + (tradeCount === 1 ? "" : "s")}
