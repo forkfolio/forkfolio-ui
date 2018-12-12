@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import Card from "components/Card/Card.jsx";
-import { Col, Row } from "react-bootstrap";
+import { Col, Row, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { formatUtils } from '../../utils/FormatUtils';
+import Button from "components/CustomButton/CustomButton.jsx";
 
 class InsightsCard extends Component {
   constructor(props) {
@@ -76,10 +77,29 @@ class InsightsCard extends Component {
     let holdingProfit = totalProfit - tradingProfit;
     let tradeCount = this.props.userModel.portfolios.slice(-1)[0].tradeCount;
     let exposureToCrypto = this.getExposureToCryptoPercentage(this.props, currentPortfolio, totalBalance);
+
+    const tooltipHelpText = <Tooltip id="edit_tooltip">
+      Hodling and trading profits are 2 components of a total profit you made since you deposited your first currency. <br/><br/>
+      Trading profit is profit you made from trading, and includes all your trades. See more details on trades on the Trades page.  <br/><br/>
+      Hodling profit is profit you made by just hodling your currencies, without trading. It's calculated by subtracting trading profit from total profit.
+    </Tooltip>; 
     return (
       <Card
         title={this.props.title}
         category='All time'
+        rightSection={
+          <OverlayTrigger placement="bottom" overlay={tooltipHelpText}>
+            <Button
+            bsStyle="default"
+            special // for share button: fa fa-share-alt
+            //speciallarge 
+            //pullRight
+            simple
+          >
+            <i className={"fa fa-question-circle"} /> Help
+          </Button> 
+        </OverlayTrigger>
+        }
         content={
           <div>
           <Row>
@@ -89,7 +109,7 @@ class InsightsCard extends Component {
                 <table className="table table-hover">
                   <tbody>
                     <tr>
-                      <td>by holding</td>
+                      <td>by hodling</td>
                       <td className="text-right">{this.toDecimalFormatStyled(holdingProfit / totalProfit * 100, '%')}</td>
                       <td className="text-right">{this.toShortFormatStyled(holdingProfit)}</td>
                     </tr>

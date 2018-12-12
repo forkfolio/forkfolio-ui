@@ -370,21 +370,28 @@ class TradesView extends Component {
               <Card
                 title="What are my recent trades?"
                 rightSection={
+                  <div>
                   <Button
-                    special
-                    simple
+                    // was like this for without color
+                    //special
+                    //simple
+                    bsStyle="info"
+                    fill
+                    special   
                     onClick={() => this.props.showAddTradeDialog()}
                   >
                     <i className={"fa fa-plus"} /> Add trade
                   </Button>
-                  /*<Button
-                    bsStyle="default"
-                    speciallarge
-                    //pullRight
-                    simple
-                  >
-                    <i className={"fa fa-question-circle"} />
-                  </Button>*/
+                  <Button
+                  bsStyle="default"
+                  special // for share button: fa fa-share-alt
+                  //speciallarge 
+                  //pullRight
+                  simple
+                >
+                  <i className={"fa fa-question-circle"} /> Help 
+                </Button> 
+                </div>
                 }
                 category={tradeCount + " trade" + (tradeCount === 1 ? "" : "s")}
                 content={

@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { Grid, Col, Row } from "react-bootstrap";
+import { Grid, Col, Row, Tooltip, OverlayTrigger } from "react-bootstrap";
 import ReactTable from "react-table";
 import Highstock from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 import Card from "components/Card/Card.jsx";
 import InsightsCard from './common/InsightsCard';
+import Button from "components/CustomButton/CustomButton.jsx";
 import HelpCard from './common/HelpCard';
 import AddFundingDialog from "./dialogs/AddFundingDialog";
 import { formatUtils } from './../utils/FormatUtils';
@@ -243,6 +244,21 @@ class PortfolioView extends Component {
       />
     );
 
+    const tooltipHelpText1 = <Tooltip id="edit_tooltip">
+      Balance sheet panel displays 
+      all crypto and fiat currencies (coins) you own at this 
+      moment. This is your portfolio. You can check live prices 
+      of your currencies, total balance of a currency in USD, 
+      and the total value in USD at the bottom. <br/><br/> 
+      24H column displays a change in USD price in the last 24 hours.
+    </Tooltip>; 
+    const tooltipHelpText2 = <Tooltip id="edit_tooltip">
+      Portfolio history panel displays a chart of daily historical snapshots of your portfolio. 
+      All changes to your portfolio are taken into account: trades, deposits and withdrawals. 
+      <br/><br/> 
+      Easily zoom in/out with predefined time periods, or use the slider on the bottom to fine tune.
+    </Tooltip>; 
+
     return (
       <div className="main-content">
         <Grid fluid>
@@ -260,6 +276,19 @@ class PortfolioView extends Component {
               <Card
                 title="What's my balance sheet today?"
                 category={assetCount + " asset" + (assetCount === 1 ? "" : "s")}
+                rightSection={
+                  <OverlayTrigger placement="bottom" overlay={tooltipHelpText1}>
+                    <Button
+                      bsStyle="default"
+                      special // for share button: fa fa-share-alt
+                      //speciallarge 
+                      //pullRight
+                      simple
+                      >
+                      <i className={"fa fa-question-circle"} /> Help 
+                    </Button> 
+                  </OverlayTrigger>
+                }
                 content={
                   <ReactTable
                     className="-highlight"
@@ -287,6 +316,19 @@ class PortfolioView extends Component {
               <Card
                 title="What's my portfolio history?"
                 //category="24 Hours performance"
+                rightSection={
+                  <OverlayTrigger placement="bottom" overlay={tooltipHelpText2}>
+                    <Button
+                      bsStyle="default"
+                      special // for share button: fa fa-share-alt
+                      //speciallarge 
+                      //pullRight
+                      simple
+                      >
+                      <i className={"fa fa-question-circle"} /> Help 
+                    </Button> 
+                  </OverlayTrigger>
+                }
                 content={
                   <HighchartsReact
                     highcharts={Highstock}

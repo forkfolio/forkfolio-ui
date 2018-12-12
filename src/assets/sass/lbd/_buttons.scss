@@ -109,7 +109,7 @@
 }
 
 .btn-special{
-   @include btn-size($padding-xs-vertical, $padding-xs-horizontal, $font-size-medium, $border-radius-small);
+   @include btn-size($padding-xs-vertical, $padding-xs-horizontal, /*$font-size-medium*/15px, $border-radius-small);
    font-weight: $font-weight-normal;
 }
 /* added by forkfolio end */

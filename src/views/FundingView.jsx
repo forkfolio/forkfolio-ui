@@ -196,22 +196,28 @@ class FundingView extends Component {
               <Card
                 title="What are my recent deposits and withdrawals?"
                 rightSection={
+                  <div>
                   <Button
-                    special
-                    //pullRight
-                    simple
+                    // was like this for without color
+                    //special
+                    //simple
+                    bsStyle="info"
+                    fill
+                    special                   
                     onClick={() => this.props.showAddFundingDialog()}
                   >
                     <i className={"fa fa-plus"} /> Add funding
                   </Button>
-                  /*<Button
+                  <Button
                     bsStyle="default"
-                    speciallarge
+                    special // for share button: fa fa-share-alt
+                    //speciallarge 
                     //pullRight
                     simple
                   >
-                    <i className={"fa fa-question-circle"} />
-                  </Button>*/
+                    <i className={"fa fa-question-circle"} /> Help 
+                  </Button> 
+                  </div>
                 }
                 category={fundingCount + " funding" + (fundingCount === 1 ? "" : "s")}
                 content={

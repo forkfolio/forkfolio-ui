@@ -312,7 +312,7 @@ class CommonTradeDialog extends Component {
                     Cancel
                   </Button>
                   <Button
-                    bsStyle="default"
+                    bsStyle="info"
                     fill
                     wd
                     type="submit"
