@@ -551,7 +551,7 @@ class Dashboard extends Component {
     }
 
     // save to file
-    let file = new File([portfolioJson], "MyForkFolio" + this.state.userModel.transactions.length + ".json", {type: "text/plain;charset=utf-8"});
+    let file = new File([portfolioJson], "my-forkfolio-" + this.state.userModel.transactions.length + ".json", {type: "text/plain;charset=utf-8"});
     FileSaver.saveAs(file);
 
     this.setState({
