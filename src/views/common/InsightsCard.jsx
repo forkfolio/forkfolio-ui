@@ -79,8 +79,8 @@ class InsightsCard extends Component {
     let exposureToCrypto = this.getExposureToCryptoPercentage(this.props, currentPortfolio, totalBalance);
 
     const tooltipHelpText = <Tooltip id="edit_tooltip">
-      Hodling and trading profits are 2 components of a total profit you made since you deposited your first currency. <br/><br/>
-      Trading profit is profit you made from trading, and includes all your trades. See more details on trades on the Trades page.  <br/><br/>
+      Hodling and trading profits are 2 components of the Total profit you made since you deposited your first currency. <br/><br/>
+      Trading profit is profit you made from trading, and includes all your trades. Go to Trades page to see more details on trades. <br/><br/>
       Hodling profit is profit you made by just hodling your currencies, without trading. It's calculated by subtracting trading profit from total profit.
     </Tooltip>; 
     return (
