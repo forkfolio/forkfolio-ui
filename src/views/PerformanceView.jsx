@@ -25,6 +25,9 @@ class PerformanceView extends Component {
   }
   
   componentWillMount() {
+    rangeSelectorModel.days = this.props.userModel.getDaysSinceFirstTx();;
+    rangeSelectorModel.userFriendlyText = "All time";
+
     console.log("Navigate to: " + window.location.pathname + window.location.hash);
     ReactGA.pageview(window.location.pathname + window.location.hash);
   }
@@ -133,6 +136,7 @@ class PerformanceView extends Component {
       rangeSelectorModel.buttons[i].events = {
         click: function() {
           rangeSelectorModel.days = rangeSelectorModel.buttons[i].days;
+          rangeSelectorModel.userFriendlyText = rangeSelectorModel.buttons[i].userFriendlyText;
           externalCaller.call();
         }
       }
@@ -165,7 +169,7 @@ class PerformanceView extends Component {
             <Col md={12}>
               <Card
                 title="How does my current portfolio compare to past portfolios?"
-                //category="24 Hours performance"
+                category={(rangeSelectorModel.userFriendlyText != null ? rangeSelectorModel.userFriendlyText : "All time" )}
                 content={<HighchartsReact
                   highcharts={Highstock}
                   constructorType={'stockChart'}

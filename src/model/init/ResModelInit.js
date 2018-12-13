@@ -1,7 +1,7 @@
 import UserModel from "../UserModel"
 import ResModel from "../ResModel"
+import { dateUtils } from './../../utils/DateUtils';
 
-// create user model with test transactions for now
 export var resModel = new ResModel();
 export let userModel = new UserModel([], resModel);
 
@@ -23,26 +23,33 @@ export const rangeSelectorModel = {
         count: 7,
         text: '1w',
         days: 7,
+        userFriendlyText: 'Last 7 days',
     },{
         type: 'month',
         count: 1,
         text: '1m',
         days: 30,
+        userFriendlyText: 'Last 30 days',
     }, {
         type: 'month',
         count: 3,
         text: '3m',
         days: 90,
+        userFriendlyText: 'Last 3 months',
     }, {
         type: 'ytd',
-        text: 'YTD'
+        text: 'YTD',
+        days: dateUtils.getDaysSince(new Date(new Date().getFullYear(), 0, 0)),
+        userFriendlyText: 'Year-to-date',
     }, {
         type: 'year',
         count: 1,
         text: '1y',
         days: 365,
+        userFriendlyText: 'Last year',
     }, {
         type: 'all',
-        text: 'All'
+        text: 'All',
+        userFriendlyText: 'All time',
     }]
 }
