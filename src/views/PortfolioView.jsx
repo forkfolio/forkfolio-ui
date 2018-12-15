@@ -183,9 +183,10 @@ class PortfolioView extends Component {
     for (const currency of currentPortfolio.balances.keys()) {
       const serie = [];
       for(let t of props.resModel.dailyTickers.get(currency)) {       
-          let balanceInDenominated = t.price * currentPortfolio.getPastBalance(t.pair.base, t.time);
+          let balanceInDenominated = t.price * currentPortfolio.getPastCurrencyBalance(t.pair.base, t.time);
           serie.push([t.time.getTime(), balanceInDenominated]);
       }
+      
       // take the last price and update it with recent price
       if(serie.slice(-1)[0] != null) {
         serie.slice(-1)[0][1] = currentPortfolio.getCurrencyBalance(props.resModel, currency, props.resModel.usd)

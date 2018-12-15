@@ -94,7 +94,7 @@ export default class Portfolio {
     }
 
     // returns balance of the currency on a date
-    getPastBalance(currency, date) {
+    getPastCurrencyBalance(currency, date) {
         let currencyBalance = 0;
         if(this.genesisTx !== null) {
             // if portfolio is created before timepoint, use it's balances
@@ -116,6 +116,39 @@ export default class Portfolio {
 
         return currencyBalance;
     }
+
+    // returns total balance of portfolio in past for denominated
+    getPastTotalBalance(resModel, date, denomination) {
+        let totalPastBalance = 0;
+        for (const k of this.balances.keys()) {
+            let pastPrice = resModel.getPastPrice(k, denomination, date);
+            totalPastBalance += pastPrice * this.getPastCurrencyBalance(k, date);
+        }
+
+        return totalPastBalance;
+
+        /*
+        if(this.genesisTx !== null) {
+            // if portfolio is created before timepoint, use it's balances
+            if(this.genesisTx.time.getTime() < date.getTime()) {
+                // if time point is after portfolio creation date, then use this portfolio's balance 
+                currencyBalance = this.balances.get(currency);
+            } else {
+                let pastPortfolio = this.getPastPortfolio(date);
+                if(pastPortfolio !== null) {
+                    currencyBalance = pastPortfolio.balances.get(currency);
+                    if(currencyBalance == null) {
+                        currencyBalance = 0
+                    }
+                }
+            }
+        } else {
+            console.log("Get past balance called for portfolio without genesis trade (first portfolio). Returning 0.");
+        }
+
+        return totalPastBalance;*/
+    }
+
     // returns portfolio was current at date
     getPastPortfolio(date) {
         let prev = this.previous;

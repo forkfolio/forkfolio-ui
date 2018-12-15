@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { Grid, Col, Row } from "react-bootstrap";
+import { Grid, Col, Row, Tooltip, OverlayTrigger } from "react-bootstrap";
 import Highstock from 'highcharts/highstock'
 import HighchartsReact from 'highcharts-react-official'
 import PortfolioPie from './common/PortfolioPie'
 import Card from "components/Card/Card.jsx";
+import Button from "components/CustomButton/CustomButton.jsx";
 import { rangeSelectorModel } from "../model/init/ResModelInit.js";
 import ReactGA from 'react-ga';
 
@@ -93,43 +94,67 @@ class PerformanceView extends Component {
   }
 
   getPortfolioSeries(props, portfolio) {
+    const serie = [];
+    // take usd tickers as template for dates
+    if(props.resModel.dailyTickers.get(props.resModel.usd) != null) {
+      for(let t of props.resModel.dailyTickers.get(props.resModel.usd)) {
+        let totalPastBalance = portfolio.getPastTotalBalance(props.resModel, t.time, props.resModel.usd);
+        serie.push([t.time.getTime(), totalPastBalance]);
+        //console.log(t.time + ": " + totalPastBalance);
+      }
+
+      // take the last price and update it with recent price
+      if(serie.slice(-1)[0] != null) {     
+        serie.slice(-1)[0][1] = portfolio.getTotalBalance(props.resModel, props.resModel.usd)
+      }
+    }
+
+    return serie;
+
+
     // prepare portfolio performance chart
-    const series = [];
-    for (const currency of portfolio.balances.keys()) {
+    //const series = [];
+    /*for (const currency of portfolio.balances.keys()) {
+      //console.log(currency);
       const serie = [];
       for(let t of props.resModel.dailyTickers.get(currency)) {
-        let balanceInDenominated = t.price * portfolio.getPastBalance(t.pair.base, t.time);
+        let balanceInDenominated = t.price * portfolio.getPastCurrencyBalance(t.pair.base, t.time);
         serie.push([t.time.getTime(), balanceInDenominated]);
       }
+      
       // take the last price and update it with recent price
       if(serie.slice(-1)[0] != null) {     
         serie.slice(-1)[0][1] = portfolio.getCurrencyBalance(props.resModel, currency, props.resModel.usd)
         series.push({name: currency.code, data: serie});
       }
-    }
-
-    // add at the end
-    const addedSeries = [];
-    for (const obj of series) {
-      for(let i = 0; i < obj.data.length; i++) {
-        // first add zeros
-        if(addedSeries[i] == null) {
-          addedSeries.push([obj.data[i][0], 0]);
-        }
-        
-        addedSeries[i][1] += obj.data[i][1];
+      console.log(serie.length)
+      if(serie.length > 0) {
+        console.log(currency.code + ": " + serie[serie.length-1][1]);
       }
     }
-    return addedSeries;
+
+    console.log("series.length: " + series.length)
+    // add at the end
+    const addedSeries = [];
+    for (const serie of series) {
+      //console.log(obj.data.length)
+      for(let i = 0; i < serie.data.length; i++) {
+        // first add zeros
+        if(addedSeries[i] == null) {
+          addedSeries.push([serie.data[i][0], 0]);
+        }
+        
+        addedSeries[i][1] += serie.data[i][1];
+      }
+    }
+    return addedSeries;*/
   }
 
   getPerformanceChartOptions(props, best, current, worst) {   
     let series = [];
-    series.push({name: "Best", data: this.getPortfolioSeries(props, best)});
-    series.push({name: "Current", data: this.getPortfolioSeries(props, current)});    
-    series.push({name: "Worst", data: this.getPortfolioSeries(props, worst)});
-    //console.log(series)
-    //console.log(rangeSelectorModel)
+    series.push({name: "Best portfolio", data: this.getPortfolioSeries(props, best)});
+    series.push({name: "Current portfolio", data: this.getPortfolioSeries(props, current)});    
+    series.push({name: "Worst portfolio", data: this.getPortfolioSeries(props, worst)});
 
     var externalCaller = this.rangeClickHandler;
     for(let i = 0; i < rangeSelectorModel.buttons.length; i++) {
@@ -162,6 +187,13 @@ class PerformanceView extends Component {
   }
 
   render() {
+    const tooltipHelpText1 = <Tooltip id="edit_tooltip">
+      Performance panel displays a chart of best, worst and current portfolio in a selected time period. Click on a zoom buttons to select time period. <br/><br/> 
+      Chart is useful to evaluate your trading performance in selected time period. The closer your current is to the best portfolio, the better. <br/><br/> 
+      Current portfolio is portfolio with all your trades, portfolio you have right now. <br/><br/> 
+      Best/worst portfolio is portfolio with highest/lowest value in USD if you'd stopped trading altogether at some moment in selected time period. 
+    </Tooltip>; 
+
     return (
       <div className="main-content">
         <Grid fluid>
@@ -169,7 +201,20 @@ class PerformanceView extends Component {
             <Col md={12}>
               <Card
                 title="How does my current portfolio compare to past portfolios?"
-                category={(rangeSelectorModel.userFriendlyText != null ? rangeSelectorModel.userFriendlyText : "All time" )}
+                category={rangeSelectorModel.userFriendlyText != null ? rangeSelectorModel.userFriendlyText : "All time" }
+                rightSection={
+                  <OverlayTrigger placement="bottom" overlay={tooltipHelpText1}>
+                    <Button
+                      bsStyle="default"
+                      special // for share button: fa fa-share-alt
+                      //speciallarge 
+                      //pullRight
+                      simple
+                      >
+                      <i className={"fa fa-question-circle"} /> Help 
+                    </Button> 
+                  </OverlayTrigger>
+                }
                 content={<HighchartsReact
                   highcharts={Highstock}
                   constructorType={'stockChart'}
