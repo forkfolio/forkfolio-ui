@@ -100,7 +100,6 @@ class PerformanceView extends Component {
       for(let t of props.resModel.dailyTickers.get(props.resModel.usd)) {
         let totalPastBalance = portfolio.getPastTotalBalance(props.resModel, t.time, props.resModel.usd);
         serie.push([t.time.getTime(), totalPastBalance]);
-        //console.log(t.time + ": " + totalPastBalance);
       }
 
       // take the last price and update it with recent price
@@ -110,44 +109,6 @@ class PerformanceView extends Component {
     }
 
     return serie;
-
-
-    // prepare portfolio performance chart
-    //const series = [];
-    /*for (const currency of portfolio.balances.keys()) {
-      //console.log(currency);
-      const serie = [];
-      for(let t of props.resModel.dailyTickers.get(currency)) {
-        let balanceInDenominated = t.price * portfolio.getPastCurrencyBalance(t.pair.base, t.time);
-        serie.push([t.time.getTime(), balanceInDenominated]);
-      }
-      
-      // take the last price and update it with recent price
-      if(serie.slice(-1)[0] != null) {     
-        serie.slice(-1)[0][1] = portfolio.getCurrencyBalance(props.resModel, currency, props.resModel.usd)
-        series.push({name: currency.code, data: serie});
-      }
-      console.log(serie.length)
-      if(serie.length > 0) {
-        console.log(currency.code + ": " + serie[serie.length-1][1]);
-      }
-    }
-
-    console.log("series.length: " + series.length)
-    // add at the end
-    const addedSeries = [];
-    for (const serie of series) {
-      //console.log(obj.data.length)
-      for(let i = 0; i < serie.data.length; i++) {
-        // first add zeros
-        if(addedSeries[i] == null) {
-          addedSeries.push([serie.data[i][0], 0]);
-        }
-        
-        addedSeries[i][1] += serie.data[i][1];
-      }
-    }
-    return addedSeries;*/
   }
 
   getPerformanceChartOptions(props, best, current, worst) {   
