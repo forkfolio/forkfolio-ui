@@ -20,6 +20,7 @@ class PortfolioView extends Component {
     this.getTableColumnsDesktop = this.getTableColumnsDesktop.bind(this);
     this.getTableColumnsMobile = this.getTableColumnsMobile.bind(this);
     this.getTableData = this.getTableData.bind(this);
+    this.getLogoURL = this.getLogoURL.bind(this);
   }
 
   componentWillMount() {
@@ -43,9 +44,18 @@ class PortfolioView extends Component {
     return total;
   }
 
+  downsizeTokenLogo(originalLogoURL) {
+    return originalLogoURL.replace("64x64", "32x32");
+  }
+
   getTableColumnsDesktop() {
     const tableColumns = [
-      { Header: "Name", accessor: "name", maxWidth: 180, },
+      { Header: "Name", accessor: "name", maxWidth: 180, 
+      Cell: row => (
+        <span>
+          <img src={this.downsizeTokenLogo(row.value[0])} alt=""></img> {row.value[1]}
+        </span>
+      )},
       { Header: "Price", accessor: "price", maxWidth: 120,
       Cell: row => (
         <span style={{ float: "right" }}>
@@ -105,7 +115,12 @@ class PortfolioView extends Component {
 
   getTableColumnsMobile() {
     const tableColumns = [
-      { Header: "Name", accessor: "code", maxWidth: 60, },
+      { Header: "Name", accessor: "code", maxWidth: 100, 
+      Cell: row => (
+        <span>
+          <img src={this.downsizeTokenLogo(row.value[0])} alt=""></img> {row.value[1]}
+        </span>
+      )},
       { Header: "Price", accessor: "price", maxWidth: 100,
       Cell: row => (
         <div>
@@ -145,6 +160,14 @@ class PortfolioView extends Component {
     return tableColumns;
   }
 
+  getLogoURL(currency) {
+    if(currency.meta == null) {
+        return "fiat-logos/" + (currency.isFiat ? currency.code.toLowerCase() : "empty") + ".png";
+    }
+
+    return currency.meta.logo;
+  }
+
   // gets table data for desktop and mobile
   getTableData(props) {
     let currentPortfolio = props.userModel.portfolios.slice(-1)[0];
@@ -153,8 +176,8 @@ class PortfolioView extends Component {
     const tableData = [];
     for (let [k, v] of currentPortfolio.balances) {
       let currencyBalance = currentPortfolio.getCurrencyBalance(props.resModel, k, props.resModel.usd);
-      let name = k.name;
-      let code = k.code;
+      let name = [this.getLogoURL(k), k.name];
+      let code = [this.getLogoURL(k), k.code];
       let percentChange24h = props.resModel.getPercentChange24h(k);
       let price = [props.resModel.getLastPrice(k, props.resModel.usd), percentChange24h];
       let balance = [v, k.code];
@@ -186,7 +209,7 @@ class PortfolioView extends Component {
           let balanceInDenominated = t.price * currentPortfolio.getPastCurrencyBalance(t.pair.base, t.time);
           serie.push([t.time.getTime(), balanceInDenominated]);
       }
-      
+
       // take the last price and update it with recent price
       if(serie.slice(-1)[0] != null) {
         serie.slice(-1)[0][1] = currentPortfolio.getCurrencyBalance(props.resModel, currency, props.resModel.usd)

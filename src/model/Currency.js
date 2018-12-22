@@ -6,5 +6,6 @@ export default class Currency {
     this.name = name;
     this.rank = rank;
     this.isFiat = isFiat;
+    this.meta = null;
   }
 }

@@ -60,6 +60,7 @@ class Dashboard extends Component {
     this.getCurrenciesToFetch = this.getCurrenciesToFetch.bind(this);
     this.fetchAllAndRender = this.fetchAllAndRender.bind(this);
     this.fetchHistoday = this.fetchHistoday.bind(this);
+    this.fetchMeta = this.fetchMeta.bind(this);
     this.isDemo = this.isDemo.bind(this);
 
     this.updateUserModel = this.updateUserModel.bind(this);
@@ -166,23 +167,27 @@ class Dashboard extends Component {
   
   fetchAllAndRender(currencies, daysSince) {
 
-    // prepare all promises
-    const promises = [];
-    for(let currency of currencies) {
-      promises.push(this.fetchHistoday(currency, daysSince));
-    }
-  
-    // resolve, then render
-    Promise.all(promises).then(() => {
-      console.log("History prices updated (" + promises.length + " series).");
+    // fetch meta first for loading speed
+    this.fetchMeta().then(() => {
+      // prepare all promises
+      const promises = [];
+      for(let currency of currencies) {
+        promises.push(this.fetchHistoday(currency, daysSince));
+      }
+    
+      // resolve, then render
+      Promise.all(promises).then(() => {
+        console.log("History prices updated (" + promises.length + " series).");
 
-      // re-render
-      let newResModel = this.state.resModel.clone();
-      let newUserModel = new UserModel(this.state.userModel.transactions, newResModel);
-      this.setState({
-        userModel: newUserModel,     
-        resModel: newResModel
-      })
+
+        // re-render
+        let newResModel = this.state.resModel.clone();
+        let newUserModel = new UserModel(this.state.userModel.transactions, newResModel);
+        this.setState({
+          userModel: newUserModel,     
+          resModel: newResModel
+        });
+      });
     });
   }
   
@@ -201,6 +206,25 @@ class Dashboard extends Component {
         accept();
         return;
       });
+    });
+  }
+
+  fetchMeta() {
+    return new Promise((accept, reject) => {
+      let currencies = this.getCurrenciesToFetch(this.state.userModel);
+      if(currencies.length > 0) {
+        fetch(config.restURL + 'meta?tokens=' + this.toTokensString(currencies)).then((response) => {
+          return response.text()
+        }).then((body) => {
+          let tickers = JSON.parse(body);
+          for (let i = 0; i < tickers.length; i++) {
+            let currency = resModel.findCurrencyByCode(tickers[i].c);
+            currency.meta = JSON.parse(tickers[i].m);
+          }
+          accept();
+          return;
+        });
+      }
     });
   }
 
