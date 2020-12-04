@@ -2269,14 +2269,14 @@ td.rdtYear:hover {
     -webkit-transform: translateY(-50%);
     -moz-transform: translateY(-50%); }
   .fixed-plugin .dropdown-menu:before {
-    border-bottom: 16px solid transparent;
+    border-bottom: 16px solid rgba(0, 0, 0, 0);
     border-left: 16px solid rgba(0, 0, 0, 0.2);
-    border-top: 16px solid transparent;
+    border-top: 16px solid rgba(0, 0, 0, 0);
     right: -27px; }
   .fixed-plugin .dropdown-menu:after {
-    border-bottom: 16px solid transparent;
+    border-bottom: 16px solid rgba(0, 0, 0, 0);
     border-left: 16px solid #FFFFFF;
-    border-top: 16px solid transparent;
+    border-top: 16px solid rgba(0, 0, 0, 0);
     right: -26px; }
   .typo-line {
     padding-left: 140px;
@@ -2529,7 +2529,7 @@ This is the official noUiSlider styles, with minor changes by Creative Tim
 .noUi-target,
 .noUi-target * {
   -webkit-touch-callout: none;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-user-select: none;
   -ms-touch-action: none;
   touch-action: none;
@@ -6393,41 +6393,41 @@ form label.radio, form label.checkbox {
     padding: 0; }
   .tooltip.top .tooltip-inner:after {
     border-top: 11px solid #FAE6A4;
-    border-left: 11px solid transparent;
-    border-right: 11px solid transparent;
+    border-left: 11px solid rgba(0, 0, 0, 0);
+    border-right: 11px solid rgba(0, 0, 0, 0);
     bottom: -10px; }
   .tooltip.top .tooltip-inner:before {
     border-top: 11px solid rgba(0, 0, 0, 0.2);
-    border-left: 11px solid transparent;
-    border-right: 11px solid transparent;
+    border-left: 11px solid rgba(0, 0, 0, 0);
+    border-right: 11px solid rgba(0, 0, 0, 0);
     bottom: -11px; }
   .tooltip.bottom {
     margin-top: 11px;
     padding: 0; }
   .tooltip.bottom .tooltip-inner:after {
     border-bottom: 11px solid #FAE6A4;
-    border-left: 11px solid transparent;
-    border-right: 11px solid transparent;
+    border-left: 11px solid rgba(0, 0, 0, 0);
+    border-right: 11px solid rgba(0, 0, 0, 0);
     top: -10px; }
   .tooltip.bottom .tooltip-inner:before {
     border-bottom: 11px solid rgba(0, 0, 0, 0.2);
-    border-left: 11px solid transparent;
-    border-right: 11px solid transparent;
+    border-left: 11px solid rgba(0, 0, 0, 0);
+    border-right: 11px solid rgba(0, 0, 0, 0);
     top: -11px; }
   .tooltip.left {
     margin-left: -11px;
     padding: 0; }
   .tooltip.left .tooltip-inner:after {
     border-left: 11px solid #FAE6A4;
-    border-top: 11px solid transparent;
-    border-bottom: 11px solid transparent;
+    border-top: 11px solid rgba(0, 0, 0, 0);
+    border-bottom: 11px solid rgba(0, 0, 0, 0);
     right: -10px;
     left: auto;
     margin-left: 0; }
   .tooltip.left .tooltip-inner:before {
     border-left: 11px solid rgba(0, 0, 0, 0.2);
-    border-top: 11px solid transparent;
-    border-bottom: 11px solid transparent;
+    border-top: 11px solid rgba(0, 0, 0, 0);
+    border-bottom: 11px solid rgba(0, 0, 0, 0);
     right: -11px;
     left: auto;
     margin-left: 0; }
@@ -6436,15 +6436,15 @@ form label.radio, form label.checkbox {
     padding: 0; }
   .tooltip.right .tooltip-inner:after {
     border-right: 11px solid #FAE6A4;
-    border-top: 11px solid transparent;
-    border-bottom: 11px solid transparent;
+    border-top: 11px solid rgba(0, 0, 0, 0);
+    border-bottom: 11px solid rgba(0, 0, 0, 0);
     left: -10px;
     top: 0;
     margin-left: 0; }
   .tooltip.right .tooltip-inner:before {
     border-right: 11px solid rgba(0, 0, 0, 0.2);
-    border-top: 11px solid transparent;
-    border-bottom: 11px solid transparent;
+    border-top: 11px solid rgba(0, 0, 0, 0);
+    border-bottom: 11px solid rgba(0, 0, 0, 0);
     left: -11px;
     top: 0;
     margin-left: 0; }
@@ -7321,20 +7321,28 @@ form label.radio, form label.checkbox {
 .btn-facebook {
   border-color: #3b5998;
   color: #3b5998; }
-  .btn-facebook:hover, .btn-facebook:focus, .btn-facebook:active, .btn-facebook.active,
+  .btn-facebook:hover,
+  .btn-facebook:focus,
+  .btn-facebook:active,
+  .btn-facebook.active,
   .open > .btn-facebook.dropdown-toggle {
     background-color: transparent;
     color: #3b5998;
     border-color: #3b5998;
     opacity: 1; }
-  .btn-facebook:disabled, .btn-facebook[disabled], .btn-facebook.disabled {
+  .btn-facebook:disabled,
+  .btn-facebook[disabled],
+  .btn-facebook.disabled {
     background-color: transparent;
     border-color: #3b5998; }
   .btn-facebook.btn-fill {
     color: #FFFFFF;
     background-color: #3b5998;
     opacity: 0.9; }
-    .btn-facebook.btn-fill:hover, .btn-facebook.btn-fill:focus, .btn-facebook.btn-fill:active, .btn-facebook.btn-fill.active,
+    .btn-facebook.btn-fill:hover,
+    .btn-facebook.btn-fill:focus,
+    .btn-facebook.btn-fill:active,
+    .btn-facebook.btn-fill.active,
     .open > .btn-facebook.btn-fill.dropdown-toggle {
       background-color: #3b5998;
       color: #FFFFFF;
@@ -7343,20 +7351,28 @@ form label.radio, form label.checkbox {
 .btn-twitter {
   border-color: #55acee;
   color: #55acee; }
-  .btn-twitter:hover, .btn-twitter:focus, .btn-twitter:active, .btn-twitter.active,
+  .btn-twitter:hover,
+  .btn-twitter:focus,
+  .btn-twitter:active,
+  .btn-twitter.active,
   .open > .btn-twitter.dropdown-toggle {
     background-color: transparent;
     color: #55acee;
     border-color: #55acee;
     opacity: 1; }
-  .btn-twitter:disabled, .btn-twitter[disabled], .btn-twitter.disabled {
+  .btn-twitter:disabled,
+  .btn-twitter[disabled],
+  .btn-twitter.disabled {
     background-color: transparent;
     border-color: #55acee; }
   .btn-twitter.btn-fill {
     color: #FFFFFF;
     background-color: #55acee;
     opacity: 0.9; }
-    .btn-twitter.btn-fill:hover, .btn-twitter.btn-fill:focus, .btn-twitter.btn-fill:active, .btn-twitter.btn-fill.active,
+    .btn-twitter.btn-fill:hover,
+    .btn-twitter.btn-fill:focus,
+    .btn-twitter.btn-fill:active,
+    .btn-twitter.btn-fill.active,
     .open > .btn-twitter.btn-fill.dropdown-toggle {
       background-color: #55acee;
       color: #FFFFFF;
@@ -7623,8 +7639,8 @@ form label.radio, form label.checkbox {
     color: #333333; }
   .dropdown-menu:before {
     border-bottom: 11px solid rgba(0, 0, 0, 0.2);
-    border-left: 11px solid transparent;
-    border-right: 11px solid transparent;
+    border-left: 11px solid rgba(0, 0, 0, 0);
+    border-right: 11px solid rgba(0, 0, 0, 0);
     content: "";
     display: inline-block;
     position: absolute;
@@ -7632,8 +7648,8 @@ form label.radio, form label.checkbox {
     top: -11px; }
   .dropdown-menu:after {
     border-bottom: 11px solid #FFFFFF;
-    border-left: 11px solid transparent;
-    border-right: 11px solid transparent;
+    border-left: 11px solid rgba(0, 0, 0, 0);
+    border-right: 11px solid rgba(0, 0, 0, 0);
     content: "";
     display: inline-block;
     position: absolute;
@@ -7648,8 +7664,8 @@ form label.radio, form label.checkbox {
   .dropup .dropdown-menu:before {
     border-bottom: none;
     border-top: 11px solid rgba(0, 0, 0, 0.2);
-    border-left: 11px solid transparent;
-    border-right: 11px solid transparent;
+    border-left: 11px solid rgba(0, 0, 0, 0);
+    border-right: 11px solid rgba(0, 0, 0, 0);
     content: "";
     display: inline-block;
     position: absolute;
@@ -7659,8 +7675,8 @@ form label.radio, form label.checkbox {
   .dropup .dropdown-menu:after {
     border-bottom: none;
     border-top: 11px solid #FFFFFF;
-    border-left: 11px solid transparent;
-    border-right: 11px solid transparent;
+    border-left: 11px solid rgba(0, 0, 0, 0);
+    border-right: 11px solid rgba(0, 0, 0, 0);
     content: "";
     display: inline-block;
     position: absolute;
@@ -8296,8 +8312,8 @@ form label.radio, form label.checkbox {
     margin-bottom: 5px; }
   .navbar-nav > li > .dropdown-menu:before {
     border-bottom: 11px solid rgba(0, 0, 0, 0.2);
-    border-left: 11px solid transparent;
-    border-right: 11px solid transparent;
+    border-left: 11px solid rgba(0, 0, 0, 0);
+    border-right: 11px solid rgba(0, 0, 0, 0);
     content: "";
     display: inline-block;
     position: absolute;
@@ -8305,8 +8321,8 @@ form label.radio, form label.checkbox {
     top: -11px; }
   .navbar-nav > li > .dropdown-menu:after {
     border-bottom: 11px solid #FFFFFF;
-    border-left: 11px solid transparent;
-    border-right: 11px solid transparent;
+    border-left: 11px solid rgba(0, 0, 0, 0);
+    border-right: 11px solid rgba(0, 0, 0, 0);
     content: "";
     display: inline-block;
     position: absolute;
