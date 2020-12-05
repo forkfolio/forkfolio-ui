@@ -216,8 +216,7 @@ class Dashboard extends Component {
       .then((response) => {
         return response.text()
       }).then((body) => {
-        console.log("fetchHistoday()");
-        console.log(body)
+        console.log("fetchHistoday() done, not printing");
         let repacked = [];
         for (let t of JSON.parse(body)) {
           let pair = new CurrencyPair(currency, resModel.usd);
