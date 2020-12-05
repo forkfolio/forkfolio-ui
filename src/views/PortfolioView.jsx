@@ -178,7 +178,7 @@ class PortfolioView extends Component {
       let currencyBalance = currentPortfolio.getCurrencyBalance(props.resModel, k, props.resModel.usd);
       let name = [this.getLogoURL(k), k.name];
       let code = [this.getLogoURL(k), k.code];
-      let percentChange24h = props.resModel.getPercentChange24h(k);
+      let percentChange24h = props.resModel.getPercentChange24h(k.code);
       let price = [props.resModel.getLastPrice(k, props.resModel.usd), percentChange24h];
       let balance = [v, k.code];
       let share = (currencyBalance / totalBalance * 100);
