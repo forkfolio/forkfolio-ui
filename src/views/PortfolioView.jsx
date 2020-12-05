@@ -170,8 +170,6 @@ class PortfolioView extends Component {
 
   // gets table data for desktop and mobile
   getTableData(props) {
-    console.log("Rendering PortfolioView");
-    console.log(props)
     let currentPortfolio = props.userModel.portfolios.slice(-1)[0];
     let totalBalance = currentPortfolio.getTotalBalance(props.resModel, props.resModel.usd);
 
@@ -257,7 +255,6 @@ class PortfolioView extends Component {
     let assetCount = currentPortfolio.balances.size;
     const showPagination = assetCount > 10;
     const isMobile = window.innerWidth <= 992;
-    //console.log("Render called. isMobile: " + isMobile)
 
     let addFundingDialog = (
       <AddFundingDialog

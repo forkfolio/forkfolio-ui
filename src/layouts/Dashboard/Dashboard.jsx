@@ -109,8 +109,8 @@ class Dashboard extends Component {
   fetchRecentPrices() {
     let currencies = this.getCurrenciesToFetch(this.state.userModel);
     if(currencies.length > 0) {
-      console.log("Fetching recent: ")
-      console.log(config.restURL + 'recent?tokens=' + this.toTokensString(currencies))
+      //console.log("Fetching recent: ")
+      //console.log(config.restURL + 'recent?tokens=' + this.toTokensString(currencies))
       fetch(config.restURL + 'recent?tokens=' + this.toTokensString(currencies)).then((response) => {
         return response.text()
       }).then((body) => {
@@ -120,21 +120,19 @@ class Dashboard extends Component {
         let count = 0;
         for (let i = 0; i < tickers.length; i++) {
           let newPrice = parseFloat(tickers[i].l);
-          console.log("--------")
-          console.log("Received token: ");
-          console.log(tickers[i])
-          console.log("Existing ticker:");
-          console.log(resModel.recentTickers.get(tickers[i].c))
+          //console.log("--------")
+          //console.log("Received token: ");
+          //console.log(tickers[i])
+          //console.log("Existing ticker:");
+          //console.log(resModel.recentTickers.get(tickers[i].c))
           // remove shitcoin duplicates
           if(newPrice > 0.001) {
-            console.log("> 0.001")
             // if ticker doesn't exist or is updated
             if(resModel.recentTickers.get(tickers[i].c) == null ||
               newPrice !== resModel.recentTickers.get(tickers[i].c).price) {
               let pair = new CurrencyPair(tickers[i].c, resModel.usd);
               resModel.recentTickers.set(tickers[i].c, new Ticker(pair, newPrice, new Date(parseInt(tickers[i].t, 10) * 1000), tickers[i].p))
               count++;
-              console.log("price updated")
             }
           }
         }
@@ -157,8 +155,6 @@ class Dashboard extends Component {
       fetch(config.restURL + 'currencies').then((response) => {
         return response.text()
       }).then((body) => {
-        console.log("fetchCurrencies()");
-        console.log(body)
         for (let c of JSON.parse(body)) {
           let currency = new Currency(c.c, c.n, c.r, c.f);
           resModel.dailyTickers.set(currency, []);
@@ -196,7 +192,6 @@ class Dashboard extends Component {
       Promise.all(promises).then(() => {
         console.log("History prices updated (" + promises.length + " series).");
 
-
         // re-render
         let newResModel = this.state.resModel.clone();
         let newUserModel = new UserModel(this.state.userModel.transactions, newResModel);
@@ -210,13 +205,13 @@ class Dashboard extends Component {
   
   fetchHistoday(currency, days) {
     return new Promise((accept, reject) => {
-      console.log("Fetching histoday: ")
-      console.log(config.restURL + 'histoday?range=' + days + '&tokens=' + currency.code)
+      //console.log("Fetching histoday: ")
+      //console.log(config.restURL + 'histoday?range=' + days + '&tokens=' + currency.code)
       fetch(config.restURL + 'histoday?range=' + days + '&tokens=' + currency.code)
       .then((response) => {
         return response.text()
       }).then((body) => {
-        console.log("fetchHistoday() done, not printing");
+        //console.log("fetchHistoday() done, not printing");
         let repacked = [];
         for (let t of JSON.parse(body)) {
           let pair = new CurrencyPair(currency, resModel.usd);
@@ -233,13 +228,13 @@ class Dashboard extends Component {
     return new Promise((accept, reject) => {
       let currencies = this.getCurrenciesToFetch(this.state.userModel);
       if(currencies.length > 0) {
-        console.log("Fetching meta: ")
-        console.log(config.restURL + 'meta?tokens=' + this.toTokensString(currencies))
+        //console.log("Fetching meta: ")
+        //console.log(config.restURL + 'meta?tokens=' + this.toTokensString(currencies))
         fetch(config.restURL + 'meta?tokens=' + this.toTokensString(currencies)).then((response) => {
           return response.text()
         }).then((body) => {
-          console.log("fetchMeta()");
-          console.log(body)
+          //console.log("fetchMeta()");
+          //console.log(body)
           let tickers = JSON.parse(body);
           for (let i = 0; i < tickers.length; i++) {
             let currency = resModel.findCurrencyByCode(tickers[i].c);
@@ -570,7 +565,6 @@ class Dashboard extends Component {
 
       // set new model, and get prices
       let newModel = this.updateUserModel(portfolioObj.transactions, 0);
-      console.log(newModel)
       let firstDate = newModel.portfolios[1].genesisTx.time;
       this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), dateUtils.getDaysSince(firstDate) + 2);
 
