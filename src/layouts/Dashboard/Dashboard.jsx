@@ -120,6 +120,10 @@ class Dashboard extends Component {
         let count = 0;
         for (let i = 0; i < tickers.length; i++) {
           let newPrice = parseFloat(tickers[i].l);
+          console.log("Received token: " + tickers[i]);
+          console.log("Existing ticker:");
+          console.log(resModel.recentTickers.get(tickers[i].c))
+          // remove shitcoin duplicates
           if(newPrice > 0.001) {
             // if ticker doesn't exist or is updated
             if(resModel.recentTickers.get(tickers[i].c) == null ||
