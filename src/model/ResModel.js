@@ -23,7 +23,9 @@ export default class ResModel {
 
     if(counter === this.usd) {
       console.log(1)
+      console.log(base);
       console.log(this.recentTickers);
+      console.log(this.recentTickers.get(base))
       // counter usd, there is recent base
       if(this.recentTickers.get(base) != null) {
         console.log("returning " + base + ": " +  this.recentTickers.get(base).price)
