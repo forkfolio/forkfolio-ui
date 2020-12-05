@@ -120,17 +120,21 @@ class Dashboard extends Component {
         let count = 0;
         for (let i = 0; i < tickers.length; i++) {
           let newPrice = parseFloat(tickers[i].l);
-          console.log("Received token: " + tickers[i]);
+          console.log("--------")
+          console.log("Received token: ");
+          console.log(tickers[i])
           console.log("Existing ticker:");
           console.log(resModel.recentTickers.get(tickers[i].c))
           // remove shitcoin duplicates
           if(newPrice > 0.001) {
+            console.log("> 0.001")
             // if ticker doesn't exist or is updated
             if(resModel.recentTickers.get(tickers[i].c) == null ||
               newPrice !== resModel.recentTickers.get(tickers[i].c).price) {
               let pair = new CurrencyPair(tickers[i].c, resModel.usd);
               resModel.recentTickers.set(tickers[i].c, new Ticker(pair, newPrice, new Date(parseInt(tickers[i].t, 10) * 1000), tickers[i].p))
               count++;
+              console.log("price updated")
             }
           }
         }
@@ -309,7 +313,7 @@ class Dashboard extends Component {
 
         // start checking recent prices periodically
         this.fetchRecentPrices();
-        setInterval(this.fetchRecentPrices, 20000);
+        setInterval(this.fetchRecentPrices, 60000);
       });
     });
     
