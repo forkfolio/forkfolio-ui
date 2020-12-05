@@ -119,14 +119,15 @@ class Dashboard extends Component {
         let tickers = JSON.parse(body);
         let count = 0;
         for (let i = 0; i < tickers.length; i++) {
-          let newPrice = parseFloat(tickers[i].l/* + Math.random()*/);
-
-          // if ticker doesn't exist or is updated
-          if(resModel.recentTickers.get(tickers[i].c) == null ||
-            newPrice !== resModel.recentTickers.get(tickers[i].c).price) {
-            let pair = new CurrencyPair(tickers[i].c, resModel.usd);
-            resModel.recentTickers.set(tickers[i].c, new Ticker(pair, newPrice, new Date(parseInt(tickers[i].t, 10) * 1000), tickers[i].p))
-            count++;
+          let newPrice = parseFloat(tickers[i].l);
+          if(newPrice > 0.001) {
+            // if ticker doesn't exist or is updated
+            if(resModel.recentTickers.get(tickers[i].c) == null ||
+              newPrice !== resModel.recentTickers.get(tickers[i].c).price) {
+              let pair = new CurrencyPair(tickers[i].c, resModel.usd);
+              resModel.recentTickers.set(tickers[i].c, new Ticker(pair, newPrice, new Date(parseInt(tickers[i].t, 10) * 1000), tickers[i].p))
+              count++;
+            }
           }
         }
         // if there is update, render
