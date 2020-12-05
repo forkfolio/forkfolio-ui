@@ -120,10 +120,12 @@ class Dashboard extends Component {
         let count = 0;
         for (let i = 0; i < tickers.length; i++) {
           let newPrice = parseFloat(tickers[i].l/* + Math.random()*/);
-          if(resModel.recentTickers.get(currencies[i]) == null ||
-            newPrice !== resModel.recentTickers.get(currencies[i]).price) {
-            let pair = new CurrencyPair(currencies[i], resModel.usd);
-            resModel.recentTickers.set(currencies[i], new Ticker(pair, newPrice, new Date(parseInt(tickers[i].t, 10) * 1000), tickers[i].p))
+
+          // if ticker doesn't exist or is updated
+          if(resModel.recentTickers.get(tickers[i].c) == null ||
+            newPrice !== resModel.recentTickers.get(tickers[i].c).price) {
+            let pair = new CurrencyPair(tickers[i].c, resModel.usd);
+            resModel.recentTickers.set(tickers[i].c, new Ticker(pair, newPrice, new Date(parseInt(tickers[i].t, 10) * 1000), tickers[i].p))
             count++;
           }
         }
