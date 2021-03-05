@@ -109,13 +109,9 @@ class Dashboard extends Component {
   fetchRecentPrices() {
     let currencies = this.getCurrenciesToFetch(this.state.userModel);
     if(currencies.length > 0) {
-      //console.log("Fetching recent: ")
-      //console.log(config.restURL + 'recent?tokens=' + this.toTokensString(currencies))
       fetch(config.restURL + 'recent?tokens=' + this.toTokensString(currencies)).then((response) => {
         return response.text()
       }).then((body) => {
-        console.log("fetchRecentPrices()");
-        console.log(body)
         let tickers = JSON.parse(body);
         let count = 0;
         for (let i = 0; i < tickers.length; i++) {
@@ -152,7 +148,8 @@ class Dashboard extends Component {
   // fetches a list of all curencies, crypto and fiat, and stores them in resModel
   fetchCurrencies() {
     return new Promise((accept, reject) => {
-      fetch(config.restURL + 'currencies').then((response) => {
+      let url = config.restURL + (config.isLocalhost ? 'currencies.json' :  + 'currencies');
+      fetch(url).then((response) => {
         return response.text()
       }).then((body) => {
         for (let c of JSON.parse(body)) {
@@ -205,13 +202,10 @@ class Dashboard extends Component {
   
   fetchHistoday(currency, days) {
     return new Promise((accept, reject) => {
-      //console.log("Fetching histoday: ")
-      //console.log(config.restURL + 'histoday?range=' + days + '&tokens=' + currency.code)
       fetch(config.restURL + 'histoday?range=' + days + '&tokens=' + currency.code)
       .then((response) => {
         return response.text()
       }).then((body) => {
-        //console.log("fetchHistoday() done, not printing");
         let repacked = [];
         for (let t of JSON.parse(body)) {
           let pair = new CurrencyPair(currency, resModel.usd);
@@ -228,13 +222,9 @@ class Dashboard extends Component {
     return new Promise((accept, reject) => {
       let currencies = this.getCurrenciesToFetch(this.state.userModel);
       if(currencies.length > 0) {
-        //console.log("Fetching meta: ")
-        //console.log(config.restURL + 'meta?tokens=' + this.toTokensString(currencies))
         fetch(config.restURL + 'meta?tokens=' + this.toTokensString(currencies)).then((response) => {
           return response.text()
         }).then((body) => {
-          //console.log("fetchMeta()");
-          //console.log(body)
           let tickers = JSON.parse(body);
           for (let i = 0; i < tickers.length; i++) {
             let currency = resModel.findCurrencyByCode(tickers[i].c);
