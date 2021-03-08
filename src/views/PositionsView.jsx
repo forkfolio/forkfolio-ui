@@ -139,60 +139,6 @@ class PositionsView extends Component {
     })
   }
 
-  getTotalVolume(rows) {
-    let total = 0;
-    for (let row of rows.data) {
-      total += row.volume[0] * (row.type === "Buy" ? 1 : -1);
-    }
-    return total;
-  }
-
-  getTotalPrice(rows) {
-    return this.getTotalCost(rows) / this.getTotalVolume(rows);
-  }
-
-  getTotalCost(rows) {
-    let total = 0;
-    for (let row of rows.data) {
-      total += row.cost[0] * (row.type === "Buy" ? 1 : -1);
-    }
-    return total;
-  }
-
-  getTotalProfitPercentage(rows) {
-    let pairStr = rows.data[0].pair.split('/');
-    let base = this.props.resModel.findCurrencyByCode(pairStr[0]);
-    let counter = this.props.resModel.findCurrencyByCode(pairStr[1]);
-    if(base !== null && counter !== null) {
-      let totalCost = this.getTotalCost(rows);
-      let totalCostInUsd = totalCost * this.props.resModel.getLastPrice(counter, this.props.resModel.usd);
-      let totalProfit = this.getTotalProfit(rows);
-      let isBuy = this.getTypeFooter(rows) === "Buy";
-      totalCostInUsd = totalCostInUsd * (isBuy ? 1 : -1);
-      // check eth/usd and rep/usd
-      return (totalProfit / Math.max(0, totalCostInUsd)) * 100; 
-    }
-
-    return 0;
-  }
-
-  getTotalProfit(rows) {
-    let total = 0;
-    for (let row of rows.data) {
-      total += row.profit[0];
-    }
-    return total;
-  }
-
-  isOnePair(rows) {
-    for(let row of rows.data) {
-      if(row.pair !== rows.data[0].pair) {
-        return false;
-      }
-    }
-    return rows.data.length !== 0;
-  }
-
   getSumFooter(rows, columnName) {
     let total = 0;
     for (let row of rows.data) {
@@ -201,70 +147,6 @@ class PositionsView extends Component {
     return total;
   }
 
-  getPairFooter(rows) {
-    if(this.isOnePair(rows)) {
-      return rows.data[0].pair;
-    }
-
-    return "";
-  }
-
-  getTypeFooter(rows) {
-    if(this.isOnePair(rows)) {
-      return this.getTotalVolume(rows) >= 0 ? "Buy" : "Sell";
-    }
-
-    return "";
-  }
-
-  getVolumeFooter(rows) {
-    if(this.isOnePair(rows)) {
-      return formatUtils.formatNumber(Math.abs(this.getTotalVolume(rows)), 2) + " " + rows.data[0].volume[1];
-    }
-
-    return "";
-  }
-
-  getPriceFooter(rows) {
-    if(this.isOnePair(rows)) {
-      return formatUtils.formatNumber(this.getTotalPrice(rows), 6) + " " + rows.data[0].cost[1];
-    }
-
-    return "";
-  }
-
-  getCostFooter(rows) {
-    if(this.isOnePair(rows)) {
-      let isBuy = this.getTypeFooter(rows) === "Buy";
-      return formatUtils.formatNumber(this.getTotalCost(rows) * (isBuy ? 1 : -1), 2) + " " + rows.data[0].cost[1];
-    }
-
-    return "";
-  }
-
-  getProfitPercentageFooter(rows) {
-    if(this.isOnePair(rows)) {
-      return formatUtils.formatNumber(this.getTotalProfitPercentage(rows), 2) + "%";
-    }
-
-    return "";
-  }
-
-
-  /* 
-    { title: "Position" },
-    { title: "Share/Liquidation" },
-    { title: "Size" },
-    { title: "Active" },
-    { title: "@Current" },
-    { title: "Total Profit @Current" },
-    { title: "Monthly Profit @Current" },						
-    { title: "APR @Current" },
-    { title: "@Target" },
-    { title: "Total Profit @Target" },
-    { title: "Monthly Profit @Target" },					
-    { title: "APR @Target" }
-  */
   getTableColumns() {
     const tableColumns = [
       { 
