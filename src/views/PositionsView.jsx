@@ -266,184 +266,156 @@ class PositionsView extends Component {
     { title: "APR @Target" }
   */
   getTableColumns() {
-    /*const tableColumns = [
-      {
-        Header: 'Name',
-        columns: [
-          {
-            Header: 'First Name',
-            accessor: 'firstName',
-            // Use a two-stage aggregator here to first
-            // count the total rows being aggregated,
-            // then sum any of those counts if they are
-            // aggregated further
-            aggregate: 'count',
-            Aggregated: ({ value }) => `${value} Names`,
-          },
-          {
-            Header: 'Last Name',
-            accessor: 'lastName',
-            // Use another two-stage aggregator here to
-            // first count the UNIQUE values from the rows
-            // being aggregated, then sum those counts if
-            // they are aggregated further
-            aggregate: 'uniqueCount',
-            Aggregated: ({ value }) => `${value} Unique Names`,
-          },
-        ],
-      },
-      {
-        Header: 'Two',
-        columns: [
-          {
-            Header: 'First Name1',
-            accessor: 'firstName1',
-            // Use a two-stage aggregator here to first
-            // count the total rows being aggregated,
-            // then sum any of those counts if they are
-            // aggregated further
-            aggregate: 'count',
-            Aggregated: ({ value }) => `${value} Names`,
-          },
-          {
-            Header: 'Last Name1',
-            accessor: 'lastName1',
-            // Use another two-stage aggregator here to
-            // first count the UNIQUE values from the rows
-            // being aggregated, then sum those counts if
-            // they are aggregated further
-            aggregate: 'uniqueCount',
-            Aggregated: ({ value }) => `${value} Unique Names`,
-          },
-        ],
-      },
-    ]*/
     const tableColumns = [
-      { Header: "Position", accessor: "position", minWidth: 95, maxWidth: 100,
-        filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
+      { 
+        Header: "Info",
+        background: '#ff000042',
+        columns: [
+          { 
+            Header: "Position", accessor: "position", minWidth: 95, maxWidth: 100,
+            filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
+          },
+          { 
+            Header: "Liquidation", accessor: "liquidation", maxWidth: 100,
+            filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
+          },
+          { 
+            Header: "Size", accessor: "size", maxWidth: 50,
+            filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
+            Cell: row => (
+              <span style={{ float: "right" }}>
+                {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
+              </span>
+            ),
+            Footer: rows => (
+              <span>
+                <strong>
+                  {this.getSumFooter(rows, "size") + " " + rows.data[0]["size"][1]}
+                </strong>
+              </span>
+            ),
+            sortMethod: (a, b) => { return b[0] - a[0]; }
+          },
+          { 
+            Header: "Active", accessor: "active", maxWidth: 30,
+            filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
+            Cell: row => (
+              <span style={{ float: "right" }}>
+                {formatUtils.formatNumber(row.value[0], 0) + " " + row.value[1]}
+              </span>
+            ),
+          },
+        ]
       },
-      { Header: "Liquidation", accessor: "liquidation", maxWidth: 100,
-        filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
+      { 
+        Header: "Current",
+        columns: [
+          { 
+            Header: "@Current", accessor: "current", maxWidth: 150, filterable: false,
+            Cell: row => (
+              <span style={{ float: "right" }}>
+                {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
+              </span>
+            ),
+            sortMethod: (a, b) => { return b[0] - a[0]; }
+          },
+          { 
+            Header: "Total Profit @Current", accessor: "totalprofitcurrent", maxWidth: 150, filterable: false,
+            Cell: row => (
+              <span style={{ float: "right" }}>
+                {formatUtils.formatNumber(row.value[0], 0) + " " + row.value[1]}
+              </span>
+            ),
+            sortMethod: (a, b) => { return b[0] - a[0]; }, 
+            Footer: rows => (
+              <span style={{ float: "right" }}>
+                <strong>
+                  {this.getSumFooter(rows, "totalprofitcurrent") + " " + rows.data[0]["totalprofitcurrent"][1]}
+                </strong>
+              </span>
+            )
+          },
+          { 
+            Header: "Monthly Profit @Current", accessor: "monthlyprofitcurrent", maxWidth: 150, filterable: false,
+            Cell: row => (
+              <span style={{ float: "right" }}>
+                {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
+              </span>
+            ),
+            sortMethod: (a, b) => { return b[0] - a[0]; }, 
+            Footer: rows => (
+              <span style={{ float: "right" }}>
+                <strong>
+                  {this.getSumFooter(rows, "monthlyprofitcurrent") + " " + rows.data[0]["monthlyprofitcurrent"][1]}
+                </strong>
+              </span>
+            )
+          },
+          { 
+            Header: "APR @Current", accessor: "aprcurrent", maxWidth: 100, filterable: false,
+            Cell: row => (
+              <span style={{ float: "right" }}>
+                {formatUtils.formatNumber(row.value[0], 2) + "" + row.value[1]}
+              </span>
+            ),
+            sortMethod: (a, b) => { return b - a;
+            }
+          },
+        ]
       },
-      { Header: "Size", accessor: "size", maxWidth: 50,
-        filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
-        Cell: row => (
-          <span style={{ float: "right" }}>
-            {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
-          </span>
-        ),
-        Footer: rows => (
-          <span>
-            <strong>
-              {this.getSumFooter(rows, "size") + " " + rows.data[0]["size"][1]}
-            </strong>
-          </span>
-        ),
-        sortMethod: (a, b) => { return b[0] - a[0]; 
-        }
-      },
-      { Header: "Active", accessor: "active", maxWidth: 30,
-        filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
-        Cell: row => (
-          <span style={{ float: "right" }}>
-            {formatUtils.formatNumber(row.value[0], 0) + " " + row.value[1]}
-          </span>
-        ),
-      },
-      { Header: "@Current", accessor: "current", maxWidth: 150, filterable: false,
-        Cell: row => (
-          <span style={{ float: "right" }}>
-            {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
-          </span>
-        ),
-        sortMethod: (a, b) => { return b[0] - a[0]; 
-        }
-      },
-      { Header: "Total Profit @Current", accessor: "totalprofitcurrent", maxWidth: 150, filterable: false,
-      Cell: row => (
-        <span style={{ float: "right" }}>
-          {formatUtils.formatNumber(row.value[0], 0) + " " + row.value[1]}
-        </span>
-      ),
-      sortMethod: (a, b) => { return b[0] - a[0];
-      }, Footer: rows => (
-          <span style={{ float: "right" }}>
-            <strong>
-              {this.getSumFooter(rows, "totalprofitcurrent") + " " + rows.data[0]["totalprofitcurrent"][1]}
-            </strong>
-          </span>
-        )
-      },
-      { Header: "Monthly Profit @Current", accessor: "monthlyprofitcurrent", maxWidth: 150, filterable: false,
-      Cell: row => (
-        <span style={{ float: "right" }}>
-          {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
-        </span>
-      ),
-      sortMethod: (a, b) => { return b[0] - a[0];
-      }, Footer: rows => (
-        <span style={{ float: "right" }}>
-          <strong>
-            {this.getSumFooter(rows, "monthlyprofitcurrent") + " " + rows.data[0]["monthlyprofitcurrent"][1]}
-          </strong>
-        </span>
-      )},
-      { Header: "APR @Current", accessor: "aprcurrent", maxWidth: 100, filterable: false,
-        Cell: row => (
-          <span style={{ float: "right" }}>
-            {formatUtils.formatNumber(row.value[0], 2) + "" + row.value[1]}
-          </span>
-        ),
-        sortMethod: (a, b) => { return b - a;
-        }
-      },
-      { Header: "@Target", accessor: "target", maxWidth: 150, filterable: false,
-        Cell: row => (
-          <span style={{ float: "right" }}>
-            {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
-          </span>
-        ),
-        sortMethod: (a, b) => { return b[0] - a[0]; 
-        }
-      },
-      { Header: "Total Profit @Target", accessor: "totalprofittarget", maxWidth: 150, filterable: false,
-      Cell: row => (
-        <span style={{ float: "right" }}>
-          {formatUtils.formatNumber(row.value[0], 0) + " " + row.value[1]}
-        </span>
-      ),
-      sortMethod: (a, b) => { return b[0] - a[0];
-      }, Footer: rows => (
-          <span style={{ float: "right" }}>
-            <strong>
-              {this.getSumFooter(rows, "totalprofittarget") + " " + rows.data[0]["totalprofittarget"][1]}
-            </strong>
-          </span>
-        )
-      },
-      { Header: "Monthly Profit @Target", accessor: "monthlyprofittarget", maxWidth: 150, filterable: false,
-      Cell: row => (
-        <span style={{ float: "right" }}>
-          {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
-        </span>
-      ),
-      sortMethod: (a, b) => { return b[0] - a[0];
-      }, Footer: rows => (
-        <span style={{ float: "right" }}>
-          <strong>
-            {this.getSumFooter(rows, "monthlyprofittarget") + " " + rows.data[0]["monthlyprofittarget"][1]}
-          </strong>
-        </span>
-      )},
-      { Header: "APR @Target", accessor: "aprtarget", maxWidth: 100, filterable: false,
-        Cell: row => (
-          <span style={{ float: "right" }}>
-            {formatUtils.formatNumber(row.value[0], 2) + "" + row.value[1]}
-          </span>
-        ),
-        sortMethod: (a, b) => { return b - a;
-        }
-      }, { 
+      { 
+        Header: "Target",
+        columns: [
+          { Header: "@Target", accessor: "target", maxWidth: 150, filterable: false,
+            Cell: row => (
+              <span style={{ float: "right" }}>
+                {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
+              </span>
+            ),
+            sortMethod: (a, b) => { return b[0] - a[0]; 
+            }
+          },
+          { Header: "Total Profit @Target", accessor: "totalprofittarget", maxWidth: 150, filterable: false,
+          Cell: row => (
+            <span style={{ float: "right" }}>
+              {formatUtils.formatNumber(row.value[0], 0) + " " + row.value[1]}
+            </span>
+          ),
+          sortMethod: (a, b) => { return b[0] - a[0];
+          }, Footer: rows => (
+              <span style={{ float: "right" }}>
+                <strong>
+                  {this.getSumFooter(rows, "totalprofittarget") + " " + rows.data[0]["totalprofittarget"][1]}
+                </strong>
+              </span>
+            )
+          },
+          { Header: "Monthly Profit @Target", accessor: "monthlyprofittarget", maxWidth: 150, filterable: false,
+          Cell: row => (
+            <span style={{ float: "right" }}>
+              {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
+            </span>
+          ),
+          sortMethod: (a, b) => { return b[0] - a[0];
+          }, Footer: rows => (
+            <span style={{ float: "right" }}>
+              <strong>
+                {this.getSumFooter(rows, "monthlyprofittarget") + " " + rows.data[0]["monthlyprofittarget"][1]}
+              </strong>
+            </span>
+          )},
+          { Header: "APR @Target", accessor: "aprtarget", maxWidth: 100, filterable: false,
+            Cell: row => (
+              <span style={{ float: "right" }}>
+                {formatUtils.formatNumber(row.value[0], 2) + "" + row.value[1]}
+              </span>
+            ),
+            sortMethod: (a, b) => { return b - a;
+            }
+          }
+        ]
+      }, 
+      { 
         Header: "Actions", accessor: "actions", minWidth: 70, maxWidth: 70, sortable: false, filterable: false 
       }
     ];
