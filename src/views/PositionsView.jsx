@@ -272,23 +272,23 @@ class PositionsView extends Component {
         background: '#ff000042',
         columns: [
           { 
-            Header: "Position", accessor: "position", minWidth: 95, maxWidth: 100,
+            Header: "Position", accessor: "position", minWidth: 95, maxWidth: 300,
             filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
           },
           { 
-            Header: "Liquidation", accessor: "liquidation", maxWidth: 100,
+            Header: "Liquidation", accessor: "liquidation", maxWidth: 400,
             filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
           },
           { 
-            Header: "Size", accessor: "size", maxWidth: 50,
+            Header: "Size", accessor: "size", maxWidth: 150,
             filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
             Cell: row => (
               <span style={{ float: "right" }}>
-                {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
+                {formatUtils.formatNumber(row.value[0], 0) + " " + row.value[1]}
               </span>
             ),
             Footer: rows => (
-              <span>
+              <span style={{ float: "right" }}>
                 <strong>
                   {this.getSumFooter(rows, "size") + " " + rows.data[0]["size"][1]}
                 </strong>
@@ -297,7 +297,7 @@ class PositionsView extends Component {
             sortMethod: (a, b) => { return b[0] - a[0]; }
           },
           { 
-            Header: "Active", accessor: "active", maxWidth: 30,
+            Header: "Active", accessor: "active", maxWidth: 80,
             filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
             Cell: row => (
               <span style={{ float: "right" }}>
@@ -311,7 +311,7 @@ class PositionsView extends Component {
         Header: "Current",
         columns: [
           { 
-            Header: "@Current", accessor: "current", maxWidth: 150, filterable: false,
+            Header: "Price", accessor: "current", maxWidth: 150, filterable: false,
             Cell: row => (
               <span style={{ float: "right" }}>
                 {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
@@ -320,7 +320,7 @@ class PositionsView extends Component {
             sortMethod: (a, b) => { return b[0] - a[0]; }
           },
           { 
-            Header: "Total Profit @Current", accessor: "totalprofitcurrent", maxWidth: 150, filterable: false,
+            Header: "Total Profit", accessor: "totalprofitcurrent", maxWidth: 150, filterable: false,
             Cell: row => (
               <span style={{ float: "right" }}>
                 {formatUtils.formatNumber(row.value[0], 0) + " " + row.value[1]}
@@ -336,7 +336,7 @@ class PositionsView extends Component {
             )
           },
           { 
-            Header: "Monthly Profit @Current", accessor: "monthlyprofitcurrent", maxWidth: 150, filterable: false,
+            Header: "Monthly Profit", accessor: "monthlyprofitcurrent", maxWidth: 150, filterable: false,
             Cell: row => (
               <span style={{ float: "right" }}>
                 {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
@@ -352,7 +352,7 @@ class PositionsView extends Component {
             )
           },
           { 
-            Header: "APR @Current", accessor: "aprcurrent", maxWidth: 100, filterable: false,
+            Header: "APR", accessor: "aprcurrent", maxWidth: 100, filterable: false,
             Cell: row => (
               <span style={{ float: "right" }}>
                 {formatUtils.formatNumber(row.value[0], 2) + "" + row.value[1]}
@@ -366,7 +366,7 @@ class PositionsView extends Component {
       { 
         Header: "Target",
         columns: [
-          { Header: "@Target", accessor: "target", maxWidth: 150, filterable: false,
+          { Header: "Price", accessor: "target", maxWidth: 150, filterable: false,
             Cell: row => (
               <span style={{ float: "right" }}>
                 {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
@@ -375,7 +375,7 @@ class PositionsView extends Component {
             sortMethod: (a, b) => { return b[0] - a[0]; 
             }
           },
-          { Header: "Total Profit @Target", accessor: "totalprofittarget", maxWidth: 150, filterable: false,
+          { Header: "Total Profit", accessor: "totalprofittarget", maxWidth: 150, filterable: false,
           Cell: row => (
             <span style={{ float: "right" }}>
               {formatUtils.formatNumber(row.value[0], 0) + " " + row.value[1]}
@@ -390,7 +390,7 @@ class PositionsView extends Component {
               </span>
             )
           },
-          { Header: "Monthly Profit @Target", accessor: "monthlyprofittarget", maxWidth: 150, filterable: false,
+          { Header: "Monthly Profit", accessor: "monthlyprofittarget", maxWidth: 150, filterable: false,
           Cell: row => (
             <span style={{ float: "right" }}>
               {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
@@ -404,7 +404,7 @@ class PositionsView extends Component {
               </strong>
             </span>
           )},
-          { Header: "APR @Target", accessor: "aprtarget", maxWidth: 100, filterable: false,
+          { Header: "APR", accessor: "aprtarget", maxWidth: 100, filterable: false,
             Cell: row => (
               <span style={{ float: "right" }}>
                 {formatUtils.formatNumber(row.value[0], 2) + "" + row.value[1]}
