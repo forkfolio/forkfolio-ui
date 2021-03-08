@@ -4,8 +4,9 @@ import { dateUtils } from './../utils/DateUtils';
 
 
 export default class UserModel {
-  constructor(transactions = [], resModel) {
+  constructor(transactions = [], positions = [], resModel) {
     this.transactions = transactions;
+    this.positions = positions;
     this.portfolios = [];
 
     this.preparePortfolios(resModel);

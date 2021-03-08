@@ -135,7 +135,7 @@ class Dashboard extends Component {
         // if there is update, render
         if(count > 0) {
           console.log("Recent prices updated (" + count + " tickers).")
-          let newModel = new UserModel(this.state.userModel.transactions, this.state.resModel);
+          let newModel = new UserModel(this.state.userModel.transactions, this.state.userModel.positions, this.state.resModel);
           this.setState({
             userModel: newModel,
             resModel: this.state.resModel.clone()
@@ -191,7 +191,7 @@ class Dashboard extends Component {
 
         // re-render
         let newResModel = this.state.resModel.clone();
-        let newUserModel = new UserModel(this.state.userModel.transactions, newResModel);
+        let newUserModel = new UserModel(this.state.userModel.transactions, this.state.userModel.positions, newResModel);
         this.setState({
           userModel: newUserModel,     
           resModel: newResModel
@@ -274,14 +274,14 @@ class Dashboard extends Component {
           let portfolioJson = localStorage.getItem('portfolio01');
           if(portfolioJson != null && portfolioJson !== '') {
             let portfolioObject = JSON.parse(portfolioJson);
-            newModel = this.updateUserModel(portfolioObject.transactions, portfolioObject.changeCount);
+            newModel = this.updateUserModel(portfolioObject, portfolioObject.changeCount);
             console.log('Loaded portfolio from local storage.')
           } else {
-            newModel = this.updateUserModel([], 0);
+            newModel = this.updateUserModel({}, 0);
           }
         } else {
           // if demo, set model from demofolio file
-          newModel = this.updateUserModel(demofolio.transactions, 0);
+          newModel = this.updateUserModel(demofolio, 0);
           console.log('Loaded default portfolio.')
         }
 
@@ -402,7 +402,7 @@ class Dashboard extends Component {
     });
 
     // update userModel
-    let newModel = new UserModel(this.state.userModel.transactions, this.state.resModel);
+    let newModel = new UserModel(this.state.userModel.transactions, this.state.userModel.positions, this.state.resModel);
     let newChangeCount = this.state.changeCount + 1;
     this.setState({
       userModel: newModel,
@@ -439,7 +439,7 @@ class Dashboard extends Component {
     });
 
     // update userModel
-    let newModel = new UserModel(newTransactions, this.state.resModel);
+    let newModel = new UserModel(newTransactions, this.state.userModel.positions, this.state.resModel);
     let newChangeCount = this.state.changeCount + 1;
     this.setState({
       userModel: newModel,
@@ -475,7 +475,7 @@ class Dashboard extends Component {
     });
   
     // update userModel
-    let newModel = new UserModel(newTransactions, this.state.resModel);
+    let newModel = new UserModel(newTransactions, this.state.userModel.positions, this.state.resModel);
     let newChangeCount = this.state.changeCount + 1;
     this.setState({
       userModel: newModel,
@@ -509,7 +509,7 @@ class Dashboard extends Component {
     } else {
       console.log("New portfolio created");
       // save to model
-      this.updateUserModel([], 0);
+      this.updateUserModel({}, 0);
 
       // save to local storage
       if(!this.state.isDemo) {
@@ -528,10 +528,20 @@ class Dashboard extends Component {
   }
 
 
-  updateUserModel(fileFormatTransactions, changeCount) {
-    let transactions = this.stringifiedToObjectsTransactions(fileFormatTransactions);
+  updateUserModel(fileFormatPortfolio, changeCount) {
+    console.log(fileFormatPortfolio)
+    let transactions = [], positions = [];
+    // parse fileFormatPortfolio and get transactions 
+    if(fileFormatPortfolio.transactions) {
+      transactions = this.stringifiedToObjectsTransactions(fileFormatPortfolio.transactions);
+    }
+    // parse fileFormatPortfolio and get positions 
+    if(fileFormatPortfolio.positions) {
+      positions = fileFormatPortfolio.positions;
+    }
+    
     // update userModel with new transactions
-    let newModel = new UserModel(transactions, this.state.resModel);
+    let newModel = new UserModel(transactions, positions, this.state.resModel);
     this.setState({
       userModel: newModel,
       changeCount: changeCount
@@ -554,7 +564,7 @@ class Dashboard extends Component {
       let portfolioObj = JSON.parse(reader.result);
 
       // set new model, and get prices
-      let newModel = this.updateUserModel(portfolioObj.transactions, 0);
+      let newModel = this.updateUserModel(portfolioObj, 0);
       let firstDate = newModel.portfolios[1].genesisTx.time;
       this.fetchAllAndRender(this.getCurrenciesToFetch(newModel), dateUtils.getDaysSince(firstDate) + 2);
 
