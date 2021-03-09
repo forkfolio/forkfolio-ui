@@ -9,12 +9,15 @@ import EditTradeDialog from "./dialogs/EditTradeDialog";
 import ConfirmRemoveTransactionDialog from "./dialogs/ConfirmRemoveTransactionDialog";
 import { formatUtils } from '../utils/FormatUtils';
 import ReactGA from 'react-ga';
+import Web3 from "web3";
 
 class PositionsView extends Component {
   constructor(props) {
     super(props);
     this.hideConfirmDialog = this.hideConfirmDialog.bind(this);
     this.removeTransaction = this.removeTransaction.bind(this);
+    this.loadWeb3 = this.loadWeb3.bind(this);
+    this.loadWeb3Account = this.loadWeb3Account.bind(this);
     this.state = {
       data: this.mapTradesToState(props),
       isConfirmDialogShown: false,
@@ -22,10 +25,48 @@ class PositionsView extends Component {
     };
   }
   
-  componentWillMount() {
+  async componentWillMount() {
     console.log("Navigate to: " + window.location.pathname + window.location.hash);
     ReactGA.pageview(window.location.pathname + window.location.hash);
+
+    // load web3
+    if (typeof window.web3 !== "undefined") {
+      const web3 = this.loadWeb3();
+      const networkId = await web3.eth.net.getId();
+      const userAccount = await this.loadWeb3Account(web3);
+      console.log("userAccount: " + userAccount)
+    }
   }
+
+  loadWeb3 = () => {
+    let web3;
+    if (typeof global.window !== "undefined") {
+      // Modern dapp browsers...
+      if (window.ethereum) {
+        web3 = new Web3(window.ethereum);
+      }
+      // Legacy dapp browsers...
+      else if (typeof global.window.web3 !== "undefined") {
+        // Use Mist/MetaMask's provider
+        web3 = new Web3(window.web3.currentProvider);
+      } else {
+        // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+      }
+    }
+
+    return web3;
+  };
+  
+  loadWeb3Account = async (web3) => {
+    try {
+      await window.ethereum.enable();
+      const accounts = await web3.eth.getAccounts();
+      return accounts[0];
+    } catch (e) {
+      console.error("Unable to load web3 account. Please enable web3 wallet in your browser. Message: " + e.getMessage());
+    }
+  };
 
   // safely change state here
   componentWillReceiveProps(nextProps) {

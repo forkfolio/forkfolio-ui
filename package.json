@@ -39,7 +39,7 @@
     "react-tagsinput": "^3.19.0",
     "whatwg-fetch": "^2.0.4",
     "wnumb": "^1.1.0",
-    "web3": "^1.2.9"
+    "web3": "1.2.9"
   },
   "scripts": {
     "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
