@@ -9,7 +9,8 @@ import EditTradeDialog from "./dialogs/EditTradeDialog";
 import ConfirmRemoveTransactionDialog from "./dialogs/ConfirmRemoveTransactionDialog";
 import { formatUtils } from '../utils/FormatUtils';
 import ReactGA from 'react-ga';
-import Web3 from "web3";
+import Web3 from 'web3';
+import Uniswap from '../web3/Uniswap';
 
 class PositionsView extends Component {
   constructor(props) {
@@ -18,10 +19,20 @@ class PositionsView extends Component {
     this.removeTransaction = this.removeTransaction.bind(this);
     this.loadWeb3 = this.loadWeb3.bind(this);
     this.loadWeb3Account = this.loadWeb3Account.bind(this);
+
+    // load web3
+    let web3;
+    if (typeof window.web3 !== "undefined") {
+      web3 = this.loadWeb3();
+    }
+
     this.state = {
-      data: this.mapTradesToState(props),
+      //data: null,
       isConfirmDialogShown: false,
-      removedTransaction: null
+      removedTransaction: null,
+      web3: web3,
+      account: null,
+      web3DataLoaded: false
     };
   }
   
@@ -29,16 +40,18 @@ class PositionsView extends Component {
     console.log("Navigate to: " + window.location.pathname + window.location.hash);
     ReactGA.pageview(window.location.pathname + window.location.hash);
 
-    // load web3
-    if (typeof window.web3 !== "undefined") {
-      const web3 = this.loadWeb3();
-      const networkId = await web3.eth.net.getId();
+    // load account
+    const web3 = this.state.web3;
+    if (web3) {
       const userAccount = await this.loadWeb3Account(web3);
-      console.log("userAccount: " + userAccount)
+      console.log("userAccount: " + userAccount);
+      this.setState({
+        account: userAccount
+      });
     }
   }
 
-  loadWeb3 = () => {
+  loadWeb3() {
     let web3;
     if (typeof global.window !== "undefined") {
       // Modern dapp browsers...
@@ -58,7 +71,7 @@ class PositionsView extends Component {
     return web3;
   };
   
-  loadWeb3Account = async (web3) => {
+  async loadWeb3Account(web3) {
     try {
       await window.ethereum.enable();
       const accounts = await web3.eth.getAccounts();
@@ -68,11 +81,54 @@ class PositionsView extends Component {
     }
   };
 
+  async componentDidUpdate(prevState) {
+    if (this.props.userModel && this.props.userModel.positions && this.state.web3) {
+      // call only once
+      if (!this.state.web3DataLoaded) {
+        this.setState({
+          web3DataLoaded: true
+        });
+        console.log(this.props.userModel)
+        //await this.loadWeb3Data(this.props.userModel.positio ns); // here is 
+        // todo: called only once, is this desireable?
+        //this.setState({
+        //  data: this.mapTradesToState(this.props)
+        //});
+      }
+
+      /*if(this.state !== prevState) {
+        this.setState({
+          data: this.mapTradesToState(this.props)
+        });
+      }*/
+    }
+  }
+
   // safely change state here
-  componentWillReceiveProps(nextProps) {
+  /*async componentWillReceiveProps(nextProps) {
+    if(nextProps !== this.props && nextProps.userModel && nextProps.userModel.positions && this.state.web3) {
+      await this.loadWeb3Data(nextProps.userModel.positions);
+
+    }
+
     this.setState({
       data: this.mapTradesToState(nextProps)
     });
+  }*/
+
+  async loadWeb3Data(positions) {
+    console.log("Loading web3 data")
+    console.log(positions)
+    let pos = positions[0];
+    if(pos) {
+      console.log(pos)
+      let uniswap = new Uniswap(pos.marketAddress, pos.addressBASE, pos.addressUNDER, 0, 0, 0, 0.3);
+      console.log(uniswap);
+      console.log(this.state.web3)
+      await uniswap.getMarketData(this.state.web3, pos);
+      console.log("Loaded Uniswap")
+      console.log(uniswap)
+    }
   }
 
   mapTradesToState(props) {
@@ -429,7 +485,7 @@ class PositionsView extends Component {
                 </div>
                 }
                 category={tradeCount + " trade" + (tradeCount === 1 ? "" : "s")}
-                content={
+                content={this.state.data ? 
                   <ReactTable
                     className="-highlight"
                     data={this.state.data}
@@ -438,7 +494,7 @@ class PositionsView extends Component {
                     defaultPageSize={10}
                     noDataText={formatUtils.getNoDataText('trades', this.props.userModel)}                    
                   />
-                }
+                : null}
               />
               {this.props.isAddTradeDialogShown ? addTradeDialog : ""}
               {this.props.isEditTradeDialogShown ? editTradeDialog : ""}

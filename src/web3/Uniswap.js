@@ -1,7 +1,7 @@
 import { CoinGeckoPrices } from './CoinGeckoPrices.js';
-import * as web3 from '../web3.min.js';
-import * as uniswapABI from '../abis/uniswapABI.js';
-import * as daiABI from '../abis/daiABI.js';
+import uniswapABI from "../abis/uniswapABI.json";
+import daiABI from "../abis/daiABI.json";
+import { usdcAddress } from './common.js'
 		
 export default class Uniswap {		
 	constructor(marketAddress, addressBASE, addressUNDER, poolBASE, poolUNDER, poolLIQ, feeInPercent) {
@@ -17,26 +17,51 @@ export default class Uniswap {
 		//this.volume = 0; // in contracts, not dai
 	}
 
-	getContractInstance(abi, address) {			
-		let cnt =  web3.eth.contract(JSON.parse(abi));
-		return cnt.at(address);
+	getContractInstance(web3, abi, address) {			
+		console.log("Loading contract instance for address: " + address)
+		let cnt = new web3.eth.Contract(abi, address);
+		console.log(1234)
+		return cnt;//.at(address);
 	}
 
 	// gets pool sizes and prices from live market 
-	getMarketData = async (position) => {
-		let marketInstance = getContractInstance(uniswapABI, this.marketAddress);
-		let baseInstance = getContractInstance(daiABI, this.addressBASE);
-		let underInstance = getContractInstance(daiABI, this.addressUNDER);
+	async getMarketData(web3, position) {
+		let marketInstance = this.getContractInstance(web3, uniswapABI, this.marketAddress);
+		let baseInstance = this.getContractInstance(web3, daiABI, this.addressBASE);
+		let underInstance = this.getContractInstance(web3, daiABI, this.addressUNDER);
+
+		let ethBalance = await web3.eth.getBalance(this.marketAddress); // 
+		let poolLIQ = await marketInstance.methods.totalSupply().call();
+		let poolBASE = await baseInstance.methods.balanceOf(this.marketAddress).call();
+		let poolUNDER = await underInstance.methods.balanceOf(this.marketAddress).call();
+
+		// if pool is using eth instead of weth
+		if(poolUNDER / 10 ** 18 === 0 && ethBalance / 10 ** 18 > 0) {
+			poolUNDER = ethBalance;
+		}
+
+		// save to position
+		this.poolUNDER = poolUNDER / (this.addressUNDER !== usdcAddress ? 10 ** 18 : 10 ** 6);  
+		this.poolLIQ = poolLIQ / 10 ** 18; 
+		this.poolBASE = poolBASE / (this.addressBASE !== usdcAddress ? 10 ** 18 : 10 ** 6);
+		
+		this.priceLIQUNDER = this.poolUNDER / this.poolLIQ;
+		this.priceLIQBASE = this.poolBASE / this.poolLIQ;
+		this.priceUNDERBASE = this.poolBASE / this.poolUNDER;
+
+		this.priceBASEUSD = await CoinGeckoPrices.getTokenPriceInUSD(this.addressBASE);
+		this.priceUNDERUSD = await CoinGeckoPrices.getTokenPriceInUSD(this.addressUNDER);
+		console.log("AMM market data loaded. " + position.symbolBASE + ": " + this.priceBASEUSD + " USD, " + position.symbolUNDER + ": " + this.priceUNDERUSD + " USD");
 		
 		// get live data
-		return new Promise((accept, reject) => {
+		/*return new Promise((accept, reject) => {
 			web3.eth.getBalance(position.marketAddress, (error, ethBalance) => {
-				marketInstance.totalSupply((error, poolLIQ) => {
-					baseInstance.balanceOf(position.marketAddress, (error, poolBASE) => {
-						underInstance.balanceOf(position.marketAddress, async (error, poolUNDER) => {
+				marketInstance.methods.totalSupply((error, poolLIQ) => {
+					baseInstance.methods.balanceOf(position.marketAddress, (error, poolBASE) => {
+						underInstance.methods.balanceOf(position.marketAddress, async (error, poolUNDER) => {
 
 	
-							//console.log(ethBalance / 10 ** 18)
+							console.log(1)
 							// if pool is using eth instead of weth
 							if(poolUNDER / 10 ** 18 === 0 && ethBalance / 10 ** 18 > 0) {
 								poolUNDER = ethBalance;
@@ -50,22 +75,23 @@ export default class Uniswap {
 							this.priceLIQUNDER = this.poolUNDER / this.poolLIQ;
 							this.priceLIQBASE = this.poolBASE / this.poolLIQ;
 							this.priceUNDERBASE = this.poolBASE / this.poolUNDER;
+							console.log(4)
 
-							this.priceBASEUSD = await getTokenPriceInUSD(this.addressBASE);
-							this.priceUNDERUSD = await getTokenPriceInUSD(this.addressUNDER);
+							this.priceBASEUSD = await CoinGeckoPrices.getTokenPriceInUSD(this.addressBASE);
+							this.priceUNDERUSD = await CoinGeckoPrices.getTokenPriceInUSD(this.addressUNDER);
 							console.log("AMM market data loaded. " + position.symbolBASE + ": " + this.priceBASEUSD + " USD, " + position.symbolUNDER + ": " + this.priceUNDERUSD + " USD");
 
 							//position.marketData = market;
 
 							// get LPT balances for all addresses
 							// disable LPT for now
-							/*for(let i = 0; i < positions.length; i++) {
-								if(positions[i].currentLPT == undefined) {
-									marketInstance.balanceOf(positions[i].address, (error, currentLPT) => {
-										positions[i].currentLPT = currentLPT / 10 ** 18;
-									});
-								}
-							}*/
+							//for(let i = 0; i < positions.length; i++) {
+							//	if(positions[i].currentLPT == undefined) {
+							//		marketInstance.balanceOf(positions[i].address, (error, currentLPT) => {
+							//			positions[i].currentLPT = currentLPT / 10 ** 18;
+							//		});
+							//	}
+							//}
 							
 							accept(1);
 							return;
@@ -73,7 +99,7 @@ export default class Uniswap {
 					});
 				});
 			});
-		});
+		});*/
 	}
 
 	addLiquidity(exactUNDER, exactBASE) {
