@@ -19,9 +19,7 @@ export default class Uniswap {
 
 	getContractInstance(web3, abi, address) {			
 		console.log("Loading contract instance for address: " + address)
-		let cnt = new web3.eth.Contract(abi, address);
-		console.log(1234)
-		return cnt;//.at(address);
+		return new web3.eth.Contract(abi, address);
 	}
 
 	// gets pool sizes and prices from live market 

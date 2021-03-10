@@ -44,7 +44,6 @@ class PositionsView extends Component {
     const web3 = this.state.web3;
     if (web3) {
       const userAccount = await this.loadWeb3Account(web3);
-      console.log("userAccount: " + userAccount);
       this.setState({
         account: userAccount
       });
@@ -81,52 +80,29 @@ class PositionsView extends Component {
     }
   };
 
-  async componentDidUpdate(prevState) {
-    if (this.props.userModel && this.props.userModel.positions && this.state.web3) {
+  async componentDidUpdate() {
+    console.log("componentDidUpdate called")
+    if (this.props.userModel && this.props.userModel.positions && Array.isArray(this.props.userModel.positions) && this.state.web3) {
       // call only once
       if (!this.state.web3DataLoaded) {
+        console.log("Loading web3 data and setting up data for table")
         this.setState({
           web3DataLoaded: true
         });
-        console.log(this.props.userModel)
-        //await this.loadWeb3Data(this.props.userModel.positio ns); // here is 
+        await this.loadWeb3Data(this.props.userModel.positions);
         // todo: called only once, is this desireable?
-        //this.setState({
-        //  data: this.mapTradesToState(this.props)
-        //});
-      }
-
-      /*if(this.state !== prevState) {
         this.setState({
           data: this.mapTradesToState(this.props)
         });
-      }*/
+      }
     }
   }
 
-  // safely change state here
-  /*async componentWillReceiveProps(nextProps) {
-    if(nextProps !== this.props && nextProps.userModel && nextProps.userModel.positions && this.state.web3) {
-      await this.loadWeb3Data(nextProps.userModel.positions);
-
-    }
-
-    this.setState({
-      data: this.mapTradesToState(nextProps)
-    });
-  }*/
-
   async loadWeb3Data(positions) {
-    console.log("Loading web3 data")
-    console.log(positions)
     let pos = positions[0];
     if(pos) {
-      console.log(pos)
       let uniswap = new Uniswap(pos.marketAddress, pos.addressBASE, pos.addressUNDER, 0, 0, 0, 0.3);
-      console.log(uniswap);
-      console.log(this.state.web3)
       await uniswap.getMarketData(this.state.web3, pos);
-      console.log("Loaded Uniswap")
       console.log(uniswap)
     }
   }

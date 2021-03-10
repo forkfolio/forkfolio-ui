@@ -274,15 +274,15 @@ class Dashboard extends Component {
           let portfolioJson = localStorage.getItem('portfolio01');
           if(portfolioJson != null && portfolioJson !== '') {
             let portfolioObject = JSON.parse(portfolioJson);
-            newModel = this.updateUserModel(portfolioObject, portfolioObject.changeCount);
             console.log('Loaded portfolio from local storage.')
+            newModel = this.updateUserModel(portfolioObject, portfolioObject.changeCount);
           } else {
             newModel = this.updateUserModel({}, 0);
           }
         } else {
           // if demo, set model from demofolio file
-          newModel = this.updateUserModel(demofolio, 0);
           console.log('Loaded default portfolio.')
+          newModel = this.updateUserModel(demofolio, 0);
         }
 
         this.setState({
@@ -529,7 +529,6 @@ class Dashboard extends Component {
 
 
   updateUserModel(fileFormatPortfolio, changeCount) {
-    console.log(fileFormatPortfolio)
     let transactions = [], positions = [];
     // parse fileFormatPortfolio and get transactions 
     if(fileFormatPortfolio.transactions) {
