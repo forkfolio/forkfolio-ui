@@ -99,7 +99,7 @@ class PositionsView extends Component {
 
   async loadWeb3Data() {
     let markets = [];
-    for(let i = 0; i < this.props.userModel.positions.length; i++) {
+    for(let i = 0; i < 1/*this.props.userModel.positions.length*/; i++) {
       let pos = this.props.userModel.positions[i];
       let uniswap = new Uniswap(pos.marketAddress, pos.addressBASE, pos.addressUNDER, 0, 0, 0, 0.3);
       await uniswap.getMarketData(this.state.web3, pos);
@@ -121,7 +121,7 @@ class PositionsView extends Component {
   refreshUniswapPositions(positions, markets) {
    
     let uniswapTableSet = [];
-    for(let i = 0; i < positions.length; i++) {
+    for(let i = 0; i < 1/*positions.length*/; i++) {
       let market = markets[i];
       console.log(market)
       // time 
@@ -178,16 +178,16 @@ class PositionsView extends Component {
         id: i,
         position: positions[i].name,
         liquidation: positions[i].description, 
-        size: [(balanceTodayToken * market.priceBASEUSD).toFixed(0), "USD"],
+        size: [balanceTodayToken * market.priceBASEUSD, "USD"],
         active: [daysSinceStart.toFixed(0), "days"],
         current: [market.priceUNDERBASE.toFixed(3), positions[i].symbolBASE],
-        totalprofitcurrent: [(market.priceBASEUSD * profitTodayToken).toFixed(2), "USD"],
-        monthlyprofitcurrent: [(market.priceBASEUSD * profitPerMonthTodayToken).toFixed(2), "USD"],
-        aprcurrent: [aprToday.toFixed(2), "%"],
-        target: [targetPriceETH.toFixed(3), positions[i].symbolBASE], // + " <br>" + targetPriceToken.toFixed(3) + " " + positions[i].symbolBASE, 
-        totalprofittarget: [profitTargetETH.toFixed(2), positions[i].symbolUNDER],// + " (" + (profitTargetETHUSD).toFixed(0) + " USD), <br>" + profitTargetToken.toFixed(2) + " " + positions[i].symbolBASE + " (" + (profitTargetTokenUSD).toFixed(0) + " USD)", 
-        monthlyprofittarget: [profitPerMonthTargetETH.toFixed(2), positions[i].symbolUNDER],// + " (" + (profitPerMonthTargetETHUSD).toFixed(0) + " USD), <br> " + profitPerMonthTargetToken.toFixed(2) + " " + positions[i].symbolBASE+ " (" + (profitPerMonthTargetTokenUSD).toFixed(0) + " USD)", 
-        aprtarget: [aprTargetETH.toFixed(2), "%"],
+        totalprofitcurrent: [market.priceBASEUSD * profitTodayToken, "USD"],
+        monthlyprofitcurrent: [market.priceBASEUSD * profitPerMonthTodayToken, "USD"],
+        aprcurrent: [aprToday, "%"],
+        target: [targetPriceETH, positions[i].symbolBASE], // + " <br>" + targetPriceToken.toFixed(3) + " " + positions[i].symbolBASE, 
+        totalprofittarget: [profitTargetETH, positions[i].symbolUNDER],// + " (" + (profitTargetETHUSD).toFixed(0) + " USD), <br>" + profitTargetToken.toFixed(2) + " " + positions[i].symbolBASE + " (" + (profitTargetTokenUSD).toFixed(0) + " USD)", 
+        monthlyprofittarget: [profitPerMonthTargetETH, positions[i].symbolUNDER],// + " (" + (profitPerMonthTargetETHUSD).toFixed(0) + " USD), <br> " + profitPerMonthTargetToken.toFixed(2) + " " + positions[i].symbolBASE+ " (" + (profitPerMonthTargetTokenUSD).toFixed(0) + " USD)", 
+        aprtarget: [aprTargetETH, "%"],
         actions: (
           <div className="actions-right">
             <Button
@@ -266,7 +266,7 @@ class PositionsView extends Component {
       }
     }			
     //console.log(position.name + ": max balance: " + maxBalanceDAI + " DAI: @" + maxProfitPrice);
-    console.log(position.name + " for max TKN: " + maxDebalanced + " " + new Date());
+    console.log(position.name + " for max TKN: " + maxDebalanced);
     
     return [maxProfitPrice, maxBalanceDAI - position.startBASE];
   }
@@ -308,8 +308,8 @@ class PositionsView extends Component {
   }
 
   checkBalances(market, balanceLPT) {
-    let balanceETH = balanceLPT * market.poolUNDER / market.poolLPT;
-    let balanceToken = balanceLPT * market.poolBASE / market.poolLPT;
+    let balanceETH = balanceLPT * market.poolUNDER / market.poolLIQ;
+    let balanceToken = balanceLPT * market.poolBASE / market.poolLIQ;
     return [balanceETH, balanceToken];
   }
 
@@ -348,95 +348,6 @@ class PositionsView extends Component {
     return [startUNDER, newDAI];
   }
 
-  /*mapTradesToState() {
-    // first get data from user and res model
-    const tableData = [];
-    // temp to test
-    tableData.push([
-      0, 
-      "(MM1) - mMSFT-UST - Mirror",
-      "Watch mirror.finance, Stock prices, Zapper",
-      [359798, "USD"],
-      [35, "days"],
-      [233.463,  "UST"],
-      [81722.89, "USD"],
-      [71307.28, "USD"],
-      [237.82, "%"],
-      [233.463, "UST"],
-      [81722.89, "USD"],
-      [71307.28, "USD"],
-      [287.82, "%"]
-    ]);
-
-    tableData.push([
-      1, 
-      "(MM2) - mGOOG-UST - Mirror",
-      "Watch mirror.finance, Stock prices, Zapper",
-      [159798, "USD"],
-      [15, "days"],
-      [133.463,  "UST"],
-      [11722.89, "USD"],
-      [11307.28, "USD"],
-      [137.82, "%"],
-      [133.463, "UST"],
-      [11722.89, "USD"],
-      [11307.28, "USD"],
-      [187.82, "%"]
-    ]);
-
-
-    // second, map to state
-    return tableData.map((prop, key) => {
-      return {
-        id: prop[0],
-        position: prop[1],
-        liquidation: prop[2],
-        size: prop[3],
-        active: prop[4],
-        current: prop[5],
-        totalprofitcurrent: prop[6],
-        monthlyprofitcurrent: prop[7],
-        aprcurrent: prop[8],
-        target: prop[9],
-        totalprofittarget: prop[10],
-        monthlyprofittarget: prop[11],
-        aprtarget: prop[12],
-        actions: (
-          <div className="actions-right">
-            <Button
-              onClick={() => {
-                this.props.setEditedTransaction(this.state.data[key].id);
-                this.props.showEditTradeDialog();
-                return true;
-              }}
-              bsStyle="default"
-              table
-              simple
-              icon
-            >
-              <i className="fa fa-edit" />
-            </Button>{" "}
-            <Button
-              onClick={() => {
-                this.setState({
-                  isConfirmDialogShown: true,
-                  removedTransaction: this.state.data[key].id
-                });
-                return true;
-              }}
-              bsStyle="danger"
-              table
-              simple
-              icon
-            >
-              <i className="fa fa-times" />
-            </Button>{" "}
-          </div>
-        )
-      };
-    })
-  }*/
-
   getSumFooter(rows, columnName) {
     let total = 0;
     for (let row of rows.data) {
@@ -452,7 +363,7 @@ class PositionsView extends Component {
         background: '#ff000042',
         columns: [
           { 
-            Header: "Position", accessor: "position", minWidth: 95, maxWidth: 300,
+            Header: "Position", accessor: "position", maxWidth: 350,
             filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
           },
           { 
@@ -470,7 +381,7 @@ class PositionsView extends Component {
             Footer: rows => (
               <span style={{ float: "right" }}>
                 <strong>
-                  {this.getSumFooter(rows, "size") + " " + rows.data[0]["size"][1]}
+                  {formatUtils.formatNumber(this.getSumFooter(rows, "size"), 0) + " " + rows.data[0]["size"][1]}
                 </strong>
               </span>
             ),
@@ -510,7 +421,7 @@ class PositionsView extends Component {
             Footer: rows => (
               <span style={{ float: "right" }}>
                 <strong>
-                  {this.getSumFooter(rows, "totalprofitcurrent") + " " + rows.data[0]["totalprofitcurrent"][1]}
+                  {formatUtils.formatNumber(this.getSumFooter(rows, "totalprofitcurrent"), 0) + " " + rows.data[0]["totalprofitcurrent"][1]}
                 </strong>
               </span>
             )
@@ -519,14 +430,14 @@ class PositionsView extends Component {
             Header: "Monthly Profit", accessor: "monthlyprofitcurrent", maxWidth: 150, filterable: false,
             Cell: row => (
               <span style={{ float: "right" }}>
-                {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
+                {formatUtils.formatNumber(row.value[0], 0) + " " + row.value[1]}
               </span>
             ),
             sortMethod: (a, b) => { return b[0] - a[0]; }, 
             Footer: rows => (
               <span style={{ float: "right" }}>
                 <strong>
-                  {this.getSumFooter(rows, "monthlyprofitcurrent") + " " + rows.data[0]["monthlyprofitcurrent"][1]}
+                  {formatUtils.formatNumber(this.getSumFooter(rows, "monthlyprofitcurrent"), 0) + " " + rows.data[0]["monthlyprofitcurrent"][1]}
                 </strong>
               </span>
             )

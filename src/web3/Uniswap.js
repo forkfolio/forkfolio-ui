@@ -115,12 +115,13 @@ export default class Uniswap {
 
 	// helper method to set new price
 	setMarketPrice(newPrice) {
-		//let inputPool = market.poolBASE;
-		//let outputPool = market.poolUNDER;
 		let k = this.poolBASE * this.poolUNDER;
-
 		this.poolUNDER = Math.sqrt(k / newPrice);
 		this.poolBASE = Math.sqrt(k * newPrice);
 		this.k = this.poolUNDER * this.poolBASE;
+	}
+
+	getPrice() {
+		return this.poolBASE / this.poolUNDER;
 	}
 }		
