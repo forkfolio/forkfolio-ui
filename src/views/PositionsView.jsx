@@ -338,6 +338,29 @@ class PositionsView extends Component {
     return [startUNDER, newDAI];
   }
 
+  getColumn9Sum() {
+    console.log(this.props.userModel.positions)
+    let sumA = 0;
+    for(let i = 0; i < this.props.userModel.positions.length; i++) {
+      if(this.props.userModel.positions[i].maxProfitTargetUSD) {
+        sumA += this.props.userModel.positions[i].maxProfitTargetUSD;
+      } 
+    }
+    
+    return sumA;
+  };
+
+  getColumn10Sum() {
+    let sumA = 0;
+    for(let i = 0; i < this.props.userModel.positions.length; i++) {
+      if(this.props.userModel.positions[i].maxProfitPerMonthTargetUSD) {
+        sumA += this.props.userModel.positions[i].maxProfitPerMonthTargetUSD;
+      }
+    }
+    
+    return sumA;
+  };
+
   getSumFooter(rows, columnName) {
     let total = 0;
     for (let row of rows.data) {
@@ -472,7 +495,7 @@ class PositionsView extends Component {
           }, Footer: rows => (
               <span style={{ float: "right" }}>
                 <strong>
-                  {this.getSumFooter(rows, "totalprofittarget") + " " + rows.data[0]["totalprofittarget"][1]}
+                  {formatUtils.formatNumber(this.getColumn9Sum(), 0) + " USD"}
                 </strong>
               </span>
             )
@@ -493,7 +516,7 @@ class PositionsView extends Component {
           }, Footer: rows => (
             <span style={{ float: "right" }}>
               <strong>
-                {formatUtils.formatNumber(this.getSumFooter(rows, "monthlyprofittarget"), 0) + " " + rows.data[0]["monthlyprofittarget"][1]}
+                {formatUtils.formatNumber(this.getColumn10Sum(), 0) + " USD"}
               </strong>
             </span>
           )},
