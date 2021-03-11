@@ -107,19 +107,9 @@ class PositionsView extends Component {
     }
 
     return markets;
-
-
-
-    /*let pos = this.props.userModel.positions[0];
-    if(pos) {
-      let uniswap = new Uniswap(pos.marketAddress, pos.addressBASE, pos.addressUNDER, 0, 0, 0, 0.3);
-      await uniswap.getMarketData(this.state.web3, pos);
-      console.log(uniswap)
-    }*/
   }
 
   refreshUniswapPositions(positions, markets) {
-   
     let uniswapTableSet = [];
     for(let i = 0; i < 1/*positions.length*/; i++) {
       let market = markets[i];
@@ -180,13 +170,13 @@ class PositionsView extends Component {
         liquidation: positions[i].description, 
         size: [balanceTodayToken * market.priceBASEUSD, "USD"],
         active: [daysSinceStart.toFixed(0), "days"],
-        current: [market.priceUNDERBASE.toFixed(3), positions[i].symbolBASE],
+        current: [market.priceUNDERBASE, positions[i].symbolBASE],
         totalprofitcurrent: [market.priceBASEUSD * profitTodayToken, "USD"],
         monthlyprofitcurrent: [market.priceBASEUSD * profitPerMonthTodayToken, "USD"],
         aprcurrent: [aprToday, "%"],
-        target: [targetPriceETH, positions[i].symbolBASE], // + " <br>" + targetPriceToken.toFixed(3) + " " + positions[i].symbolBASE, 
-        totalprofittarget: [profitTargetETH, positions[i].symbolUNDER],// + " (" + (profitTargetETHUSD).toFixed(0) + " USD), <br>" + profitTargetToken.toFixed(2) + " " + positions[i].symbolBASE + " (" + (profitTargetTokenUSD).toFixed(0) + " USD)", 
-        monthlyprofittarget: [profitPerMonthTargetETH, positions[i].symbolUNDER],// + " (" + (profitPerMonthTargetETHUSD).toFixed(0) + " USD), <br> " + profitPerMonthTargetToken.toFixed(2) + " " + positions[i].symbolBASE+ " (" + (profitPerMonthTargetTokenUSD).toFixed(0) + " USD)", 
+        target: [targetPriceETH, positions[i].symbolBASE, targetPriceToken, positions[i].symbolBASE],
+        totalprofittarget: [profitTargetETH, positions[i].symbolUNDER, profitTargetETHUSD, profitTargetToken, positions[i].symbolBASE, profitTargetTokenUSD], 
+        monthlyprofittarget: [profitPerMonthTargetETH, positions[i].symbolUNDER, profitPerMonthTargetETHUSD, profitPerMonthTargetToken, positions[i].symbolBASE, profitPerMonthTargetTokenUSD], 
         aprtarget: [aprTargetETH, "%"],
         actions: (
           <div className="actions-right">
@@ -371,8 +361,7 @@ class PositionsView extends Component {
             filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
           },
           { 
-            Header: "Size", accessor: "size", maxWidth: 150,
-            filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
+            Header: "Size", accessor: "size", maxWidth: 120, filterable: false,
             Cell: row => (
               <span style={{ float: "right" }}>
                 {formatUtils.formatNumber(row.value[0], 0) + " " + row.value[1]}
@@ -388,8 +377,7 @@ class PositionsView extends Component {
             sortMethod: (a, b) => { return b[0] - a[0]; }
           },
           { 
-            Header: "Active", accessor: "active", maxWidth: 80,
-            filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
+            Header: "Active", accessor: "active", maxWidth: 75, filterable: false,
             Cell: row => (
               <span style={{ float: "right" }}>
                 {formatUtils.formatNumber(row.value[0], 0) + " " + row.value[1]}
@@ -443,7 +431,7 @@ class PositionsView extends Component {
             )
           },
           { 
-            Header: "APR", accessor: "aprcurrent", maxWidth: 100, filterable: false,
+            Header: "APR", accessor: "aprcurrent", maxWidth: 70, filterable: false,
             Cell: row => (
               <span style={{ float: "right" }}>
                 {formatUtils.formatNumber(row.value[0], 2) + "" + row.value[1]}
@@ -461,16 +449,24 @@ class PositionsView extends Component {
             Cell: row => (
               <span style={{ float: "right" }}>
                 {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
+                <br></br>
+                {formatUtils.formatNumber(row.value[2], 2) + " " + row.value[3]}
               </span>
             ),
             sortMethod: (a, b) => { return b[0] - a[0]; 
             }
           },
-          { Header: "Total Profit", accessor: "totalprofittarget", maxWidth: 150, filterable: false,
+          { Header: "Total Profit", accessor: "totalprofittarget", maxWidth: 250, filterable: false,
           Cell: row => (
-            <span style={{ float: "right" }}>
-              {formatUtils.formatNumber(row.value[0], 0) + " " + row.value[1]}
-            </span>
+            <div>
+              <div style={{ float: "right" }}>
+                {formatUtils.formatNumber(row.value[0], 0) + " " + row.value[1] + " (" + formatUtils.formatNumber(row.value[2], 0) + " USD)"}
+              </div>
+              <br/>
+              <div style={{ float: "right" }}>
+                {formatUtils.formatNumber(row.value[3], 0) + " " + row.value[4] + " (" + formatUtils.formatNumber(row.value[5], 0) + " USD)"}
+              </div>
+            </div>
           ),
           sortMethod: (a, b) => { return b[0] - a[0];
           }, Footer: rows => (
@@ -481,21 +477,27 @@ class PositionsView extends Component {
               </span>
             )
           },
-          { Header: "Monthly Profit", accessor: "monthlyprofittarget", maxWidth: 150, filterable: false,
+          { Header: "Monthly Profit", accessor: "monthlyprofittarget", maxWidth: 250, filterable: false,
           Cell: row => (
-            <span style={{ float: "right" }}>
-              {formatUtils.formatNumber(row.value[0], 2) + " " + row.value[1]}
-            </span>
+            <div>
+              <div style={{ float: "right" }}>
+                {formatUtils.formatNumber(row.value[0], 0) + " " + row.value[1] + " (" + formatUtils.formatNumber(row.value[2], 0) + " USD)"}
+              </div>
+              <br/>
+              <div style={{ float: "right" }}>
+                {formatUtils.formatNumber(row.value[3], 0) + " " + row.value[4] + " (" + formatUtils.formatNumber(row.value[5], 0) + " USD)"}
+              </div>
+            </div>
           ),
           sortMethod: (a, b) => { return b[0] - a[0];
           }, Footer: rows => (
             <span style={{ float: "right" }}>
               <strong>
-                {this.getSumFooter(rows, "monthlyprofittarget") + " " + rows.data[0]["monthlyprofittarget"][1]}
+                {formatUtils.formatNumber(this.getSumFooter(rows, "monthlyprofittarget"), 0) + " " + rows.data[0]["monthlyprofittarget"][1]}
               </strong>
             </span>
           )},
-          { Header: "APR", accessor: "aprtarget", maxWidth: 100, filterable: false,
+          { Header: "APR", accessor: "aprtarget", maxWidth: 70, filterable: false,
             Cell: row => (
               <span style={{ float: "right" }}>
                 {formatUtils.formatNumber(row.value[0], 2) + "" + row.value[1]}
