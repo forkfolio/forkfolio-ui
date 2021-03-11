@@ -42,6 +42,7 @@ export default class Uniswap {
 		this.poolUNDER = poolUNDER / (this.addressUNDER !== usdcAddress ? 10 ** 18 : 10 ** 6);  
 		this.poolLIQ = poolLIQ / 10 ** 18; 
 		this.poolBASE = poolBASE / (this.addressBASE !== usdcAddress ? 10 ** 18 : 10 ** 6);
+		this.k = this.poolUNDER * this.poolBASE;
 		
 		this.priceLIQUNDER = this.poolUNDER / this.poolLIQ;
 		this.priceLIQBASE = this.poolBASE / this.poolLIQ;
@@ -49,55 +50,8 @@ export default class Uniswap {
 
 		this.priceBASEUSD = await CoinGeckoPrices.getTokenPriceInUSD(this.addressBASE);
 		this.priceUNDERUSD = await CoinGeckoPrices.getTokenPriceInUSD(this.addressUNDER);
+
 		console.log("AMM market data loaded. " + position.symbolBASE + ": " + this.priceBASEUSD + " USD, " + position.symbolUNDER + ": " + this.priceUNDERUSD + " USD");
-		
-		// get live data
-		/*return new Promise((accept, reject) => {
-			web3.eth.getBalance(position.marketAddress, (error, ethBalance) => {
-				marketInstance.methods.totalSupply((error, poolLIQ) => {
-					baseInstance.methods.balanceOf(position.marketAddress, (error, poolBASE) => {
-						underInstance.methods.balanceOf(position.marketAddress, async (error, poolUNDER) => {
-
-	
-							console.log(1)
-							// if pool is using eth instead of weth
-							if(poolUNDER / 10 ** 18 === 0 && ethBalance / 10 ** 18 > 0) {
-								poolUNDER = ethBalance;
-							}
-
-							// save to position
-							this.poolUNDER = poolUNDER / (this.addressUNDER !== usdcAddress ? 10 ** 18 : 10 ** 6);  
-							this.poolLIQ = poolLIQ / 10 ** 18; 
-							this.poolBASE = poolBASE / (this.addressBASE !== usdcAddress ? 10 ** 18 : 10 ** 6);
-							
-							this.priceLIQUNDER = this.poolUNDER / this.poolLIQ;
-							this.priceLIQBASE = this.poolBASE / this.poolLIQ;
-							this.priceUNDERBASE = this.poolBASE / this.poolUNDER;
-							console.log(4)
-
-							this.priceBASEUSD = await CoinGeckoPrices.getTokenPriceInUSD(this.addressBASE);
-							this.priceUNDERUSD = await CoinGeckoPrices.getTokenPriceInUSD(this.addressUNDER);
-							console.log("AMM market data loaded. " + position.symbolBASE + ": " + this.priceBASEUSD + " USD, " + position.symbolUNDER + ": " + this.priceUNDERUSD + " USD");
-
-							//position.marketData = market;
-
-							// get LPT balances for all addresses
-							// disable LPT for now
-							//for(let i = 0; i < positions.length; i++) {
-							//	if(positions[i].currentLPT == undefined) {
-							//		marketInstance.balanceOf(positions[i].address, (error, currentLPT) => {
-							//			positions[i].currentLPT = currentLPT / 10 ** 18;
-							//		});
-							//	}
-							//}
-							
-							accept(1);
-							return;
-						});
-					});
-				});
-			});
-		});*/
 	}
 
 	addLiquidity(exactUNDER, exactBASE) {

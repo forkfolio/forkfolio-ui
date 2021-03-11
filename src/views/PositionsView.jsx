@@ -89,25 +89,266 @@ class PositionsView extends Component {
         this.setState({
           web3DataLoaded: true
         });
-        await this.loadWeb3Data(this.props.userModel.positions);
+        console.log(this.props.userModel.positions)
+        let markets = await this.loadWeb3Data();
         // todo: called only once, is this desireable?
-        this.setState({
-          data: this.mapTradesToState(this.props)
-        });
+        this.refreshUniswapPositions(this.props.userModel.positions, markets);
       }
     }
   }
 
-  async loadWeb3Data(positions) {
-    let pos = positions[0];
+  async loadWeb3Data() {
+    let markets = [];
+    for(let i = 0; i < this.props.userModel.positions.length; i++) {
+      let pos = this.props.userModel.positions[i];
+      let uniswap = new Uniswap(pos.marketAddress, pos.addressBASE, pos.addressUNDER, 0, 0, 0, 0.3);
+      await uniswap.getMarketData(this.state.web3, pos);
+      markets.push(uniswap);
+    }
+
+    return markets;
+
+
+
+    /*let pos = this.props.userModel.positions[0];
     if(pos) {
       let uniswap = new Uniswap(pos.marketAddress, pos.addressBASE, pos.addressUNDER, 0, 0, 0, 0.3);
       await uniswap.getMarketData(this.state.web3, pos);
       console.log(uniswap)
-    }
+    }*/
   }
 
-  mapTradesToState(props) {
+  refreshUniswapPositions(positions, markets) {
+   
+    let uniswapTableSet = [];
+    for(let i = 0; i < positions.length; i++) {
+      let market = markets[i];
+      console.log(market)
+      // time 
+      let startDate = new Date(positions[i].startDate);
+      let daysSinceStart = (new Date() - startDate) / (1000 * 60 * 60 * 24);
+
+      // calculate Ins
+      let dydxInETH = positions[i].longPos[0] / positions[i].longPos[1];
+      let totalInETH = positions[i].startUNDER + dydxInETH;
+      let totalInTKN = positions[i].startBASE;
+      
+      // calculate Outs
+      let uniswapOutETH = positions[i].currentLPT * market.priceLIQUNDER;
+      let uniswapOutTKN = positions[i].currentLPT * market.priceLIQBASE;
+
+      let dydxOutETH = this.getDyDxLongBalanceInETH(positions[i].longPos[0], positions[i].longPos[1], positions[i].longPos[2], market.priceUNDERBASE);
+
+      let totalOutETH = uniswapOutETH + dydxOutETH + positions[i].extraUNDER;	
+      let totalOutTKN = uniswapOutTKN + positions[i].extraBASE;
+      let balanceTodayToken = totalOutETH * market.priceUNDERBASE + totalOutTKN;	
+      
+      // today
+      let profitTodayToken = (totalOutETH - totalInETH) * market.priceUNDERBASE + (totalOutTKN - totalInTKN);				
+      let profitPerMonthTodayToken = profitTodayToken * 30.4167 / daysSinceStart;						
+      let aprToday = profitTodayToken / balanceTodayToken / daysSinceStart * 365 * 100;	
+
+      // target token
+      let maximumsToken = this.findPriceAndProfitForMaxToken(market, positions[i]);
+      let targetPriceToken = maximumsToken[0];
+      let profitTargetToken = maximumsToken[1];
+      let balanceToken = totalInTKN + totalInETH * targetPriceToken;
+      let profitPerMonthTargetToken = profitTargetToken * 30.4167 / daysSinceStart;	
+      let aprTargetToken = profitTargetToken / balanceToken / daysSinceStart * 365 * 100;
+      
+      // target ETH
+      let maximumsETH = this.findPriceAndProfitForMaxETH(market, positions[i]);
+      let targetPriceETH = maximumsETH[0];
+      let profitTargetETH = maximumsETH[1];
+      let balanceETH = totalInETH + totalInTKN / targetPriceETH;
+      let profitPerMonthTargetETH = profitTargetETH * 30.4167 / daysSinceStart;	
+      let aprTargetETH = profitTargetETH / balanceETH / daysSinceStart * 365 * 100;
+
+      // profits in (USD)
+      let profitTargetETHUSD = profitTargetETH * targetPriceETH * market.priceBASEUSD;
+      let profitTargetTokenUSD = positions[i].symbolBASE == "DAI" || positions[i].symbolBASE == "USDC" ? profitTargetToken * market.priceBASEUSD : profitTargetToken / targetPriceToken * market.priceUNDERUSD;
+      let profitPerMonthTargetETHUSD = profitPerMonthTargetETH * targetPriceETH * market.priceBASEUSD;
+      let profitPerMonthTargetTokenUSD = positions[i].symbolBASE == "DAI" || positions[i].symbolBASE == "USDC" ? profitPerMonthTargetToken * market.priceBASEUSD : profitPerMonthTargetToken / targetPriceToken * market.priceUNDERUSD;
+
+      positions[i].maxProfitTargetUSD = Math.max(profitTargetETHUSD, profitTargetTokenUSD);
+      positions[i].maxProfitPerMonthTargetUSD = Math.max(profitPerMonthTargetTokenUSD, profitPerMonthTargetETHUSD);
+
+      // prepare dataset for table
+      uniswapTableSet.push({
+        id: i,
+        position: positions[i].name,
+        liquidation: positions[i].description, 
+        size: [(balanceTodayToken * market.priceBASEUSD).toFixed(0), "USD"],
+        active: [daysSinceStart.toFixed(0), "days"],
+        current: [market.priceUNDERBASE.toFixed(3), positions[i].symbolBASE],
+        totalprofitcurrent: [(market.priceBASEUSD * profitTodayToken).toFixed(2), "USD"],
+        monthlyprofitcurrent: [(market.priceBASEUSD * profitPerMonthTodayToken).toFixed(2), "USD"],
+        aprcurrent: [aprToday.toFixed(2), "%"],
+        target: [targetPriceETH.toFixed(3), positions[i].symbolBASE], // + " <br>" + targetPriceToken.toFixed(3) + " " + positions[i].symbolBASE, 
+        totalprofittarget: [profitTargetETH.toFixed(2), positions[i].symbolUNDER],// + " (" + (profitTargetETHUSD).toFixed(0) + " USD), <br>" + profitTargetToken.toFixed(2) + " " + positions[i].symbolBASE + " (" + (profitTargetTokenUSD).toFixed(0) + " USD)", 
+        monthlyprofittarget: [profitPerMonthTargetETH.toFixed(2), positions[i].symbolUNDER],// + " (" + (profitPerMonthTargetETHUSD).toFixed(0) + " USD), <br> " + profitPerMonthTargetToken.toFixed(2) + " " + positions[i].symbolBASE+ " (" + (profitPerMonthTargetTokenUSD).toFixed(0) + " USD)", 
+        aprtarget: [aprTargetETH.toFixed(2), "%"],
+        actions: (
+          <div className="actions-right">
+            <Button
+              onClick={() => {
+                //this.props.setEditedTransaction(this.state.data[key].id);
+                //this.props.showEditTradeDialog();
+                return true;
+              }}
+              bsStyle="default"
+              table
+              simple
+              icon
+            >
+              <i className="fa fa-edit" />
+            </Button>{" "}
+            <Button
+              onClick={() => {
+                this.setState({
+                  isConfirmDialogShown: true,
+                  //removedTransaction: this.state.data[key].id
+                });
+                return true;
+              }}
+              bsStyle="danger"
+              table
+              simple
+              icon
+            >
+              <i className="fa fa-times" />
+            </Button>{" "}
+          </div>
+        )
+      });
+        
+      
+      // update time and price
+      //if(positions[i].marketAddress === uniswapV2DAIWETHAddress) {
+      //  document.getElementById("priceAndTime").innerHTML = "Price: " + market.priceUNDERBASE.toFixed(2) + " DAI - " + new Date().toLocaleString();  	
+      //}
+    }
+
+    console.log("Uniswap positions refreshed");
+    this.setState({
+      data: uniswapTableSet
+    });
+  }
+
+  /*
+  *	Finds the price and profit at which uniswap + long position 
+  *	yield maximum token returns. 
+  */
+  findPriceAndProfitForMaxToken(market, position) {
+    let startPrice = 0.1;
+    let endPrice = 3000;	
+    let maxProfitPrice = startPrice;			
+    let maxBalanceDAI = -100000000000;
+    let maxDebalanced;
+    let totalInETH = position.startUNDER + position.longPos[0] / position.longPos[1];
+    for(let i = startPrice; i < endPrice; i += 0.01) {
+      market.setMarketPrice(i);
+
+      // get uniswap balance
+      let uniBalances = this.checkBalances(market, position.currentLPT);
+      //console.log("optimum @" + i.toFixed(3) + ": " + uniBalances[0].toFixed(4) + " ETH + " + uniBalances[1].toFixed(4) + " COMP");
+
+      // get dydx balance
+      let longBalETH = this.getDyDxLongBalanceInETH(position.longPos[0], position.longPos[1], position.longPos[2], i);
+
+      // debalance for max dai
+      let debalanced = this.debalanceDAI(market, totalInETH, uniBalances[0] + longBalETH + position.extraUNDER, uniBalances[1] + position.extraBASE);
+      //console.log("debalanced @" + i.toFixed(3) + ": " + debalanced[0].toFixed(4) + " ETH + " + debalanced[1].toFixed(4) + " COMP");
+      if(maxBalanceDAI < debalanced[1]) {
+        maxBalanceDAI = debalanced[1];
+        maxProfitPrice = i;
+        maxDebalanced = debalanced;
+      }
+    }			
+    //console.log(position.name + ": max balance: " + maxBalanceDAI + " DAI: @" + maxProfitPrice);
+    console.log(position.name + " for max TKN: " + maxDebalanced + " " + new Date());
+    
+    return [maxProfitPrice, maxBalanceDAI - position.startBASE];
+  }
+  
+  /*
+  *	Finds the price and profit at which uniswap + long position 
+  *	yield maximum ETH returns. 
+  */
+  findPriceAndProfitForMaxETH(market, position) {
+    let startPrice = 0.1;
+    let endPrice = 3000;		
+    let maxProfitPrice = startPrice;		
+    let maxBalanceETH = -100000000000;
+    let maxDebalanced;
+    let totalInETH = position.startUNDER + position.longPos[0] / position.longPos[1];
+    for(let i = startPrice; i < endPrice; i += 0.01) {
+      market.setMarketPrice(i);
+
+      // get uniswap balance
+      let uniBalances = this.checkBalances(market, position.currentLPT);
+      //console.log("ETH optimum @" + i + ": " + uniBalances[0].toFixed(4) + " ETH + " + uniBalances[1].toFixed(2) + " DAI");
+
+      // get dydx balance
+      let longBalETH = this.getDyDxLongBalanceInETH(position.longPos[0], position.longPos[1], position.longPos[2], i);
+
+      // debalance for max dai
+      let debalanced = this.debalanceETH(market, position.startBASE, uniBalances[0] + longBalETH + position.extraUNDER, uniBalances[1] + position.extraBASE);
+      //console.log("Profit in DAI @" + i + ": " + ((debalanced[0] - position.startUNDER)  * i).toFixed(3) + " DAI = " + (debalanced[0] - position.startUNDER).toFixed(5) + " ETH")
+      if(maxBalanceETH < debalanced[0]) {
+        maxBalanceETH = debalanced[0];
+        maxProfitPrice = i;
+        maxDebalanced = debalanced;
+      }
+    }			
+    //console.log(position.name + ": max balance: " + maxBalanceETH + " ETH: @" + maxProfitPrice);
+    console.log(position.name + " for max ETH: " + maxDebalanced);
+    
+    return [maxProfitPrice, maxBalanceETH - totalInETH]; 
+  }
+
+  checkBalances(market, balanceLPT) {
+    let balanceETH = balanceLPT * market.poolUNDER / market.poolLPT;
+    let balanceToken = balanceLPT * market.poolBASE / market.poolLPT;
+    return [balanceETH, balanceToken];
+  }
+
+  getDyDxLongBalanceInETH(size, leverage, openPrice, currentPrice) {
+    let depositETH = size / leverage;
+    let marketBuyETH = size - depositETH;
+    let debtDAI = marketBuyETH * openPrice;
+    let currentDAI = size * currentPrice - debtDAI;
+    let currentETH = currentDAI / currentPrice;
+
+    return Math.max(0, currentETH);
+  }
+
+  getDyDxShortBalanceInDAI(size, leverage, openPrice, currentPrice) {
+    let depositDAI = size * openPrice / leverage;
+    let marketBuyDAI = size * openPrice - depositDAI;
+    let debtETH = marketBuyDAI / openPrice;
+    let currentDAI = size * openPrice - debtETH * currentPrice;
+
+    return Math.max(0, currentDAI);
+  }
+  
+  debalanceETH(market, startBASE, ethTokens, daiTokens) {
+    let currentPrice = (market.poolBASE / market.poolUNDER);
+    let diffDai = startBASE - daiTokens;
+    let newETH = ethTokens - diffDai / currentPrice;
+    
+    return [newETH, startBASE];
+  }
+  
+  debalanceDAI(market, startUNDER, ethTokens, daiTokens) {
+    let currentPrice = (market.poolBASE / market.poolUNDER);
+    let diffETH = startUNDER - ethTokens;
+    let newDAI = daiTokens - diffETH * currentPrice;
+    
+    return [startUNDER, newDAI];
+  }
+
+  /*mapTradesToState() {
     // first get data from user and res model
     const tableData = [];
     // temp to test
@@ -142,22 +383,6 @@ class PositionsView extends Component {
       [11307.28, "USD"],
       [187.82, "%"]
     ]);
-    /*let newestFirst = props.userModel.transactions.slice(0, props.userModel.transactions.length);
-    newestFirst.sort((a, b) => b.time.getTime() - a.time.getTime());
-    for (let tx of newestFirst) {
-      if (tx.isTrade) {
-        let date = tx.time.toISOString().split('T')[0];
-        let pair = tx.pair.base.code + "/" + tx.pair.counter.code;
-        let type = tx.isBuy ? "Buy" : "Sell";
-        let comment = tx.comment === "null" ? "" : tx.comment;
-        let volume = [tx.baseAmount, tx.pair.base.code];
-        let price = [tx.getPrice(), tx.pair.counter.code];
-        let cost = [tx.counterAmount, tx.pair.counter.code];
-        let profitPercent = tx.getProfitPercent(props.resModel);
-        let profit = [tx.getProfit(props.resModel, props.resModel.usd), props.resModel.usd.code];
-        tableData.push([tx, date, pair, type, comment, volume, price, cost, profitPercent, profit]);
-      }
-    }*/
 
 
     // second, map to state
@@ -210,7 +435,7 @@ class PositionsView extends Component {
         )
       };
     })
-  }
+  }*/
 
   getSumFooter(rows, columnName) {
     let total = 0;
