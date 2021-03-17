@@ -99,7 +99,7 @@ class PositionsView extends Component {
 
   async loadWeb3Data() {
     let markets = [];
-    for(let i = 0; i < 1/*this.props.userModel.positions.length*/; i++) {
+    for(let i = 0; i < this.props.userModel.positions.length; i++) {
       let pos = this.props.userModel.positions[i];
       let uniswap = new Uniswap(pos.marketAddress, pos.addressBASE, pos.addressUNDER, 0, 0, 0, 0.3);
       await uniswap.getMarketData(this.state.web3, pos);
@@ -111,7 +111,7 @@ class PositionsView extends Component {
 
   refreshUniswapPositions(positions, markets) {
     let uniswapTableSet = [];
-    for(let i = 0; i < 1/*positions.length*/; i++) {
+    for(let i = 0; i < positions.length; i++) {
       let market = markets[i];
       console.log(market)
       // time 
@@ -169,7 +169,7 @@ class PositionsView extends Component {
         position: positions[i].name,
         liquidation: positions[i].description, 
         size: [balanceTodayToken * market.priceBASEUSD, "USD"],
-        active: [daysSinceStart.toFixed(0), "days"],
+        days: [daysSinceStart.toFixed(0), "d"],
         current: [market.priceUNDERBASE, positions[i].symbolBASE],
         totalprofitcurrent: [market.priceBASEUSD * profitTodayToken, "USD"],
         monthlyprofitcurrent: [market.priceBASEUSD * profitPerMonthTodayToken, "USD"],
@@ -376,11 +376,11 @@ class PositionsView extends Component {
         background: '#ff000042',
         columns: [
           { 
-            Header: "Position", accessor: "position", maxWidth: 350,
+            Header: "Position", accessor: "position", maxWidth: 350, style: { 'whiteSpace': 'unset' },
             filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
           },
           { 
-            Header: "Liquidation", accessor: "liquidation", maxWidth: 400,
+            Header: "Liquidation", accessor: "liquidation", maxWidth: 400, style: { 'whiteSpace': 'unset' },
             filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
           },
           { 
@@ -400,10 +400,10 @@ class PositionsView extends Component {
             sortMethod: (a, b) => { return b[0] - a[0]; }
           },
           { 
-            Header: "Active", accessor: "active", maxWidth: 75, filterable: false,
+            Header: "Days", accessor: "days", maxWidth: 60, filterable: false,
             Cell: row => (
               <span style={{ float: "right" }}>
-                {formatUtils.formatNumber(row.value[0], 0) + " " + row.value[1]}
+                {formatUtils.formatNumber(row.value[0], 0) + "" + row.value[1]}
               </span>
             ),
           },
