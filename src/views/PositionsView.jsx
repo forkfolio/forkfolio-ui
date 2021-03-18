@@ -166,8 +166,7 @@ class PositionsView extends Component {
       // prepare dataset for table
       uniswapTableSet.push({
         id: i,
-        position: positions[i].name,
-        liquidation: positions[i].description, 
+        position: [positions[i].name, positions[i].description], 
         size: [balanceTodayToken * market.priceBASEUSD, "USD"],
         days: [daysSinceStart.toFixed(0), "d"],
         current: [market.priceUNDERBASE, positions[i].symbolBASE],
@@ -398,18 +397,14 @@ class PositionsView extends Component {
         background: '#ff000042',
         columns: [
           { 
-            Header: "Position", accessor: "position", maxWidth: 350, style: { 'whiteSpace': 'unset' },
-            filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
-          },
-          { 
-            Header: "Liquidation", accessor: "liquidation", maxWidth: 400, style: { 'whiteSpace': 'unset' },
+            Header: "Position", accessor: "position", maxWidth: 550, style: { 'whiteSpace': 'unset' },
             filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
             Cell: row => {
               return (
                 <span style={{ float: "left" }}>
-                  {row.value.text}
-                  <br></br>
-                  {this.displayLinks(row.value)}
+                  <b>{row.value[0]}</b><br></br>
+                  {row.value[1].text}<br></br>
+                  {this.displayLinks(row.value[1])}
                 </span>
               )
             },
