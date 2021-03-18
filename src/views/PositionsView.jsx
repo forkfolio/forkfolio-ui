@@ -225,6 +225,15 @@ class PositionsView extends Component {
     });
   }
 
+  linksToString(links) {
+    let linkString = "";
+    for(let i = 0; i < links.length; i++) {
+      linkString += '<a href="' + links[i].link + '">' + links[i].anchor + '</a>, ';
+    }
+
+    return linkString;
+  }
+
   /*
   *	Finds the price and profit at which uniswap + long position 
   *	yield maximum token returns. 
@@ -369,6 +378,19 @@ class PositionsView extends Component {
     return total;
   }
 
+  
+  displayLinks = (description) => {
+    return (
+      description.links.map(link => {
+        return (
+          <div>
+            <a href={link.link}>{link.anchor}</a><br></br>
+          </div>
+        );
+      })
+    )
+  };
+
   getTableColumns() {
     const tableColumns = [
       { 
@@ -382,6 +404,15 @@ class PositionsView extends Component {
           { 
             Header: "Liquidation", accessor: "liquidation", maxWidth: 400, style: { 'whiteSpace': 'unset' },
             filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
+            Cell: row => {
+              return (
+                <span style={{ float: "left" }}>
+                  {row.value.text}
+                  <br></br>
+                  {this.displayLinks(row.value)}
+                </span>
+              )
+            },
           },
           { 
             Header: "Size", accessor: "size", maxWidth: 120, filterable: false,
