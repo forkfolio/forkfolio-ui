@@ -11,6 +11,8 @@ import { formatUtils } from '../utils/FormatUtils';
 import ReactGA from 'react-ga';
 import Web3 from 'web3';
 import Uniswap from '../web3/Uniswap';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 
 class PositionsView extends Component {
   constructor(props) {
@@ -224,12 +226,6 @@ class PositionsView extends Component {
           </div>
         )
       });
-        
-      
-      // update time and price
-      //if(positions[i].marketAddress === uniswapV2DAIWETHAddress) {
-      //  document.getElementById("priceAndTime").innerHTML = "Price: " + market.priceUNDERBASE.toFixed(2) + " DAI - " + new Date().toLocaleString();  	
-      //}
     }
 
     console.log("Uniswap positions refreshed");
@@ -407,170 +403,159 @@ class PositionsView extends Component {
   getTableColumns() {
     const tableColumns = [
       { 
-        Header: "Info",
-        background: '#ff000042',
-        columns: [
-          { 
-            Header: "Position", accessor: "position", maxWidth: 550, style: { 'whiteSpace': 'unset' },
-            filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
-            Cell: row => {
-              return (
-                <span style={{ float: "left" }}>
-                  <b>{row.value[0]}</b><br></br>
-                  {row.value[1].text}<br></br>
-                  {this.displayLinks(row.value[1])}
-                </span>
-              )
-            },
-          },
-          { 
-            Header: "Size/Days", accessor: "sizedays", maxWidth: 120, filterable: false,
-            Cell: row => (
-              <div>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(row.value.size[0], 0) + " " + row.value.size[1]}
-                </div>
-                <br/>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(row.value.days[0], 0) + " " + row.value.days[1]}
-                </div>
-              </div>
-            ),
-            Footer: rows => (
-              <span style={{ float: "right" }}>
-                <strong>
-                  {formatUtils.formatNumber(this.getSumFooter(rows, "sizedays", "size", 0), 0) + " " + rows.data[0]["sizedays"]["size"][1]}
-                </strong>
-              </span>
-            ),
-            sortMethod: (a, b) => { return b[0] - a[0]; }
-          },
-        ]
+        Header: "Position", accessor: "position", maxWidth: 550, style: { 'whiteSpace': 'unset' },
+        filterMethod: (filter, row) => row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase()) !== -1,
+        Cell: row => {
+          return (
+            <span style={{ float: "left" }}>
+              <b>{row.value[0]}</b><br></br>
+              {row.value[1].text}<br></br>
+              {this.displayLinks(row.value[1])}
+            </span>
+          )
+        },
       },
       { 
-        Header: "Current",
-        columns: [
-          { 
-            Header: "Price", accessor: "price", maxWidth: 130, filterable: false,
-            Cell: row => (
-              <div>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(row.value.lower[0], 2) + " " + row.value.lower[1]}
-                </div>
-                <br/>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(row.value.current[0], 2) + " " + row.value.current[1]}
-                </div>
-                <br/>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(row.value.higher[0], 2) + " " + row.value.higher[1]}
-                </div>
+        Header: "Size/Days", accessor: "sizedays", maxWidth: 120, filterable: false,
+        Cell: row => (
+          <div>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(row.value.size[0], 0) + " " + row.value.size[1]}
+            </div>
+            <br/>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(row.value.days[0], 0) + " " + row.value.days[1]}
+            </div>
+          </div>
+        ),
+        Footer: rows => (
+          <span style={{ float: "right" }}>
+            <strong>
+              {formatUtils.formatNumber(this.getSumFooter(rows, "sizedays", "size", 0), 0) + " " + rows.data[0]["sizedays"]["size"][1]}
+            </strong>
+          </span>
+        ),
+        sortMethod: (a, b) => { return b[0] - a[0]; }
+      },
+      { 
+        Header: "Price", accessor: "price", maxWidth: 130, filterable: false,
+        Cell: row => (
+          <div>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(row.value.lower[0], 2) + " " + row.value.lower[1]}
+            </div>
+            <br/>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(row.value.current[0], 2) + " " + row.value.current[1]}
+            </div>
+            <br/>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(row.value.higher[0], 2) + " " + row.value.higher[1]}
+            </div>
+          </div>
+        ),
+        sortMethod: (a, b) => { return b[0] - a[0]; },
+        Footer: rows => (
+          <div>
+            <div style={{ float: "right" }}>
+              @current
+            </div>
+            <br/>
+            <div style={{ float: "right" }}>
+              @target
               </div>
-            ),
-            sortMethod: (a, b) => { return b[0] - a[0]; },
-            Footer: rows => (
-              <div>
-                <div style={{ float: "right" }}>
-                  @current
-                </div>
-                <br/>
-                <div style={{ float: "right" }}>
-                  @target
-                  </div>
-              </div>
-            )
-          },
-          { 
-            Header: "Total Profit", accessor: "totalprofit", maxWidth: 350, filterable: false,
-            Cell: row => (
-              <div>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(row.value.lower[0], 0) + " " + row.value.lower[1] + " (" + formatUtils.formatNumber(row.value.lower[2], 0) + " USD)"}
-                </div>
-                <br/>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(row.value.current[0], 0) + " " + row.value.current[1] + " (" + formatUtils.formatNumber(row.value.current[2], 0) + " USD)"}
-                </div>
-                <br/>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(row.value.higher[0], 0) + " " + row.value.higher[1] + " (" + formatUtils.formatNumber(row.value.higher[2], 0) + " USD)"}
-                </div>
-              </div>
-            ),
-            sortMethod: (a, b) => { return b[0] - a[0]; }, 
-            Footer: rows => (
-              <div>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(this.getSumFooter(rows, "totalprofit", "current", 0), 0) + " " + rows.data[0]["totalprofit"]["current"][1]}
-                </div>
-                <br/>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(this.getTotalProfitSum(), 0) + " " + rows.data[0]["totalprofit"]["current"][1]}
-                </div>
-              </div>
-            )
-          },
-          { 
-            Header: "Monthly Profit", accessor: "monthlyprofit", maxWidth: 350, filterable: false,
-            Cell: row => (
-              <div>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(row.value.lower[0], 0) + " " + row.value.lower[1] + " (" + formatUtils.formatNumber(row.value.lower[2], 0) + " USD)"}
-                </div>
-                <br/>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(row.value.current[0], 0) + " " + row.value.current[1] + " (" + formatUtils.formatNumber(row.value.current[2], 0) + " USD)"}
-                </div>
-                <br/>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(row.value.higher[0], 0) + " " + row.value.higher[1] + " (" + formatUtils.formatNumber(row.value.higher[2], 0) + " USD)"}
-                </div>
-              </div>
-            ),
-            sortMethod: (a, b) => { return b[0] - a[0]; }, 
-            Footer: rows => (
-              <div>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(this.getSumFooter(rows, "monthlyprofit", "current", 0), 0) + " " + rows.data[0]["monthlyprofit"]["current"][1]}
-                </div>
-                <br/>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(this.getMonthlyProfitSum(), 0) + " " + rows.data[0]["monthlyprofit"]["current"][1]}
-                </div>
-              </div>
-            )
-          },
-          { 
-            Header: "APR", accessor: "apr", maxWidth: 70, filterable: false,
-            Cell: row => (
-              <div>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(row.value.lower[0], 2) + "" + row.value.lower[1]}
-                </div>
-                <br/>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(row.value.current[0], 2) + "" + row.value.current[1]}
-                </div>
-                <br/>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(row.value.higher[0], 2) + "" + row.value.higher[1]}
-                </div>
-              </div>
-            ),
-            sortMethod: (a, b) => { return b - a; },
-            Footer: rows => (
-              <div>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(this.getSumFooter(rows, "monthlyprofit", "current", 0) * 12 / this.getSumFooter(rows, "sizedays", "size", 0) * 100, 2) + "%"}
-                </div>
-                <br/>
-                <div style={{ float: "right" }}>
-                  {formatUtils.formatNumber(this.getMonthlyProfitSum() * 12 / this.getSumFooter(rows, "sizedays", "size", 0) * 100, 2) + "%"}
-                </div>
-              </div>
-            )
-          },
-        ]
+          </div>
+        )
+      },
+      { 
+        Header: "Total Profit", accessor: "totalprofit", maxWidth: 350, filterable: false,
+        Cell: row => (
+          <div>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(row.value.lower[0], 0) + " " + row.value.lower[1] + " (" + formatUtils.formatNumber(row.value.lower[2], 0) + " USD)"}
+            </div>
+            <br/>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(row.value.current[0], 0) + " " + row.value.current[1] + " (" + formatUtils.formatNumber(row.value.current[2], 0) + " USD)"}
+            </div>
+            <br/>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(row.value.higher[0], 0) + " " + row.value.higher[1] + " (" + formatUtils.formatNumber(row.value.higher[2], 0) + " USD)"}
+            </div>
+          </div>
+        ),
+        sortMethod: (a, b) => { return b[0] - a[0]; }, 
+        Footer: rows => (
+          <div>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(this.getSumFooter(rows, "totalprofit", "current", 0), 0) + " " + rows.data[0]["totalprofit"]["current"][1]}
+            </div>
+            <br/>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(this.getTotalProfitSum(), 0) + " " + rows.data[0]["totalprofit"]["current"][1]}
+            </div>
+          </div>
+        )
+      },
+      { 
+        Header: "Monthly Profit", accessor: "monthlyprofit", maxWidth: 350, filterable: false,
+        Cell: row => (
+          <div>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(row.value.lower[0], 0) + " " + row.value.lower[1] + " (" + formatUtils.formatNumber(row.value.lower[2], 0) + " USD)"}
+            </div>
+            <br/>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(row.value.current[0], 0) + " " + row.value.current[1] + " (" + formatUtils.formatNumber(row.value.current[2], 0) + " USD)"}
+            </div>
+            <br/>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(row.value.higher[0], 0) + " " + row.value.higher[1] + " (" + formatUtils.formatNumber(row.value.higher[2], 0) + " USD)"}
+            </div>
+          </div>
+        ),
+        sortMethod: (a, b) => { return b[0] - a[0]; }, 
+        Footer: rows => (
+          <div>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(this.getSumFooter(rows, "monthlyprofit", "current", 0), 0) + " " + rows.data[0]["monthlyprofit"]["current"][1]}
+            </div>
+            <br/>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(this.getMonthlyProfitSum(), 0) + " " + rows.data[0]["monthlyprofit"]["current"][1]}
+            </div>
+          </div>
+        )
+      },
+      { 
+        Header: "APR", accessor: "apr", maxWidth: 70, filterable: false,
+        Cell: row => (
+          <div>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(row.value.lower[0], 2) + "" + row.value.lower[1]}
+            </div>
+            <br/>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(row.value.current[0], 2) + "" + row.value.current[1]}
+            </div>
+            <br/>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(row.value.higher[0], 2) + "" + row.value.higher[1]}
+            </div>
+          </div>
+        ),
+        sortMethod: (a, b) => { return b - a; },
+        Footer: rows => (
+          <div>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(this.getSumFooter(rows, "monthlyprofit", "current", 0) * 12 / this.getSumFooter(rows, "sizedays", "size", 0) * 100, 2) + "%"}
+            </div>
+            <br/>
+            <div style={{ float: "right" }}>
+              {formatUtils.formatNumber(this.getMonthlyProfitSum() * 12 / this.getSumFooter(rows, "sizedays", "size", 0) * 100, 2) + "%"}
+            </div>
+          </div>
+        )
       },
       { 
         Header: "Actions", accessor: "actions", minWidth: 70, maxWidth: 70, sortable: false, filterable: false 
@@ -589,6 +574,42 @@ class PositionsView extends Component {
   removeTransaction() {
     this.props.removeTransaction(this.state.removedTransaction);
     this.hideConfirmDialog();
+  }
+
+  getPerformanceChartOptions(props) {
+
+    const performanceOptions = {
+      chart: {
+        type: 'area'
+      },
+      title: {
+        text: null
+      },
+      plotOptions: {
+        series: {
+          stacking: 'normal',
+          lineColor: '#666666',
+          lineWidth: 1,
+          marker: {
+              lineWidth: 1,
+              lineColor: '#666666'
+          }
+        }
+      },     
+      series: [
+        { data: [Math.random() * 5, 2, 1]}
+      ],
+      tooltip: {
+        shared: true, // this doesn't work
+        valueSuffix: ' USD',
+        valueDecimals: 2
+      },
+      credits: {
+        enabled: false
+      }
+    }
+
+    return performanceOptions;
   }
 
   render() {
@@ -627,6 +648,12 @@ class PositionsView extends Component {
 
     const tooltipHelpText1 = <Tooltip id="edit_tooltip">
       123 help
+    </Tooltip>; 
+    const tooltipHelpText2 = <Tooltip id="edit_tooltip">
+      Portfolio history panel displays a chart of daily historical snapshots of your portfolio. 
+      All changes to your portfolio are taken into account: trades, deposits and withdrawals. 
+      <br/><br/> 
+      Easily zoom in/out with predefined time periods, or use the slider on the bottom to fine tune.
     </Tooltip>; 
 
     return (
@@ -677,6 +704,34 @@ class PositionsView extends Component {
               {this.props.isAddTradeDialogShown ? addTradeDialog : ""}
               {this.props.isEditTradeDialogShown ? editTradeDialog : ""}
               {this.state.isConfirmDialogShown ? confirmRemoveTransactionDialog : ""}
+            </Col>
+          </Row>
+          <Row>
+            <Col md={12}>
+              <Card
+                title="How does my position looks like?"
+                //category="24 Hours performance"
+                rightSection={
+                  <OverlayTrigger placement="bottom" overlay={tooltipHelpText2}>
+                    <Button
+                      bsStyle="default"
+                      special // for share button: fa fa-share-alt
+                      //speciallarge 
+                      //pullRight
+                      simple
+                      >
+                      <i className={"fa fa-question-circle"} /> Help 
+                    </Button> 
+                  </OverlayTrigger>
+                }
+                content={
+                  <HighchartsReact
+                    highcharts={Highcharts}
+                    //constructorType={'stockChart'}
+                    options={this.getPerformanceChartOptions(this.props)}
+                  />
+                }
+              />
             </Col>
           </Row>
         </Grid>

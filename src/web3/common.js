@@ -52,6 +52,11 @@ export const sushiswapV2SUSHIETHAddress = "0x795065dcc9f64b5614c407a6efdc400da62
 
 export const inchV2DAIETHAddress = "0x7566126f2fd0f2dddae01bb8a6ea49b760383d5a";
 
+export function getContractInstance(web3, abi, address) {			
+	console.log("Loading contract instance for address: " + address)
+	return new web3.eth.Contract(abi, address);
+}
+
 class OptionMath {
 	blackScholes(PutCallFlag, S, X, T, r, v) {
 	  let d1 = (Math.log(S / X) + (r + v * v / 2) * T) / (v * Math.sqrt(T));

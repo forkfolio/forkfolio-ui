@@ -1,7 +1,7 @@
 import { CoinGeckoPrices } from './CoinGeckoPrices.js';
 import uniswapABI from "../abis/uniswapABI.json";
 import daiABI from "../abis/daiABI.json";
-import { usdcAddress } from './common.js'
+import { usdcAddress, getContractInstance } from './common.js'
 		
 export default class Uniswap {		
 	constructor(marketAddress, addressBASE, addressUNDER, poolBASE, poolUNDER, poolLIQ, feeInPercent) {
@@ -17,16 +17,11 @@ export default class Uniswap {
 		//this.volume = 0; // in contracts, not dai
 	}
 
-	getContractInstance(web3, abi, address) {			
-		console.log("Loading contract instance for address: " + address)
-		return new web3.eth.Contract(abi, address);
-	}
-
 	// gets pool sizes and prices from live market 
 	async getMarketData(web3, position) {
-		let marketInstance = this.getContractInstance(web3, uniswapABI, this.marketAddress);
-		let baseInstance = this.getContractInstance(web3, daiABI, this.addressBASE);
-		let underInstance = this.getContractInstance(web3, daiABI, this.addressUNDER);
+		let marketInstance = getContractInstance(web3, uniswapABI, this.marketAddress);
+		let baseInstance = getContractInstance(web3, daiABI, this.addressBASE);
+		let underInstance = getContractInstance(web3, daiABI, this.addressUNDER);
 
 		let ethBalance = await web3.eth.getBalance(this.marketAddress); // 
 		let poolLIQ = await marketInstance.methods.totalSupply().call();
