@@ -11,8 +11,7 @@ import { formatUtils } from '../utils/FormatUtils';
 import ReactGA from 'react-ga';
 import Web3 from 'web3';
 import Uniswap from '../web3/Uniswap';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
+import PositionChartCard from "./positions/PositionChartCard";
 
 class PositionsView extends Component {
   constructor(props) {
@@ -708,30 +707,7 @@ class PositionsView extends Component {
           </Row>
           <Row>
             <Col md={12}>
-              <Card
-                title="How does my position looks like?"
-                //category="24 Hours performance"
-                rightSection={
-                  <OverlayTrigger placement="bottom" overlay={tooltipHelpText2}>
-                    <Button
-                      bsStyle="default"
-                      special // for share button: fa fa-share-alt
-                      //speciallarge 
-                      //pullRight
-                      simple
-                      >
-                      <i className={"fa fa-question-circle"} /> Help 
-                    </Button> 
-                  </OverlayTrigger>
-                }
-                content={
-                  <HighchartsReact
-                    highcharts={Highcharts}
-                    //constructorType={'stockChart'}
-                    options={this.getPerformanceChartOptions(this.props)}
-                  />
-                }
-              />
+              <PositionChartCard />
             </Col>
           </Row>
         </Grid>
