@@ -12,12 +12,14 @@ import ReactGA from 'react-ga';
 import Web3 from 'web3';
 import Uniswap from '../web3/Uniswap';
 import PositionChartCard from "./positions/PositionChartCard";
+import PositionChartDialog from "./dialogs/PositionChartDialog";
 
 class PositionsView extends Component {
   constructor(props) {
     super(props);
     this.hideConfirmDialog = this.hideConfirmDialog.bind(this);
     this.removeTransaction = this.removeTransaction.bind(this);
+    this.hideChartDialog = this.hideChartDialog.bind(this);
     this.loadWeb3 = this.loadWeb3.bind(this);
     this.loadWeb3Account = this.loadWeb3Account.bind(this);
 
@@ -31,6 +33,7 @@ class PositionsView extends Component {
       //data: null,
       isConfirmDialogShown: false,
       removedTransaction: null,
+      isChartDialogShown: false,
       web3: web3,
       account: null,
       web3DataLoaded: false
@@ -166,7 +169,7 @@ class PositionsView extends Component {
 
       // prepare dataset for table
       uniswapTableSet.push({
-        id: i,
+        id: positions[i],
         position: [positions[i].name, positions[i].description], 
         sizedays: {
           size: [balanceTodayToken * market.priceBASEUSD, "USD"],
@@ -196,6 +199,22 @@ class PositionsView extends Component {
           <div className="actions-right">
             <Button
               onClick={() => {
+                this.setState({
+                  isChartDialogShown: true,
+                  selectedPosition: positions[i]
+                });
+                return true;
+              }}
+              bsStyle="default"
+              table
+              simple
+              icon
+            >
+              <i className="fas fa-chart-area" />
+            </Button>{" "}
+            <br></br>
+            <Button
+              onClick={() => {
                 //this.props.setEditedTransaction(this.state.data[key].id);
                 //this.props.showEditTradeDialog();
                 return true;
@@ -207,6 +226,7 @@ class PositionsView extends Component {
             >
               <i className="fa fa-edit" />
             </Button>{" "}
+            <br></br>
             <Button
               onClick={() => {
                 this.setState({
@@ -575,6 +595,12 @@ class PositionsView extends Component {
     this.hideConfirmDialog();
   }
 
+  hideChartDialog() {
+    this.setState({
+      isChartDialogShown: false
+    });
+  }
+
   getPerformanceChartOptions(props) {
 
     const performanceOptions = {
@@ -645,6 +671,14 @@ class PositionsView extends Component {
       />
     );
 
+    let positionChartDialog = (
+      <PositionChartDialog
+        isDialogShown={this.state.isChartDialogShown}
+        hideDialog={this.hideChartDialog}
+        selectedPosition={this.state.selectedPosition}
+      />
+    );
+
     const tooltipHelpText1 = <Tooltip id="edit_tooltip">
       123 help
     </Tooltip>; 
@@ -703,6 +737,7 @@ class PositionsView extends Component {
               {this.props.isAddTradeDialogShown ? addTradeDialog : ""}
               {this.props.isEditTradeDialogShown ? editTradeDialog : ""}
               {this.state.isConfirmDialogShown ? confirmRemoveTransactionDialog : ""}
+              {this.state.isChartDialogShown ? positionChartDialog : ""}
             </Col>
           </Row>
           <Row>
