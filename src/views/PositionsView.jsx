@@ -13,6 +13,7 @@ import Web3 from 'web3';
 import Uniswap from '../web3/Uniswap';
 import PositionChartCard from "./positions/PositionChartCard";
 import PositionChartDialog from "./dialogs/PositionChartDialog";
+import { clone, checkBalances, getDyDxLongBalanceInETH, getDyDxShortBalanceInDAI, debalanceETH, debalanceDAI } from '../web3/common.js';
 
 class PositionsView extends Component {
   constructor(props) {
@@ -120,7 +121,7 @@ class PositionsView extends Component {
   prepareTableData(positions, markets) {
     let uniswapTableSet = [];
     for(let i = 0; i < positions.length; i++) {
-      let market = markets[i];
+      let market = clone(markets[i]);
       // time 
       let startDate = new Date(positions[i].startDate);
       let daysSinceStart = (new Date() - startDate) / (1000 * 60 * 60 * 24);
@@ -134,7 +135,7 @@ class PositionsView extends Component {
       let uniswapOutETH = positions[i].currentLPT * market.priceLIQUNDER;
       let uniswapOutTKN = positions[i].currentLPT * market.priceLIQBASE;
 
-      let dydxOutETH = this.getDyDxLongBalanceInETH(positions[i].longPos[0], positions[i].longPos[1], positions[i].longPos[2], market.priceUNDERBASE);
+      let dydxOutETH = getDyDxLongBalanceInETH(positions[i].longPos[0], positions[i].longPos[1], positions[i].longPos[2], market.priceUNDERBASE);
 
       let totalOutETH = uniswapOutETH + dydxOutETH + positions[i].extraUNDER;	
       let totalOutTKN = uniswapOutTKN + positions[i].extraBASE;
@@ -268,14 +269,14 @@ class PositionsView extends Component {
       market.setMarketPrice(i);
 
       // get uniswap balance
-      let uniBalances = this.checkBalances(market, position.currentLPT);
+      let uniBalances = checkBalances(market, position.currentLPT);
       //console.log("optimum @" + i.toFixed(3) + ": " + uniBalances[0].toFixed(4) + " ETH + " + uniBalances[1].toFixed(4) + " COMP");
 
       // get dydx balance
-      let longBalETH = this.getDyDxLongBalanceInETH(position.longPos[0], position.longPos[1], position.longPos[2], i);
+      let longBalETH = getDyDxLongBalanceInETH(position.longPos[0], position.longPos[1], position.longPos[2], i);
 
       // debalance for max dai
-      let debalanced = this.debalanceDAI(market, totalInETH, uniBalances[0] + longBalETH + position.extraUNDER, uniBalances[1] + position.extraBASE);
+      let debalanced = debalanceDAI(market, totalInETH, uniBalances[0] + longBalETH + position.extraUNDER, uniBalances[1] + position.extraBASE);
       //console.log("debalanced @" + i.toFixed(3) + ": " + debalanced[0].toFixed(4) + " ETH + " + debalanced[1].toFixed(4) + " COMP");
       if(maxBalanceDAI < debalanced[1]) {
         maxBalanceDAI = debalanced[1];
@@ -304,14 +305,14 @@ class PositionsView extends Component {
       market.setMarketPrice(i);
 
       // get uniswap balance
-      let uniBalances = this.checkBalances(market, position.currentLPT);
+      let uniBalances = checkBalances(market, position.currentLPT);
       //console.log("ETH optimum @" + i + ": " + uniBalances[0].toFixed(4) + " ETH + " + uniBalances[1].toFixed(2) + " DAI");
 
       // get dydx balance
-      let longBalETH = this.getDyDxLongBalanceInETH(position.longPos[0], position.longPos[1], position.longPos[2], i);
+      let longBalETH = getDyDxLongBalanceInETH(position.longPos[0], position.longPos[1], position.longPos[2], i);
 
       // debalance for max dai
-      let debalanced = this.debalanceETH(market, position.startBASE, uniBalances[0] + longBalETH + position.extraUNDER, uniBalances[1] + position.extraBASE);
+      let debalanced = debalanceETH(market, position.startBASE, uniBalances[0] + longBalETH + position.extraUNDER, uniBalances[1] + position.extraBASE);
       //console.log("Profit in DAI @" + i + ": " + ((debalanced[0] - position.startUNDER)  * i).toFixed(3) + " DAI = " + (debalanced[0] - position.startUNDER).toFixed(5) + " ETH")
       if(maxBalanceETH < debalanced[0]) {
         maxBalanceETH = debalanced[0];
@@ -323,47 +324,6 @@ class PositionsView extends Component {
     console.log(position.name + " for max ETH: " + maxDebalanced);
     
     return [maxProfitPrice, maxBalanceETH - totalInETH]; 
-  }
-
-  checkBalances(market, balanceLPT) {
-    let balanceETH = balanceLPT * market.poolUNDER / market.poolLIQ;
-    let balanceToken = balanceLPT * market.poolBASE / market.poolLIQ;
-    return [balanceETH, balanceToken];
-  }
-
-  getDyDxLongBalanceInETH(size, leverage, openPrice, currentPrice) {
-    let depositETH = size / leverage;
-    let marketBuyETH = size - depositETH;
-    let debtDAI = marketBuyETH * openPrice;
-    let currentDAI = size * currentPrice - debtDAI;
-    let currentETH = currentDAI / currentPrice;
-
-    return Math.max(0, currentETH);
-  }
-
-  getDyDxShortBalanceInDAI(size, leverage, openPrice, currentPrice) {
-    let depositDAI = size * openPrice / leverage;
-    let marketBuyDAI = size * openPrice - depositDAI;
-    let debtETH = marketBuyDAI / openPrice;
-    let currentDAI = size * openPrice - debtETH * currentPrice;
-
-    return Math.max(0, currentDAI);
-  }
-  
-  debalanceETH(market, startBASE, ethTokens, daiTokens) {
-    let currentPrice = (market.poolBASE / market.poolUNDER);
-    let diffDai = startBASE - daiTokens;
-    let newETH = ethTokens - diffDai / currentPrice;
-    
-    return [newETH, startBASE];
-  }
-  
-  debalanceDAI(market, startUNDER, ethTokens, daiTokens) {
-    let currentPrice = (market.poolBASE / market.poolUNDER);
-    let diffETH = startUNDER - ethTokens;
-    let newDAI = daiTokens - diffETH * currentPrice;
-    
-    return [startUNDER, newDAI];
   }
 
   getTotalProfitSum() {
@@ -653,29 +613,29 @@ class PositionsView extends Component {
                 title="What are my opened positions?"
                 rightSection={
                   <div>
-                  <Button
-                    // was like this for without color
-                    //special
-                    //simple
-                    bsStyle="info"
-                    fill
-                    special   
-                    onClick={() => this.props.showAddTradeDialog()}
-                  >
-                    <i className={"fa fa-plus"} /> Add trade
-                  </Button>
-                  <OverlayTrigger placement="bottom" overlay={tooltipHelpText1}>
                     <Button
-                      bsStyle="default"
-                      special // for share button: fa fa-share-alt
-                      //speciallarge 
-                      //pullRight
-                      simple
+                      // was like this for without color
+                      //special
+                      //simple
+                      bsStyle="info"
+                      fill
+                      special   
+                      onClick={() => this.props.showAddTradeDialog()}
                     >
-                    <i className={"fa fa-question-circle"} /> Help 
-                  </Button> 
-                </OverlayTrigger>
-                </div>
+                      <i className={"fa fa-plus"} /> Add trade
+                    </Button>
+                    <OverlayTrigger placement="bottom" overlay={tooltipHelpText1}>
+                      <Button
+                        bsStyle="default"
+                        special // for share button: fa fa-share-alt
+                        //speciallarge 
+                        //pullRight
+                        simple
+                      >
+                        <i className={"fa fa-question-circle"} /> Help 
+                      </Button> 
+                    </OverlayTrigger>
+                  </div>
                 }
                 category={tradeCount + " trade" + (tradeCount === 1 ? "" : "s")}
                 content={this.state.data ? 

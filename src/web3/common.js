@@ -44,6 +44,65 @@ export function getContractInstance(web3, abi, address) {
 	return new web3.eth.Contract(abi, address);
 }
 
+export function checkBalances(market, balanceLPT) {
+    let balanceETH = balanceLPT * market.poolUNDER / market.poolLIQ;
+    let balanceToken = balanceLPT * market.poolBASE / market.poolLIQ;
+    return [balanceETH, balanceToken];
+}
+
+export function getDyDxLongBalanceInETH(size, leverage, openPrice, currentPrice) {
+    let depositETH = size / leverage;
+    let marketBuyETH = size - depositETH;
+    let debtDAI = marketBuyETH * openPrice;
+    let currentDAI = size * currentPrice - debtDAI;
+    let currentETH = currentDAI / currentPrice;
+
+    return Math.max(0, currentETH);
+  }
+
+export function getDyDxShortBalanceInDAI(size, leverage, openPrice, currentPrice) {
+    let depositDAI = size * openPrice / leverage;
+    let marketBuyDAI = size * openPrice - depositDAI;
+    let debtETH = marketBuyDAI / openPrice;
+    let currentDAI = size * openPrice - debtETH * currentPrice;
+
+    return Math.max(0, currentDAI);
+  }
+  
+export function debalanceETH(market, startBASE, ethTokens, daiTokens) {
+    let currentPrice = (market.poolBASE / market.poolUNDER);
+    let diffDai = startBASE - daiTokens;
+    let newETH = ethTokens - diffDai / currentPrice;
+    
+    return [newETH, startBASE];
+  }
+  
+export function debalanceDAI(market, startUNDER, ethTokens, daiTokens) {
+    let currentPrice = (market.poolBASE / market.poolUNDER);
+    let diffETH = startUNDER - ethTokens;
+    let newDAI = daiTokens - diffETH * currentPrice;
+    
+    return [startUNDER, newDAI];
+}
+
+/**
+ * @function
+ * @description Deep clone a class instance.
+ * @param {object} instance The class instance you want to clone.
+ * @returns {object} A new cloned instance.
+ */
+export function clone(instance) {
+	return Object.assign(
+	  Object.create(
+		// Set the prototype of the new object to the prototype of the instance.
+		// Used to allow new object behave like class instance.
+		Object.getPrototypeOf(instance),
+	  ),
+	  // Prevent shallow copies of nested structures like arrays, etc
+	  JSON.parse(JSON.stringify(instance)),
+	);
+}
+
 //----------------- BLACK-SCHOLES -----------------------
 /*
   PutCallFlag: Either "put" or "call"
