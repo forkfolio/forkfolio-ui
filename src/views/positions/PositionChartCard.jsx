@@ -19,8 +19,7 @@ class PositionChartCard extends Component {
     };
   }
 
-  async componentDidUpdate(prevProps) {
-    console.log("componentDidUpdate called")
+  async componentDidUpdate() {
     if (this.userModelLoaded() && this.props.markets) {
       // call only once
       if(!this.state.chartLoaded) {
@@ -63,7 +62,6 @@ class PositionChartCard extends Component {
     let balanceArrayETH = [], balanceArrayTKN = [];
 
     let openPrice = (market.poolBASE / market.poolUNDER);
-    console.log(openPrice)
     
     // inputs for profit taking currency
     let e = document.getElementById("profit_taking_currency");
@@ -108,7 +106,6 @@ class PositionChartCard extends Component {
     let totalInTKN = uniswapInTKN + dydxShortInTKN + option1InTKN + option2InTKN;
 
     console.log("Total in: " + totalInETH + " ETH + " + totalInTKN + " TKN");
-
 
     // rebalance before adding liquidity on uniswap
     let rebalancedTKN = (uniswapInTKN + uniswapInETH * openPrice) / 2;

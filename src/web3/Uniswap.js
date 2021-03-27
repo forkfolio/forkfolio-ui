@@ -25,6 +25,7 @@ export default class Uniswap {
 
 		let ethBalance = await web3.eth.getBalance(this.marketAddress); // 
 		let poolLIQ = await marketInstance.methods.totalSupply().call();
+
 		let poolBASE = await baseInstance.methods.balanceOf(this.marketAddress).call();
 		let poolUNDER = await underInstance.methods.balanceOf(this.marketAddress).call();
 
@@ -50,7 +51,7 @@ export default class Uniswap {
 	}
 
 	addLiquidity(exactUNDER, exactBASE) {
-		let exactLIQ = exactUNDER * (this.poolLPT / this.poolUNDER);
+		let exactLIQ = exactUNDER * (this.poolLIQ / this.poolUNDER);
 		//console.log("Pool before: " + market.poolUNDER + " ETH + " + market.poolBASE + " Token");
 		this.poolUNDER += exactUNDER;
 		this.poolBASE += exactBASE;
