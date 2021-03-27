@@ -85,7 +85,6 @@ class PositionsView extends Component {
   };
 
   async componentDidUpdate() {
-    console.log("componentDidUpdate called")
     if (this.props.userModel && this.props.userModel.positions && Array.isArray(this.props.userModel.positions) && this.state.web3) {
       // call only once
       if (!this.state.web3DataLoaded) {
@@ -93,10 +92,15 @@ class PositionsView extends Component {
         this.setState({
           web3DataLoaded: true
         });
-        console.log(this.props.userModel.positions)
+        // get live market data from Uniswap smart contracts via web3
         let markets = await this.loadWeb3Data();
-        // todo: called only once, is this desireable?
-        this.refreshUniswapPositions(this.props.userModel.positions, markets);
+        // calculate data for table
+        let tableData = this.prepareTableData(this.props.userModel.positions, markets);
+        // update table
+        this.setState({
+          data: tableData,
+          markets: markets // used by chart
+        });
       }
     }
   }
@@ -113,11 +117,10 @@ class PositionsView extends Component {
     return markets;
   }
 
-  refreshUniswapPositions(positions, markets) {
+  prepareTableData(positions, markets) {
     let uniswapTableSet = [];
     for(let i = 0; i < positions.length; i++) {
       let market = markets[i];
-      console.log(market)
       // time 
       let startDate = new Date(positions[i].startDate);
       let daysSinceStart = (new Date() - startDate) / (1000 * 60 * 60 * 24);
@@ -170,7 +173,7 @@ class PositionsView extends Component {
       // prepare dataset for table
       uniswapTableSet.push({
         id: positions[i],
-        position: [positions[i].name, positions[i].description], 
+        position: [positions[i].name, positions[i].description, positions[i].address], 
         sizedays: {
           size: [balanceTodayToken * market.priceBASEUSD, "USD"],
           days: [daysSinceStart.toFixed(0), "days"],
@@ -247,19 +250,7 @@ class PositionsView extends Component {
       });
     }
 
-    console.log("Uniswap positions refreshed");
-    this.setState({
-      data: uniswapTableSet
-    });
-  }
-
-  linksToString(links) {
-    let linkString = "";
-    for(let i = 0; i < links.length; i++) {
-      linkString += '<a href="' + links[i].link + '">' + links[i].anchor + '</a>, ';
-    }
-
-    return linkString;
+    return uniswapTableSet;
   }
 
   /*
@@ -376,7 +367,6 @@ class PositionsView extends Component {
   }
 
   getTotalProfitSum() {
-    console.log(this.props.userModel.positions)
     let sumA = 0;
     for(let i = 0; i < this.props.userModel.positions.length; i++) {
       if(this.props.userModel.positions[i].maxProfitTargetUSD) {
@@ -411,9 +401,9 @@ class PositionsView extends Component {
     return (
       description.links.map(link => {
         return (
-          <div>
-            <a href={link.link}>{link.anchor}</a><br></br>
-          </div>
+          <span>
+            <a href={link.link}>{link.anchor}</a>{" "}
+          </span>
         );
       })
     )
@@ -430,6 +420,7 @@ class PositionsView extends Component {
               <b>{row.value[0]}</b><br></br>
               {row.value[1].text}<br></br>
               {this.displayLinks(row.value[1])}
+              <a href={"https://zapper.fi/dashboard?address=" + row.value[2]}>Zap</a>
             </span>
           )
         },
@@ -601,42 +592,6 @@ class PositionsView extends Component {
     });
   }
 
-  getPerformanceChartOptions(props) {
-
-    const performanceOptions = {
-      chart: {
-        type: 'area'
-      },
-      title: {
-        text: null
-      },
-      plotOptions: {
-        series: {
-          stacking: 'normal',
-          lineColor: '#666666',
-          lineWidth: 1,
-          marker: {
-              lineWidth: 1,
-              lineColor: '#666666'
-          }
-        }
-      },     
-      series: [
-        { data: [Math.random() * 5, 2, 1]}
-      ],
-      tooltip: {
-        shared: true, // this doesn't work
-        valueSuffix: ' USD',
-        valueDecimals: 2
-      },
-      credits: {
-        enabled: false
-      }
-    }
-
-    return performanceOptions;
-  }
-
   render() {
     let currentPortfolio = this.props.userModel.portfolios.slice(-1)[0];
     let tradeCount = currentPortfolio.tradeCount;
@@ -742,7 +697,11 @@ class PositionsView extends Component {
           </Row>
           <Row>
             <Col md={12}>
-              <PositionChartCard />
+              <PositionChartCard 
+                selectedPosition={null}
+                userModel={this.props.userModel}
+                markets={this.state.markets}
+              />
             </Col>
           </Row>
         </Grid>

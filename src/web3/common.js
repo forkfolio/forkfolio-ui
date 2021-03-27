@@ -1,19 +1,6 @@
 
 		
-//----------------- BLACK-SCHOLES -----------------------
-/*
-  PutCallFlag: Either "put" or "call"
-  S: Stock Price
-  X: Strike Price
-  T: Time to expiration (in years)
-  r: Risk-free rate
-  v: Volatility
-  This is the same one found in http://www.espenhaug.com/black_scholes.html
-  but written with proper indentation and a === instead of == because it's
-  faster, and it doesn't declare 5 useless variables (although if you really
-  want to do it to have more elegant code I left a commented CND function in
-  the end)
-*/
+
 
 // token addresses
 export const daiAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
@@ -53,10 +40,24 @@ export const sushiswapV2SUSHIETHAddress = "0x795065dcc9f64b5614c407a6efdc400da62
 export const inchV2DAIETHAddress = "0x7566126f2fd0f2dddae01bb8a6ea49b760383d5a";
 
 export function getContractInstance(web3, abi, address) {			
-	console.log("Loading contract instance for address: " + address)
+	//console.log("Loading contract instance for address: " + address)
 	return new web3.eth.Contract(abi, address);
 }
 
+//----------------- BLACK-SCHOLES -----------------------
+/*
+  PutCallFlag: Either "put" or "call"
+  S: Stock Price
+  X: Strike Price
+  T: Time to expiration (in years)
+  r: Risk-free rate
+  v: Volatility
+  This is the same one found in http://www.espenhaug.com/black_scholes.html
+  but written with proper indentation and a === instead of == because it's
+  faster, and it doesn't declare 5 useless variables (although if you really
+  want to do it to have more elegant code I left a commented CND function in
+  the end)
+*/
 class OptionMath {
 	blackScholes(PutCallFlag, S, X, T, r, v) {
 	  let d1 = (Math.log(S / X) + (r + v * v / 2) * T) / (v * Math.sqrt(T));

@@ -13,28 +13,25 @@ class PositionChartCard extends Component {
     super(props);
 
     this.state = {
-      //data: null,
-      //isConfirmDialogShown: false,
-      //removedTransaction: null,
-      //account: null
+      chartLoaded: false,
+      chartData: [Math.random() * 5, 2, 1]
     };
   }
 
-  async componentDidUpdate() {
+  async componentDidUpdate(prevProps) {
     console.log("componentDidUpdate called")
-    /*if (this.props.userModel && this.props.userModel.positions && Array.isArray(this.props.userModel.positions) && this.state.web3) {
-      // call only once
-      if (!this.state.web3DataLoaded) {
-        console.log("Loading web3 data and setting up data for table")
-        this.setState({
-          web3DataLoaded: true
-        });
-        console.log(this.props.userModel.positions)
-        let markets = await this.loadWeb3Data();
-        // todo: called only once, is this desireable?
-        this.refreshUniswapPositions(this.props.userModel.positions, markets);
-      }
-    }*/
+    if (this.props.userModel && 
+      this.props.userModel.positions && 
+      Array.isArray(this.props.userModel.positions) && 
+      !this.state.chartLoaded && 
+      this.props.markets) {
+      console.log("Refreshing chart data")
+      // call only once (using chartLoaded)
+      this.setState({
+        chartLoaded: true,
+        chartData: [1, 2, 1]
+      });
+    }
   }
 
   getPerformanceChartOptions(props) {
@@ -57,7 +54,7 @@ class PositionChartCard extends Component {
         }
       },     
       series: [
-        { data: [Math.random() * 5, 2, 1]}
+        { data: this.state.chartData}
       ],
       tooltip: {
         shared: true, // this doesn't work
