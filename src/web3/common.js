@@ -50,6 +50,7 @@ export function checkBalances(market, balanceLPT) {
     return [balanceETH, balanceToken];
 }
 
+// tode: delete when dydx is implemented
 export function getDyDxLongBalanceInETH(size, leverage, openPrice, currentPrice) {
     let depositETH = size / leverage;
     let marketBuyETH = size - depositETH;
@@ -69,16 +70,14 @@ export function getDyDxShortBalanceInDAI(size, leverage, openPrice, currentPrice
     return Math.max(0, currentDAI);
   }
   
-export function debalanceETH(market, startBASE, ethTokens, daiTokens) {
-    let currentPrice = (market.poolBASE / market.poolUNDER);
+export function debalanceETH(currentPrice, startBASE, ethTokens, daiTokens) {
     let diffDai = startBASE - daiTokens;
     let newETH = ethTokens - diffDai / currentPrice;
     
     return [newETH, startBASE];
   }
   
-export function debalanceDAI(market, startUNDER, ethTokens, daiTokens) {
-    let currentPrice = (market.poolBASE / market.poolUNDER);
+export function debalanceDAI(currentPrice, startUNDER, ethTokens, daiTokens) {
     let diffETH = startUNDER - ethTokens;
     let newDAI = daiTokens - diffETH * currentPrice;
     

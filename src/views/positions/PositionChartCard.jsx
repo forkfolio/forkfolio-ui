@@ -5,6 +5,8 @@ import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import { formatUtils } from '../../utils/FormatUtils';
 import Uniswap from '../../web3/Uniswap';
+import dYdXLong from '../../web3/dYdXLong';
+import dYdXShort from '../../web3/dYdXShort';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { clone, uniswapV2USDCWETHAddress, checkBalances, getDyDxLongBalanceInETH, getDyDxShortBalanceInDAI, debalanceETH, debalanceDAI } from '../../web3/common.js';
@@ -51,12 +53,87 @@ class PositionChartCard extends Component {
         usdcWethMarket = clone(this.props.markets[i]);
       }
     }
-    let datasets = this.prepareDataset(20, usdcWethMarket);
+    // old code
+    /*let datasets = this.prepareDataset(20, usdcWethMarket);
     //console.log(">>>> Sim for " + uniswapProfitPercentage + "% APR")
     //prepareDataset(uniswapProfitPercentage * daysPass / 365, balancesAfter30DaysETH, balancesAfter30DaysTKN);
 
+    return [datasets[0], datasets[1]];*/
+    let currentPrice = (usdcWethMarket.poolBASE / usdcWethMarket.poolUNDER);
+    //let dydx = new dYdXLong(1, 1700, 1, 1700);
+    let dydx = new dYdXShort(1700, 1, 1700, 1700);
+    let position = clone(this.props.userModel.positions[0]);
+    console.log(position)
+    position.startBASE = 1700;
+    position.startUNDER = 0;
+    position.subpositions = [dydx];
+    let datasets = this.prepareDataset2(20, position, currentPrice);
+
     return [datasets[0], datasets[1]];
   }
+
+  prepareDataset2(apyPercentage, position, currentPrice) {
+    let balanceArrayETH = [], balanceArrayTKN = [];
+
+    // inputs for profit taking currency
+    let isTokenProfitTakingCurrency = true;//e.options[e.selectedIndex].value == "token";
+
+    // calculate ins from all subpositions
+    let totalInBASE = 0, totalInUNDER = 0;
+    for(let j = 0; j < position.subpositions.length; j++) {
+      totalInBASE += position.subpositions[j].getOpeningValue()[0];
+      totalInUNDER += position.subpositions[j].getOpeningValue()[1];
+    }
+
+    console.log("Total in: " + totalInUNDER + " UNDER or " + totalInBASE + " BASE");
+
+    // apply APR
+    //market.poolBASE += market.poolBASE * apyPercentage / 100;
+    //market.poolUNDER += market.poolUNDER * apyPercentage / 100;
+
+    let startPrice = 1600, endPrice = 1700;
+    let priceForMaxTKN = 0, priceForMaxETH = 0;	
+    let maxBalanceETH = -1000000, maxBalanceTKN = -1000000;
+
+    for(let i = startPrice; i < endPrice; i += 10) {
+      let totalOutBASE = 0;
+      // get totals out
+      for(let j = 0; j < position.subpositions.length; j++) {
+        console.log(position.subpositions[j])
+        totalOutBASE += position.subpositions[j].getCurrentValue(i)[0];
+      }
+
+      console.log("@" + i + " " + totalOutBASE);
+
+      // debalance
+      let debalanced;
+      if (isTokenProfitTakingCurrency) {
+        debalanced = debalanceDAI(i, totalInUNDER, 0, totalOutBASE);
+      } else {
+        debalanced = debalanceETH(i, totalInBASE, 0, totalOutBASE);
+      }
+       
+      console.log("Debalanced @" + i + ": " + debalanced[0].toFixed(4) + " ETH + " + debalanced[1].toFixed(2) + " DAI");
+    
+      balanceArrayETH.push({x: i, y: (debalanced[0] / totalInUNDER * 100)});
+      balanceArrayTKN.push({x: i, y: (debalanced[1] / totalInBASE * 100)});
+
+      // find maximums
+      if(maxBalanceETH < debalanced[0]) {
+        maxBalanceETH = debalanced[0];
+        priceForMaxETH = i;
+      }
+      if(maxBalanceTKN < debalanced[1]) {
+        maxBalanceTKN = debalanced[1];
+        priceForMaxTKN = i;
+      }
+    }
+    console.log("Max profit in ETH: " + maxBalanceETH + " @" + priceForMaxETH + " TKN");
+    console.log("Max profit in TKN: " + maxBalanceTKN + " @" + priceForMaxTKN + " TKN");
+
+    return [balanceArrayETH, balanceArrayTKN];
+  }
+
 
   prepareDataset(apyPercentage, market) {
     let balanceArrayETH = [], balanceArrayTKN = [];
