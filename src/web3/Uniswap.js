@@ -50,6 +50,17 @@ export default class Uniswap {
 		console.log("AMM market data loaded. " + position.symbolBASE + ": " + this.priceBASEUSD + " USD, " + position.symbolUNDER + ": " + this.priceUNDERUSD + " USD");
 	}
 
+	// gets current value in [BASE, UNDER]
+	getCurrentValue(currentPrice) {
+		let positionDAI = (this.ethCollateral + this.ethBought) * currentPrice - this.daiBorrowed;
+		return [Math.max(0, positionDAI), Math.max(0, positionDAI) / currentPrice];
+	}
+
+	// gets opening value in [BASE, UNDER]
+	getOpeningValue() {
+		return [this.ethCollateral * this.openingPrice, this.ethCollateral];
+	}
+
 	addLiquidity(exactUNDER, exactBASE) {
 		let exactLIQ = exactUNDER * (this.poolLIQ / this.poolUNDER);
 		//console.log("Pool before: " + market.poolUNDER + " ETH + " + market.poolBASE + " Token");

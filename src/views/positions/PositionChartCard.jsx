@@ -60,8 +60,8 @@ class PositionChartCard extends Component {
 
     return [datasets[0], datasets[1]];*/
     let currentPrice = (usdcWethMarket.poolBASE / usdcWethMarket.poolUNDER);
-    //let dydx = new dYdXLong(1, 1700, 1, 1700);
-    let dydx = new dYdXShort(1700, 1, 1700, 1700);
+    let dydx = new dYdXLong(1, 1700, 1, 1700);
+    //let dydx = new dYdXShort(1700, 1, 1700, 1700);
     let position = clone(this.props.userModel.positions[0]);
     console.log(position)
     position.startBASE = 1700;
@@ -106,7 +106,7 @@ class PositionChartCard extends Component {
       console.log("@" + i + " " + totalOutBASE);
 
       // debalance
-      let debalanced;
+      /*let debalanced;
       if (isTokenProfitTakingCurrency) {
         debalanced = debalanceDAI(i, totalInUNDER, 0, totalOutBASE);
       } else {
@@ -114,21 +114,21 @@ class PositionChartCard extends Component {
       }
        
       console.log("Debalanced @" + i + ": " + debalanced[0].toFixed(4) + " ETH + " + debalanced[1].toFixed(2) + " DAI");
-    
-      balanceArrayETH.push({x: i, y: (debalanced[0] / totalInUNDER * 100)});
-      balanceArrayTKN.push({x: i, y: (debalanced[1] / totalInBASE * 100)});
+    */
+      //balanceArrayETH.push({x: i, y: (totalOutBASE / totalInUNDER * 100)});
+      balanceArrayTKN.push({x: i, y: ((totalOutBASE - totalInBASE) / totalInBASE * 100)});
 
       // find maximums
-      if(maxBalanceETH < debalanced[0]) {
+      /*if(maxBalanceETH < debalanced[0]) {
         maxBalanceETH = debalanced[0];
         priceForMaxETH = i;
-      }
-      if(maxBalanceTKN < debalanced[1]) {
-        maxBalanceTKN = debalanced[1];
+      }*/
+      if(maxBalanceTKN < totalOutBASE) {
+        maxBalanceTKN = totalOutBASE;
         priceForMaxTKN = i;
       }
     }
-    console.log("Max profit in ETH: " + maxBalanceETH + " @" + priceForMaxETH + " TKN");
+    //console.log("Max profit in ETH: " + maxBalanceETH + " @" + priceForMaxETH + " TKN");
     console.log("Max profit in TKN: " + maxBalanceTKN + " @" + priceForMaxTKN + " TKN");
 
     return [balanceArrayETH, balanceArrayTKN];
@@ -254,7 +254,7 @@ class PositionChartCard extends Component {
   getPerformanceChartOptions(props) {
     const performanceOptions = {
       chart: {
-        type: 'area'
+        type: 'line'
       },
       title: {
         text: null
@@ -275,7 +275,7 @@ class PositionChartCard extends Component {
       ],
       tooltip: {
         shared: true, // this doesn't work
-        valueSuffix: ' USD',
+        valueSuffix: '%',
         valueDecimals: 2
       },
       credits: {

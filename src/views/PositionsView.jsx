@@ -276,7 +276,7 @@ class PositionsView extends Component {
       let longBalETH = getDyDxLongBalanceInETH(position.longPos[0], position.longPos[1], position.longPos[2], i);
 
       // debalance for max dai
-      let debalanced = debalanceDAI(market, totalInETH, uniBalances[0] + longBalETH + position.extraUNDER, uniBalances[1] + position.extraBASE);
+      let debalanced = debalanceDAI(market.getPrice(), totalInETH, uniBalances[0] + longBalETH + position.extraUNDER, uniBalances[1] + position.extraBASE);
       //console.log("debalanced @" + i.toFixed(3) + ": " + debalanced[0].toFixed(4) + " ETH + " + debalanced[1].toFixed(4) + " COMP");
       if(maxBalanceDAI < debalanced[1]) {
         maxBalanceDAI = debalanced[1];
@@ -312,7 +312,7 @@ class PositionsView extends Component {
       let longBalETH = getDyDxLongBalanceInETH(position.longPos[0], position.longPos[1], position.longPos[2], i);
 
       // debalance for max dai
-      let debalanced = debalanceETH(market, position.startBASE, uniBalances[0] + longBalETH + position.extraUNDER, uniBalances[1] + position.extraBASE);
+      let debalanced = debalanceETH(market.getPrice(), position.startBASE, uniBalances[0] + longBalETH + position.extraUNDER, uniBalances[1] + position.extraBASE);
       //console.log("Profit in DAI @" + i + ": " + ((debalanced[0] - position.startUNDER)  * i).toFixed(3) + " DAI = " + (debalanced[0] - position.startUNDER).toFixed(5) + " ETH")
       if(maxBalanceETH < debalanced[0]) {
         maxBalanceETH = debalanced[0];
