@@ -96,12 +96,12 @@ class PositionsView extends Component {
         // get live market data from Uniswap smart contracts via web3
         let markets = await this.loadWeb3Data();
         // calculate data for table
-        let tableData = this.prepareTableData(this.props.userModel.positions, markets);
+        /*let tableData = this.prepareTableData(this.props.userModel.positions, markets);
         // update table
         this.setState({
           data: tableData,
           markets: markets // used by chart
-        });
+        });*/
       }
     }
   }
@@ -110,9 +110,18 @@ class PositionsView extends Component {
     let markets = [];
     for(let i = 0; i < this.props.userModel.positions.length; i++) {
       let pos = this.props.userModel.positions[i];
-      let uniswap = new Uniswap(pos.marketAddress, pos.addressBASE, pos.addressUNDER, 0, 0, 0, 0.3);
-      await uniswap.getMarketData(this.state.web3, pos);
-      markets.push(uniswap);
+      for(let j = 0; j < pos.subpositions.length; j++) {
+        let subpos = pos.subpositions[j];
+        if(subpos.type === "uniswap") {
+          let uniswap = new Uniswap(subpos.marketAddress, pos.base.address, pos.under.address, subpos.startLIQ);
+          console.log("Printing uniswap")
+          console.log(uniswap)
+        }
+      }
+      console.log(pos)
+      //let uniswap = new Uniswap(pos.marketAddress, pos.addressBASE, pos.addressUNDER, 0);
+      //await uniswap.getMarketData(this.state.web3, pos);
+      //markets.push(uniswap);
     }
 
     return markets;

@@ -4,17 +4,22 @@ import daiABI from "../abis/daiABI.json";
 import { usdcAddress, getContractInstance } from './common.js'
 		
 export default class Uniswap {		
-	constructor(marketAddress, addressBASE, addressUNDER, poolBASE, poolUNDER, poolLIQ, feeInPercent) {
+	constructor(marketAddress, addressBASE, addressUNDER, myLIQ) {
 		this.marketAddress = marketAddress;
 		this.addressBASE = addressBASE;
 		this.addressUNDER = addressUNDER;
+		this.feeInPercent = 0.3;
 
-		this.poolBASE = poolBASE;
-		this.poolUNDER = poolUNDER;
-		this.poolLIQ = poolLIQ;
-		this.k = poolBASE * poolUNDER;
-		this.feeInPercent = feeInPercent;
-		//this.volume = 0; // in contracts, not dai
+		// my position
+		this.myBASE = 0;
+		this.myUNDER = 0;
+		this.myLIQ = myLIQ;
+
+		// pool 
+		this.poolBASE = 0;
+		this.poolUNDER = 0;
+		this.poolLIQ = 0;
+		this.k = this.poolBASE * this.poolUNDER;
 	}
 
 	// gets pool sizes and prices from live market 
@@ -23,9 +28,8 @@ export default class Uniswap {
 		let baseInstance = getContractInstance(web3, daiABI, this.addressBASE);
 		let underInstance = getContractInstance(web3, daiABI, this.addressUNDER);
 
-		let ethBalance = await web3.eth.getBalance(this.marketAddress); // 
+		let ethBalance = await web3.eth.getBalance(this.marketAddress);
 		let poolLIQ = await marketInstance.methods.totalSupply().call();
-
 		let poolBASE = await baseInstance.methods.balanceOf(this.marketAddress).call();
 		let poolUNDER = await underInstance.methods.balanceOf(this.marketAddress).call();
 

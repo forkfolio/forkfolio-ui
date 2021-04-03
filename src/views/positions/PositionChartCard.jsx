@@ -60,14 +60,17 @@ class PositionChartCard extends Component {
 
     return [datasets[0], datasets[1]];*/
     let currentPrice = (usdcWethMarket.poolBASE / usdcWethMarket.poolUNDER);
-    let dydx = new dYdXLong(1, 1700, 1, 1700);
+
+
+    let pos = clone(this.props.userModel.positions[0]);
+    //let dydx = new dYdXLong(1, 1700, 1, 1700);
     //let dydx = new dYdXShort(1700, 1, 1700, 1700);
-    let position = clone(this.props.userModel.positions[0]);
-    console.log(position)
-    position.startBASE = 1700;
-    position.startUNDER = 0;
-    position.subpositions = [dydx];
-    let datasets = this.prepareDataset2(20, position, currentPrice);
+    //let uniswap = new Uniswap(pos.marketAddress, pos.addressBASE, pos.addressUNDER, pos.currentLPT)
+    console.log(pos)
+    //pos.startBASE = 1700;
+    //pos.startUNDER = 0;
+    //pos.subpositions = [uniswap];
+    let datasets = [1, 2];//this.prepareDataset2(20, pos, currentPrice);
 
     return [datasets[0], datasets[1]];
   }
