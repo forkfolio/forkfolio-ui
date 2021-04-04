@@ -90,7 +90,7 @@ export function debalanceDAI(currentPrice, startUNDER, ethTokens, daiTokens) {
  * @param {object} instance The class instance you want to clone.
  * @returns {object} A new cloned instance.
  */
-export function clone(instance) {
+/*export function clone(instance) {
 	return Object.assign(
 	  Object.create(
 		// Set the prototype of the new object to the prototype of the instance.
@@ -100,6 +100,16 @@ export function clone(instance) {
 	  // Prevent shallow copies of nested structures like arrays, etc
 	  JSON.parse(JSON.stringify(instance)),
 	);
+}*/
+
+export function clone(original) {
+  var copied = Object.assign(
+    Object.create(
+      Object.getPrototypeOf(original)
+    ),
+    original
+  );
+  return copied;
 }
 
 //----------------- BLACK-SCHOLES -----------------------

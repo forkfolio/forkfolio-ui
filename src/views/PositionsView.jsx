@@ -94,119 +94,131 @@ class PositionsView extends Component {
           web3DataLoaded: true
         });
         // get live market data from Uniswap smart contracts via web3
-        let markets = await this.loadWeb3Data();
+        await this.loadWeb3Data();
         // calculate data for table
-        /*let tableData = this.prepareTableData(this.props.userModel.positions, markets);
+        let tableData = this.prepareTableData(this.props.userModel.positions);
+        console.log(tableData)
         // update table
         this.setState({
-          data: tableData,
-          markets: markets // used by chart
-        });*/
+          data: tableData
+        });
       }
     }
   }
 
   async loadWeb3Data() {
-    let markets = [];
     for(let i = 0; i < this.props.userModel.positions.length; i++) {
       let pos = this.props.userModel.positions[i];
       for(let j = 0; j < pos.subpositions.length; j++) {
         let subpos = pos.subpositions[j];
+        let service;
         if(subpos.type === "uniswap") {
-          let uniswap = new Uniswap(subpos.marketAddress, pos.base.address, pos.under.address, subpos.startLIQ);
-          console.log("Printing uniswap")
-          console.log(uniswap)
+          service = new Uniswap(subpos.marketAddress, pos.base.address, pos.under.address, subpos.startLIQ);
+          //console.log("Printing uniswap")
+          //console.log(service)
+          await service.getMarketData(this.state.web3, pos);
         }
+        // todo: add other types of service other than uniswap
+        // todo: dirty adding to position
+        subpos.service = service;
       }
-      console.log(pos)
-      //let uniswap = new Uniswap(pos.marketAddress, pos.addressBASE, pos.addressUNDER, 0);
-      //await uniswap.getMarketData(this.state.web3, pos);
-      //markets.push(uniswap);
     }
-
-    return markets;
   }
 
-  prepareTableData(positions, markets) {
+  prepareTableData(positions) {
     let uniswapTableSet = [];
     for(let i = 0; i < positions.length; i++) {
-      let market = clone(markets[i]);
+      let pos = positions[i];
       // time 
-      let startDate = new Date(positions[i].startDate);
+      let startDate = new Date(pos.startDate);
       let daysSinceStart = (new Date() - startDate) / (1000 * 60 * 60 * 24);
 
-      // calculate Ins
-      let dydxInETH = positions[i].longPos[0] / positions[i].longPos[1];
-      let totalInETH = positions[i].startUNDER + dydxInETH;
-      let totalInTKN = positions[i].startBASE;
-      
-      // calculate Outs
-      let uniswapOutETH = positions[i].currentLPT * market.priceLIQUNDER;
-      let uniswapOutTKN = positions[i].currentLPT * market.priceLIQBASE;
+      // find uniswap market
+      let market;
+      for(let j = 0; j < pos.subpositions.length; j++) {
+        let subpos = pos.subpositions[j];
+        if(subpos.type === "uniswap") {
+          market = clone(subpos.service);
+        }
+      }
 
-      let dydxOutETH = getDyDxLongBalanceInETH(positions[i].longPos[0], positions[i].longPos[1], positions[i].longPos[2], market.priceUNDERBASE);
+      let totalInBASE = 0, totalInUNDER = 0, totalOutBASE = 0, startBASE = 0, startUNDER = 0;
+      for(let j = 0; j < pos.subpositions.length; j++) {
+        let subpos = pos.subpositions[j];
 
-      let totalOutETH = uniswapOutETH + dydxOutETH + positions[i].extraUNDER;	
-      let totalOutTKN = uniswapOutTKN + positions[i].extraBASE;
-      let balanceTodayToken = totalOutETH * market.priceUNDERBASE + totalOutTKN;	
-      
+        // calculate Ins
+        totalInBASE += subpos.base.start + subpos.under.start * market.getPrice();
+        totalInUNDER += subpos.under.start + subpos.base.start / market.getPrice();
+        startBASE += subpos.base.start;
+        startUNDER += subpos.under.start;
+
+        // calculate Outs
+        // todo: add extra 
+        totalOutBASE += subpos.service.getCurrentValue(market.getPrice())[0]; 
+      }
+
       // today
-      let profitTodayToken = (totalOutETH - totalInETH) * market.priceUNDERBASE + (totalOutTKN - totalInTKN);				
-      let profitPerMonthTodayToken = profitTodayToken * 30.4167 / daysSinceStart;						
-      let aprToday = profitTodayToken / balanceTodayToken / daysSinceStart * 365 * 100;	
+      console.log(totalInBASE);
+      console.log(totalOutBASE);
 
-      // target token
-      let maximumsToken = this.findPriceAndProfitForMaxToken(market, positions[i]);
-      let targetPriceToken = maximumsToken[0];
-      let profitTargetToken = maximumsToken[1];
-      let balanceToken = totalInTKN + totalInETH * targetPriceToken;
-      let profitPerMonthTargetToken = profitTargetToken * 30.4167 / daysSinceStart;	
-      let aprTargetToken = profitTargetToken / balanceToken / daysSinceStart * 365 * 100;
+      let profitTodayToken = totalOutBASE - totalInBASE;				
+      let profitPerMonthTodayToken = profitTodayToken * 30.4167 / daysSinceStart;						
+      let aprToday = profitTodayToken / totalInBASE / daysSinceStart * 365 * 100;	
+
+
+      // target BASE
+      let priceAndProfitBASE = this.findMaxBASE(pos);
+      let targetPriceBASE = priceAndProfitBASE[0];
+      let targetProfitBASE = priceAndProfitBASE[1];
+      let profitPerMonthTargetBASE = targetProfitBASE * 30.4167 / daysSinceStart;	
+      let aprTargetBASE = targetProfitBASE / totalInBASE / daysSinceStart * 365 * 100;
       
-      // target ETH
-      let maximumsETH = this.findPriceAndProfitForMaxETH(market, positions[i]);
-      let targetPriceETH = maximumsETH[0];
-      let profitTargetETH = maximumsETH[1];
-      let balanceETH = totalInETH + totalInTKN / targetPriceETH;
-      let profitPerMonthTargetETH = profitTargetETH * 30.4167 / daysSinceStart;	
-      let aprTargetETH = profitTargetETH / balanceETH / daysSinceStart * 365 * 100;
+      // target UNDER
+      let priceAndProfitUNDER = this.findMaxUNDER(pos);
+      let targetPriceUNDER = priceAndProfitUNDER[0];
+      let targetProfitUNDER = priceAndProfitUNDER[1];
+      let profitPerMonthTargetUNDER = targetProfitUNDER * 30.4167 / daysSinceStart;	
+      let aprTargetUNDER = targetProfitUNDER / totalInUNDER / daysSinceStart * 365 * 100;
 
       // profits in (USD)
-      let profitTargetETHUSD = profitTargetETH * targetPriceETH * market.priceBASEUSD;
-      let profitTargetTokenUSD = positions[i].symbolBASE == "DAI" || positions[i].symbolBASE == "USDC" ? profitTargetToken * market.priceBASEUSD : profitTargetToken / targetPriceToken * market.priceUNDERUSD;
-      let profitPerMonthTargetETHUSD = profitPerMonthTargetETH * targetPriceETH * market.priceBASEUSD;
-      let profitPerMonthTargetTokenUSD = positions[i].symbolBASE == "DAI" || positions[i].symbolBASE == "USDC" ? profitPerMonthTargetToken * market.priceBASEUSD : profitPerMonthTargetToken / targetPriceToken * market.priceUNDERUSD;
+      let profitTargetETHUSD = targetProfitUNDER * targetPriceUNDER * market.priceBASEUSD;
+      let profitTargetTokenUSD = positions[i].symbolBASE == "DAI" || pos.symbolBASE == "USDC" ? targetProfitBASE * market.priceBASEUSD : targetProfitBASE / targetPriceBASE * market.priceUNDERUSD;
+      let profitPerMonthTargetETHUSD = profitPerMonthTargetUNDER * targetPriceUNDER * market.priceBASEUSD;
+      let profitPerMonthTargetTokenUSD = positions[i].symbolBASE == "DAI" || pos.symbolBASE == "USDC" ? profitPerMonthTargetBASE * market.priceBASEUSD : profitPerMonthTargetBASE / targetPriceBASE * market.priceUNDERUSD;
 
-      positions[i].maxProfitTargetUSD = Math.max(profitTargetETHUSD, profitTargetTokenUSD);
-      positions[i].maxProfitPerMonthTargetUSD = Math.max(profitPerMonthTargetTokenUSD, profitPerMonthTargetETHUSD);
+      pos.maxProfitTargetUSD = Math.max(profitTargetETHUSD, profitTargetTokenUSD);
+      pos.maxProfitPerMonthTargetUSD = Math.max(profitPerMonthTargetTokenUSD, profitPerMonthTargetETHUSD);
+
+      console.log(market.priceBASEUSD)
+      console.log(profitTodayToken)
 
       // prepare dataset for table
       uniswapTableSet.push({
-        id: positions[i],
-        position: [positions[i].name, positions[i].description, positions[i].address], 
+        id: pos,
+        position: [pos.name, pos.description, pos.address], 
         sizedays: {
-          size: [balanceTodayToken * market.priceBASEUSD, "USD"],
+          size: [totalOutBASE * market.priceBASEUSD, "USD"],
           days: [daysSinceStart.toFixed(0), "days"],
         },
         price: {
-          lower: [targetPriceETH, positions[i].symbolBASE],
-          current: [market.priceUNDERBASE, positions[i].symbolBASE],
-          higher: [targetPriceToken, positions[i].symbolBASE]
+          lower: [targetPriceUNDER, pos.base.symbol],
+          current: [market.priceUNDERBASE, pos.base.symbol],
+          higher: [targetPriceBASE, pos.base.symbol]
         },
         totalprofit: {
-          lower: [profitTargetETH, positions[i].symbolUNDER, profitTargetETHUSD],
+          lower: [targetProfitUNDER, pos.under.symbol, profitTargetETHUSD],
           current: [market.priceBASEUSD * profitTodayToken, "USD", market.priceBASEUSD * profitTodayToken],
-          higher: [profitTargetToken, positions[i].symbolBASE, profitTargetTokenUSD]
+          higher: [targetProfitBASE, pos.base.symbol, profitTargetTokenUSD]
         },
         monthlyprofit: {
-          lower: [profitPerMonthTargetETH, positions[i].symbolUNDER, profitPerMonthTargetETHUSD],
+          lower: [profitPerMonthTargetUNDER, pos.under.symbol, profitPerMonthTargetETHUSD],
           current: [market.priceBASEUSD * profitPerMonthTodayToken, "USD", market.priceBASEUSD * profitPerMonthTodayToken],
-          higher: [profitPerMonthTargetToken, positions[i].symbolBASE, profitPerMonthTargetTokenUSD]
+          higher: [profitPerMonthTargetBASE, pos.base.symbol, profitPerMonthTargetTokenUSD]
         },
         apr: {
-          lower: [aprTargetETH, "%"],
+          lower: [aprTargetUNDER, "%"],
           current: [aprToday, "%"],
-          higher: [aprTargetETH, "%"]
+          higher: [aprTargetBASE, "%"]
         },
         actions: (
           <div className="actions-right">
@@ -261,6 +273,64 @@ class PositionsView extends Component {
     }
 
     return uniswapTableSet;
+  }
+
+  findMaxBASE(position) {
+    let startPrice = 0.1;
+    let endPrice = 3000;	
+    let maxPrice = startPrice;			
+    let maxBalanceBASE = -100000000000;
+    let maxProfitBASE = -100000000000;
+
+    for(let i = startPrice; i < endPrice; i += 0.01) {
+      let totalOutBASE = 0, startBASE = 0, startUNDER = 0;
+      // get totals out
+      for(let j = 0; j < position.subpositions.length; j++) {
+        totalOutBASE += position.subpositions[j].service.getCurrentValue(i)[0];
+        startBASE += position.subpositions[j].base.start;
+        startUNDER += position.subpositions[j].under.start;
+      }
+
+      // debalance for max BASE
+      let debalanced = debalanceDAI(i, startUNDER, 0, totalOutBASE);
+      //console.log("debalanced @" + i.toFixed(3) + ": " + debalanced[0].toFixed(4) + " ETH + " + debalanced[1].toFixed(4) + " COMP");
+      if(maxBalanceBASE < debalanced[1]) {
+        maxBalanceBASE = debalanced[1];
+        maxProfitBASE = debalanced[1] - startBASE;
+        maxPrice = i;
+      }
+    }
+
+    return [maxPrice, maxProfitBASE];
+  }
+
+  findMaxUNDER(position) {
+    let startPrice = 0.1;
+    let endPrice = 3000;	
+    let maxPrice = startPrice;			
+    let maxBalanceUNDER = -100000000000;
+    let maxProfitUNDER = -100000000000;
+
+    for(let i = startPrice; i < endPrice; i += 0.01) {
+      let totalOutUNDER = 0, startBASE = 0, startUNDER = 0;
+      // get totals out
+      for(let j = 0; j < position.subpositions.length; j++) {
+        totalOutUNDER += position.subpositions[j].service.getCurrentValue(i)[1];
+        startBASE += position.subpositions[j].base.start;
+        startUNDER += position.subpositions[j].under.start;
+      }
+
+      // debalance for max UNDER
+      let debalanced = debalanceETH(i, startBASE, totalOutUNDER, 0);
+      //console.log("debalanced @" + i.toFixed(3) + ": " + debalanced[0].toFixed(4) + " ETH + " + debalanced[1].toFixed(4) + " COMP");
+      if(maxBalanceUNDER < debalanced[0]) {
+        maxBalanceUNDER = debalanced[0];
+        maxProfitUNDER = debalanced[0] - startUNDER;
+        maxPrice = i;
+      }
+    }
+
+    return [maxPrice, maxProfitUNDER];
   }
 
   /*
@@ -669,7 +739,6 @@ class PositionsView extends Component {
               <PositionChartCard 
                 selectedPosition={null}
                 userModel={this.props.userModel}
-                markets={this.state.markets}
               />
             </Col>
           </Row>

@@ -51,18 +51,19 @@ export default class Uniswap {
 		this.priceBASEUSD = await CoinGeckoPrices.getTokenPriceInUSD(this.addressBASE);
 		this.priceUNDERUSD = await CoinGeckoPrices.getTokenPriceInUSD(this.addressUNDER);
 
-		console.log("AMM market data loaded. " + position.symbolBASE + ": " + this.priceBASEUSD + " USD, " + position.symbolUNDER + ": " + this.priceUNDERUSD + " USD");
+		console.log("AMM market data loaded. " + position.base.symbol + ": " + this.priceBASEUSD + " USD, " + position.under.symbol + ": " + this.priceUNDERUSD + " USD");
 	}
 
 	// gets current value in [BASE, UNDER]
 	getCurrentValue(currentPrice) {
-		let positionDAI = (this.ethCollateral + this.ethBought) * currentPrice - this.daiBorrowed;
-		return [Math.max(0, positionDAI), Math.max(0, positionDAI) / currentPrice];
+		let valueInBASE = this.myLIQ * this.priceLIQBASE + this.myLIQ * this.priceLIQUNDER * currentPrice;
+		let valueInUNDER = valueInBASE / currentPrice;
+		return [valueInBASE, valueInUNDER];
 	}
 
-	// gets opening value in [BASE, UNDER]
+	// gets opening value in [BASE, UNDER] todo
 	getOpeningValue() {
-		return [this.ethCollateral * this.openingPrice, this.ethCollateral];
+		//return [this.ethCollateral * this.openingPrice, this.ethCollateral];
 	}
 
 	addLiquidity(exactUNDER, exactBASE) {
