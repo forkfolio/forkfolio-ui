@@ -22,16 +22,17 @@ class PositionChartCard extends Component {
   }
 
   async componentDidUpdate() {
-    if (this.userModelLoaded() && this.props.markets) {
+    if (this.userModelLoaded() && this.props.selectedPosition) {
       // call only once
       if(!this.state.chartLoaded) {
         console.log("Refreshing chart data")
-        let datasets = this.prepareChartData();
-        console.log(datasets)
+        //let datasets = this.prepareChartData();
+        console.log(this.props.selectedPosition)
+        //console.log(datasets)
       
         this.setState({
           chartLoaded: true,
-          chartData: datasets[1]
+          //chartData: datasets[1]
         });
       }
     }

@@ -37,7 +37,8 @@ class PositionsView extends Component {
       isChartDialogShown: false,
       web3: web3,
       account: null,
-      web3DataLoaded: false
+      web3DataLoaded: false,
+      selectedPosition: null
     };
   }
   
@@ -100,7 +101,8 @@ class PositionsView extends Component {
         console.log(tableData)
         // update table
         this.setState({
-          data: tableData
+          data: tableData,
+          selectedPosition: this.props.userModel.positions[0]
         });
       }
     }
@@ -754,7 +756,7 @@ class PositionsView extends Component {
           <Row>
             <Col md={12}>
               <PositionChartCard 
-                selectedPosition={null}
+                selectedPosition={this.state.selectedPosition}
                 userModel={this.props.userModel}
               />
             </Col>

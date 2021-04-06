@@ -7,7 +7,7 @@ export default class dYdXShort {
 		this.openingPrice = openingPrice;
 	}
 
-	// gets live market datavia web3 
+	// gets live market data via web3 
 	async getMarketData(web3, position) {
 		// do nothing for now
 		console.log("dYdXShort market data loaded. ");

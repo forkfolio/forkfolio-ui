@@ -1,5 +1,5 @@
 		
-export default class dYdXLong {		
+export default class GammaOptions {		
 	constructor(ethCollateral, daiBorrowed, ethBought, openingPrice) {
 		this.ethCollateral = ethCollateral;
 		this.daiBorrowed = daiBorrowed;
