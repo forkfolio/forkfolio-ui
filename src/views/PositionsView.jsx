@@ -169,16 +169,18 @@ class PositionsView extends Component {
       console.log(priceAndProfitBASE)
       let targetPriceBASE = priceAndProfitBASE[0];
       let targetProfitBASE = priceAndProfitBASE[1];
+      let targetTotalOutBASE = priceAndProfitBASE[2];
       let profitPerMonthTargetBASE = targetProfitBASE * 30.4167 / daysSinceStart;	
-      let aprTargetBASE = targetProfitBASE / totalInBASE / daysSinceStart * 365 * 100;
+      let aprTargetBASE = targetProfitBASE / targetTotalOutBASE / daysSinceStart * 365 * 100;
       
       // target UNDER
       let priceAndProfitUNDER = this.findMaxUNDER(pos);
       console.log(priceAndProfitUNDER)
       let targetPriceUNDER = priceAndProfitUNDER[0];
       let targetProfitUNDER = priceAndProfitUNDER[1];
+      let targetTotalOutUNDER = priceAndProfitUNDER[2];
       let profitPerMonthTargetUNDER = targetProfitUNDER * 30.4167 / daysSinceStart;	
-      let aprTargetUNDER = targetProfitUNDER / totalInUNDER / daysSinceStart * 365 * 100;
+      let aprTargetUNDER = targetProfitUNDER / targetTotalOutUNDER / daysSinceStart * 365 * 100;
 
       // profits in (USD)
       let profitTargetETHUSD = targetProfitUNDER * targetPriceUNDER * market.priceBASEUSD;
@@ -278,6 +280,7 @@ class PositionsView extends Component {
     let maxPrice = startPrice;			
     let maxBalanceBASE = -100000000000;
     let maxProfitBASE = -100000000000;
+    let maxTotalOutBASE = -100000000000;
 
     for(let i = startPrice; i < endPrice; i += 0.01) {
       let totalOutBASE = 0, startBASE = 0, startUNDER = 0;
@@ -303,10 +306,11 @@ class PositionsView extends Component {
         maxBalanceBASE = debalanced[1];
         maxProfitBASE = debalanced[1] - startBASE;
         maxPrice = i;
+        maxTotalOutBASE = debalanced[0] * maxPrice + maxBalanceBASE;
       }
     }
 
-    return [maxPrice, maxProfitBASE];
+    return [maxPrice, maxProfitBASE, maxTotalOutBASE];
   }
 
   findMaxUNDER(position) {
@@ -315,6 +319,7 @@ class PositionsView extends Component {
     let maxPrice = startPrice;			
     let maxBalanceUNDER = -100000000000;
     let maxProfitUNDER = -100000000000;
+    let maxTotalOutUNDER = -100000000000;
 
     for(let i = startPrice; i < endPrice; i += 0.01) {
       let totalOutUNDER = 0, startBASE = 0, startUNDER = 0;
@@ -338,10 +343,11 @@ class PositionsView extends Component {
         maxBalanceUNDER = debalanced[0];
         maxProfitUNDER = debalanced[0] - startUNDER;
         maxPrice = i;
+        maxTotalOutUNDER = maxBalanceUNDER + debalanced[1] / maxPrice;
       }
     }
 
-    return [maxPrice, maxProfitUNDER];
+    return [maxPrice, maxProfitUNDER, maxTotalOutUNDER];
   }
 
   /*
