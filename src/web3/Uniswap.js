@@ -44,9 +44,9 @@ export default class Uniswap {
 		this.poolBASE = poolBASE / (this.addressBASE !== usdcAddress ? 10 ** 18 : 10 ** 6);
 		this.k = this.poolUNDER * this.poolBASE;
 		
-		this.priceLIQUNDER = this.poolUNDER / this.poolLIQ;
-		this.priceLIQBASE = this.poolBASE / this.poolLIQ;
-		this.priceUNDERBASE = this.poolBASE / this.poolUNDER;
+		//this.priceLIQUNDER = this.poolUNDER / this.poolLIQ;
+		//this.priceLIQBASE = this.poolBASE / this.poolLIQ;
+		//this.priceUNDERBASE = this.poolBASE / this.poolUNDER;
 
 		this.priceBASEUSD = await CoinGeckoPrices.getTokenPriceInUSD(this.addressBASE);
 		this.priceUNDERUSD = await CoinGeckoPrices.getTokenPriceInUSD(this.addressUNDER);
@@ -54,11 +54,21 @@ export default class Uniswap {
 		console.log("AMM market data loaded. " + position.base.symbol + ": " + this.priceBASEUSD + " USD, " + position.under.symbol + ": " + this.priceUNDERUSD + " USD");
 	}
 
-	// gets current value in [BASE, UNDER]
-	getCurrentValue(currentPrice) {
-		let valueInBASE = this.myLIQ * this.priceLIQBASE + this.myLIQ * this.priceLIQUNDER * currentPrice;
-		let valueInUNDER = valueInBASE / currentPrice;
-		return [valueInBASE, valueInUNDER];
+	// gets user balance in [BASE, UNDER] for given price. 
+	// Moves price to newPrice, calculates, and later returns market to 
+	getCurrentValue(newPrice) {
+		// get old price, move to new price
+		let oldPrice = this.getPrice();
+		this.setMarketPrice(newPrice);
+
+		let myShare = this.myLIQ / this.poolLIQ;
+		let myBASE = this.poolBASE * myShare + this.poolUNDER * myShare * newPrice;
+		let myUNDER = myBASE / newPrice;
+
+		// back to old price
+		this.setMarketPrice(oldPrice);
+
+		return [myBASE, myUNDER];
 	}
 
 	// gets opening value in [BASE, UNDER] todo

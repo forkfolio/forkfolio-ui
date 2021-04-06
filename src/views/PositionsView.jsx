@@ -154,13 +154,11 @@ class PositionsView extends Component {
 
         // calculate Outs
         // todo: add extra 
-        totalOutBASE += subpos.service.getCurrentValue(market.getPrice())[0]; 
+        let extraBASE = subpos.base.extra + subpos.under.extra * market.getPrice();
+        totalOutBASE += subpos.service.getCurrentValue(market.getPrice())[0] + extraBASE; 
       }
 
       // today
-      console.log(totalInBASE);
-      console.log(totalOutBASE);
-
       let profitTodayToken = totalOutBASE - totalInBASE;				
       let profitPerMonthTodayToken = profitTodayToken * 30.4167 / daysSinceStart;						
       let aprToday = profitTodayToken / totalInBASE / daysSinceStart * 365 * 100;	
@@ -168,6 +166,7 @@ class PositionsView extends Component {
 
       // target BASE
       let priceAndProfitBASE = this.findMaxBASE(pos);
+      console.log(priceAndProfitBASE)
       let targetPriceBASE = priceAndProfitBASE[0];
       let targetProfitBASE = priceAndProfitBASE[1];
       let profitPerMonthTargetBASE = targetProfitBASE * 30.4167 / daysSinceStart;	
@@ -175,6 +174,7 @@ class PositionsView extends Component {
       
       // target UNDER
       let priceAndProfitUNDER = this.findMaxUNDER(pos);
+      console.log(priceAndProfitUNDER)
       let targetPriceUNDER = priceAndProfitUNDER[0];
       let targetProfitUNDER = priceAndProfitUNDER[1];
       let profitPerMonthTargetUNDER = targetProfitUNDER * 30.4167 / daysSinceStart;	
@@ -182,15 +182,12 @@ class PositionsView extends Component {
 
       // profits in (USD)
       let profitTargetETHUSD = targetProfitUNDER * targetPriceUNDER * market.priceBASEUSD;
-      let profitTargetTokenUSD = positions[i].symbolBASE == "DAI" || pos.symbolBASE == "USDC" ? targetProfitBASE * market.priceBASEUSD : targetProfitBASE / targetPriceBASE * market.priceUNDERUSD;
+      let profitTargetTokenUSD = pos.base.symbol == "DAI" || pos.base.symbol == "USDC" ? targetProfitBASE * market.priceBASEUSD : targetProfitBASE / targetPriceBASE * market.priceUNDERUSD;
       let profitPerMonthTargetETHUSD = profitPerMonthTargetUNDER * targetPriceUNDER * market.priceBASEUSD;
-      let profitPerMonthTargetTokenUSD = positions[i].symbolBASE == "DAI" || pos.symbolBASE == "USDC" ? profitPerMonthTargetBASE * market.priceBASEUSD : profitPerMonthTargetBASE / targetPriceBASE * market.priceUNDERUSD;
+      let profitPerMonthTargetTokenUSD = pos.base.symbol == "DAI" || pos.base.symbol == "USDC" ? profitPerMonthTargetBASE * market.priceBASEUSD : profitPerMonthTargetBASE / targetPriceBASE * market.priceUNDERUSD;
 
       pos.maxProfitTargetUSD = Math.max(profitTargetETHUSD, profitTargetTokenUSD);
       pos.maxProfitPerMonthTargetUSD = Math.max(profitPerMonthTargetTokenUSD, profitPerMonthTargetETHUSD);
-
-      console.log(market.priceBASEUSD)
-      console.log(profitTodayToken)
 
       // prepare dataset for table
       uniswapTableSet.push({
@@ -202,7 +199,7 @@ class PositionsView extends Component {
         },
         price: {
           lower: [targetPriceUNDER, pos.base.symbol],
-          current: [market.priceUNDERBASE, pos.base.symbol],
+          current: [market.getPrice(), pos.base.symbol],
           higher: [targetPriceBASE, pos.base.symbol]
         },
         totalprofit: {
@@ -286,14 +283,22 @@ class PositionsView extends Component {
       let totalOutBASE = 0, startBASE = 0, startUNDER = 0;
       // get totals out
       for(let j = 0; j < position.subpositions.length; j++) {
-        totalOutBASE += position.subpositions[j].service.getCurrentValue(i)[0];
-        startBASE += position.subpositions[j].base.start;
-        startUNDER += position.subpositions[j].under.start;
+        let subpos = position.subpositions[j];
+
+        // get ins
+        startBASE += subpos.base.start;
+        startUNDER += subpos.under.start;
+
+        // get outs
+        let extraBASE = subpos.base.extra + subpos.under.extra * i;
+        totalOutBASE += subpos.service.getCurrentValue(i)[0] + extraBASE;
       }
+
+      //console.log("totalOutBASE: " + totalOutBASE)
 
       // debalance for max BASE
       let debalanced = debalanceDAI(i, startUNDER, 0, totalOutBASE);
-      //console.log("debalanced @" + i.toFixed(3) + ": " + debalanced[0].toFixed(4) + " ETH + " + debalanced[1].toFixed(4) + " COMP");
+      //console.log("debalanced @" + i.toFixed(3) + ": " + debalanced[0].toFixed(4) + " UNDER + " + debalanced[1].toFixed(4) + " BASE");
       if(maxBalanceBASE < debalanced[1]) {
         maxBalanceBASE = debalanced[1];
         maxProfitBASE = debalanced[1] - startBASE;
@@ -315,9 +320,15 @@ class PositionsView extends Component {
       let totalOutUNDER = 0, startBASE = 0, startUNDER = 0;
       // get totals out
       for(let j = 0; j < position.subpositions.length; j++) {
-        totalOutUNDER += position.subpositions[j].service.getCurrentValue(i)[1];
-        startBASE += position.subpositions[j].base.start;
-        startUNDER += position.subpositions[j].under.start;
+        let subpos = position.subpositions[j];
+
+        // get ins
+        startBASE += subpos.base.start;
+        startUNDER += subpos.under.start;
+
+        // get outs
+        let extraUNDER = subpos.under.extra + subpos.base.extra / i;
+        totalOutUNDER += subpos.service.getCurrentValue(i)[1] + extraUNDER;
       }
 
       // debalance for max UNDER
