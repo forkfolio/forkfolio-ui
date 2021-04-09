@@ -25,17 +25,7 @@ class PositionChartCard extends Component {
     if (this.userModelLoaded() && this.props.selectedPosition) {
       // call only once
       if(!this.state.chartLoaded) {
-        console.log("Refreshing chart data");
-        // for simulations for now, prepare data here
-        let datasets = this.prepareChartData(this.props.selectedPosition);
-        console.log(datasets)
-      
-        this.setState({
-          chartLoaded: true,
-          chartData1: datasets[0],
-          chartData2: datasets[1],
-          chartData3: datasets[2]
-        });
+        this.refreshChart();
       }
     }
   }
@@ -45,15 +35,18 @@ class PositionChartCard extends Component {
     return userModel && userModel.positions && Array.isArray(userModel.positions);
   }
 
-  prepareChartData(pos) {
+  refreshChart() {
+    console.log("Refreshing chart data");
+    let pos = this.props.selectedPosition;   
+    console.log(pos)
+    
     // time 
     let daysSinceStart = (new Date() - new Date(pos.startDate)) / (1000 * 60 * 60 * 24);
     
+    let currentPrice = 0;
     let startPrice = 500;
     let endPrice = 3000;	
-    let maxPrice = startPrice;
-    let maxTotalOutBASE = -100000000000;
-    let balancePercentagesBASE = [], balancePercentagesUNDER = [], profitsBASE = [], profitsUNDER = [];
+    let aprsBASE = [], profitsBASE = [], profitsUNDER = [];
     for(let i = startPrice; i < endPrice; i += 10) {
       let totalOutBASE = 0, totalOutUNDER = 0, startBASE = 0, startUNDER = 0;
       // get totals out
@@ -70,58 +63,88 @@ class PositionChartCard extends Component {
 
         let extraUNDER = subpos.base.extra / i + subpos.under.extra;
         totalOutUNDER += subpos.service.getCurrentValue(i)[1] + extraUNDER;
+
+        if(subpos.type === "uniswap") {
+          currentPrice = subpos.service.getPrice();
+        }
       }
 
       // debalance for max BASE
       let debalancedBASE = debalanceDAI(i, startUNDER, 0, totalOutBASE);
-      console.log("debalanced BASE @" + i.toFixed(3) + ": " + debalancedBASE[0].toFixed(4) + " UNDER + " + debalancedBASE[1].toFixed(4) + " BASE");
+      //console.log("debalanced BASE @" + i.toFixed(3) + ": " + debalancedBASE[0].toFixed(4) + " UNDER + " + debalancedBASE[1].toFixed(4) + " BASE");
       let profitBASE = debalancedBASE[1] - startBASE;
       let hodlBASE = startBASE + startUNDER * i;
       let aprTargetBASE = profitBASE / hodlBASE / daysSinceStart * 365 * 100;
 
       // debalance for max UNDER
       let debalancedUNDER = debalanceETH(i, startBASE, totalOutUNDER, 0);
-      console.log("debalanced UNDER @" + i.toFixed(3) + ": " + debalancedUNDER[0].toFixed(4) + " UNDER + " + debalancedUNDER[1].toFixed(4) + " BASE");
+      //console.log("debalanced UNDER @" + i.toFixed(3) + ": " + debalancedUNDER[0].toFixed(4) + " UNDER + " + debalancedUNDER[1].toFixed(4) + " BASE");
       let profitUNDER = debalancedUNDER[0] - startUNDER;
-      let hodlUNDER = startBASE / i + startUNDER;
-      let aprTargetUNDER = profitUNDER / hodlUNDER / daysSinceStart * 365 * 100;
+      //let hodlUNDER = startBASE / i + startUNDER;
+      //let aprTargetUNDER = profitUNDER / hodlUNDER / daysSinceStart * 365 * 100;
 
-      //balanceArrayETH.push({x: i, y: (totalOutBASE / totalInUNDER * 100)});
-      //balancePercentagesBASE.push({x: i, y: (debalanced[1] / startBASE * 100)});
-      balancePercentagesBASE.push({x: i, y: aprTargetBASE});
-      balancePercentagesUNDER.push({x: i, y: aprTargetUNDER});
+      aprsBASE.push({x: i, y: aprTargetBASE});
       profitsBASE.push({x: i, y: profitBASE});
       profitsUNDER.push({x: i, y: profitUNDER});
-
-      // find maximums
-      if(maxTotalOutBASE < totalOutBASE) {
-        maxTotalOutBASE = totalOutBASE;
-        maxPrice = i;
-      }
     }
-    //console.log("Max profit in ETH: " + maxBalanceETH + " @" + priceForMaxETH + " TKN");
-    //console.log("Max balance BASE: " + maxTotalOutBASE + " @" + maxPrice + " BASE");
 
-    return [balancePercentagesBASE, profitsBASE, profitsUNDER];
+    let rangeEdgesBASE = this.getRangePoints(profitsBASE);
+    let rangeEdgesUNDER = this.getRangePoints(profitsUNDER);
 
+
+    this.setState({
+      chartLoaded: true,
+      chartData1: aprsBASE,
+      chartData2: profitsBASE,
+      chartData3: profitsUNDER,
+      rangeEdgesBASE: rangeEdgesBASE, 
+      rangeEdgesUNDER: rangeEdgesUNDER,
+      currentPrice: currentPrice
+    });
   }
 
-  getPerformanceChartOptions(props) {
-    console.log(props)
-    console.log(props.selectedPosition != null ? props.selectedPosition.name : "unknown")
+  getRangePoints(profits) {
+    // find maximum profit
+    let maxPrice = 0;
+    let maxProfit = -100000000000;
+    for(let i = 0; i < profits.length; i++) {
+      if(maxProfit < profits[i].y) {
+        maxProfit = profits[i].y;
+        maxPrice = profits[i].x;
+      }
+    }
+
+    let leftPoint = null, rightPoint = null, prevPoint;
+    // find left and right range edge [90%]
+    for(let i = 0; i < profits.length; i++) {
+      if(leftPoint === null && profits[i].y > maxProfit * 0.9) {
+        leftPoint = { x: profits[i].x, y: profits[i].y };
+      } 
+      
+      if(leftPoint !== null && rightPoint === null && profits[i].y < maxProfit * 0.9) {
+        rightPoint = prevPoint;
+      }
+
+      prevPoint = { x: profits[i].x, y: profits[i].y };
+    }
+
+    return [leftPoint, rightPoint]
+  }
+
+  getPerformanceChartOptions() {
     const performanceOptions = {
       chart: {
         type: 'line',
         height: '600'
       },
       title: {
-        text: 'APR for position: ' + (props.selectedPosition != null ? props.selectedPosition.name : 'unknown')
+        text: 'APR for position: ' + (this.props.selectedPosition != null ? this.props.selectedPosition.name : 'unknown')
       },
       xAxis: {
         plotBands: [
           {
-            from: 900,
-            to: 1100,
+            from: this.state.rangeEdgesUNDER ? this.state.rangeEdgesUNDER[0].x : 0,
+            to: this.state.rangeEdgesUNDER ? this.state.rangeEdgesUNDER[1].x : 0,
             color: 'rgba(165, 244, 151, 0.4)',
             label: {
                 text: 'Max UNDER Range',
@@ -131,8 +154,8 @@ class PositionChartCard extends Component {
             }
           },
           { 
-            from: 1200,
-            to: 1500,
+            from: this.state.rangeEdgesBASE ? this.state.rangeEdgesBASE[0].x : 0,
+            to: this.state.rangeEdgesBASE ? this.state.rangeEdgesBASE[1].x : 0,
             color: 'rgba(242, 240, 150, 0.4)',
             label: {
                 text: 'Max BASE Range',
@@ -142,8 +165,8 @@ class PositionChartCard extends Component {
             }
           },
           { 
-            from: 2050,
-            to: 2060,
+            from: this.state.currentPrice ? this.state.currentPrice * 0.998 : 0,
+            to: this.state.currentPrice ? this.state.currentPrice * 1.002 : 0,
             color: 'rgba(27, 27, 27, 0.8)',
             label: {
                 text: 'ETH Price',
@@ -254,7 +277,7 @@ class PositionChartCard extends Component {
           <HighchartsReact
             highcharts={Highcharts}
             //constructorType={'stockChart'}
-            options={this.getPerformanceChartOptions(this.props)}
+            options={this.getPerformanceChartOptions()}
           />
         }
       />

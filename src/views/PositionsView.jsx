@@ -299,7 +299,7 @@ class PositionsView extends Component {
 
       // debalance for max BASE
       let debalanced = debalanceDAI(i, startUNDER, 0, totalOutBASE);
-      console.log("debalanced @" + i.toFixed(3) + ": " + debalanced[0].toFixed(4) + " UNDER + " + debalanced[1].toFixed(4) + " BASE");
+      //console.log("debalanced @" + i.toFixed(3) + ": " + debalanced[0].toFixed(4) + " UNDER + " + debalanced[1].toFixed(4) + " BASE");
       if(maxBalanceBASE < debalanced[1]) {
         maxBalanceBASE = debalanced[1];
         maxProfitBASE = debalanced[1] - startBASE;
