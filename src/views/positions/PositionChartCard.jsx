@@ -25,14 +25,16 @@ class PositionChartCard extends Component {
     if (this.userModelLoaded() && this.props.selectedPosition) {
       // call only once
       if(!this.state.chartLoaded) {
-        console.log("Refreshing chart data")
-        //let datasets = this.prepareChartData();
-        console.log(this.props.selectedPosition)
-        //console.log(datasets)
+        console.log("Refreshing chart data");
+        // for simulations for now, prepare data here
+        let datasets = this.prepareChartData(this.props.selectedPosition);
+        console.log(datasets)
       
         this.setState({
           chartLoaded: true,
-          //chartData: datasets[1]
+          chartData1: datasets[0],
+          chartData2: datasets[1],
+          chartData3: datasets[2]
         });
       }
     }
@@ -43,227 +45,137 @@ class PositionChartCard extends Component {
     return userModel && userModel.positions && Array.isArray(userModel.positions);
   }
 
-  prepareChartData() {
-    let uniswapProfitPercentage = 20;//new Number(document.getElementById("add_profit").value);
-
-    console.log(">>>> Sim for 0% APR")
-    let usdcWethMarket;
-    // find USDC-WETH
-    for(let i = 0; i < this.props.markets.length; i++) {
-      if(this.props.markets[i].marketAddress === uniswapV2USDCWETHAddress) {
-        usdcWethMarket = clone(this.props.markets[i]);
-      }
-    }
-    // old code
-    /*let datasets = this.prepareDataset(20, usdcWethMarket);
-    //console.log(">>>> Sim for " + uniswapProfitPercentage + "% APR")
-    //prepareDataset(uniswapProfitPercentage * daysPass / 365, balancesAfter30DaysETH, balancesAfter30DaysTKN);
-
-    return [datasets[0], datasets[1]];*/
-    let currentPrice = (usdcWethMarket.poolBASE / usdcWethMarket.poolUNDER);
-
-
-    let pos = clone(this.props.userModel.positions[0]);
-    //let dydx = new dYdXLong(1, 1700, 1, 1700);
-    //let dydx = new dYdXShort(1700, 1, 1700, 1700);
-    //let uniswap = new Uniswap(pos.marketAddress, pos.addressBASE, pos.addressUNDER, pos.currentLPT)
-    console.log(pos)
-    //pos.startBASE = 1700;
-    //pos.startUNDER = 0;
-    //pos.subpositions = [uniswap];
-    let datasets = [1, 2];//this.prepareDataset2(20, pos, currentPrice);
-
-    return [datasets[0], datasets[1]];
-  }
-
-  prepareDataset2(apyPercentage, position, currentPrice) {
-    let balanceArrayETH = [], balanceArrayTKN = [];
-
-    // inputs for profit taking currency
-    let isTokenProfitTakingCurrency = true;//e.options[e.selectedIndex].value == "token";
-
-    // calculate ins from all subpositions
-    let totalInBASE = 0, totalInUNDER = 0;
-    for(let j = 0; j < position.subpositions.length; j++) {
-      totalInBASE += position.subpositions[j].getOpeningValue()[0];
-      totalInUNDER += position.subpositions[j].getOpeningValue()[1];
-    }
-
-    console.log("Total in: " + totalInUNDER + " UNDER or " + totalInBASE + " BASE");
-
-    // apply APR
-    //market.poolBASE += market.poolBASE * apyPercentage / 100;
-    //market.poolUNDER += market.poolUNDER * apyPercentage / 100;
-
-    let startPrice = 1600, endPrice = 1700;
-    let priceForMaxTKN = 0, priceForMaxETH = 0;	
-    let maxBalanceETH = -1000000, maxBalanceTKN = -1000000;
-
+  prepareChartData(pos) {
+    // time 
+    let daysSinceStart = (new Date() - new Date(pos.startDate)) / (1000 * 60 * 60 * 24);
+    
+    let startPrice = 500;
+    let endPrice = 3000;	
+    let maxPrice = startPrice;
+    let maxTotalOutBASE = -100000000000;
+    let balancePercentagesBASE = [], balancePercentagesUNDER = [], profitsBASE = [], profitsUNDER = [];
     for(let i = startPrice; i < endPrice; i += 10) {
-      let totalOutBASE = 0;
+      let totalOutBASE = 0, totalOutUNDER = 0, startBASE = 0, startUNDER = 0;
       // get totals out
-      for(let j = 0; j < position.subpositions.length; j++) {
-        console.log(position.subpositions[j])
-        totalOutBASE += position.subpositions[j].getCurrentValue(i)[0];
+      for(let j = 0; j < pos.subpositions.length; j++) {
+        let subpos = pos.subpositions[j];
+
+        // get ins
+        startBASE += subpos.base.start;
+        startUNDER += subpos.under.start;
+
+        // get outs
+        let extraBASE = subpos.base.extra + subpos.under.extra * i;
+        totalOutBASE += subpos.service.getCurrentValue(i)[0] + extraBASE;
+
+        let extraUNDER = subpos.base.extra / i + subpos.under.extra;
+        totalOutUNDER += subpos.service.getCurrentValue(i)[1] + extraUNDER;
       }
 
-      console.log("@" + i + " " + totalOutBASE);
+      // debalance for max BASE
+      let debalancedBASE = debalanceDAI(i, startUNDER, 0, totalOutBASE);
+      console.log("debalanced BASE @" + i.toFixed(3) + ": " + debalancedBASE[0].toFixed(4) + " UNDER + " + debalancedBASE[1].toFixed(4) + " BASE");
+      let profitBASE = debalancedBASE[1] - startBASE;
+      let hodlBASE = startBASE + startUNDER * i;
+      let aprTargetBASE = profitBASE / hodlBASE / daysSinceStart * 365 * 100;
 
-      // debalance
-      /*let debalanced;
-      if (isTokenProfitTakingCurrency) {
-        debalanced = debalanceDAI(i, totalInUNDER, 0, totalOutBASE);
-      } else {
-        debalanced = debalanceETH(i, totalInBASE, 0, totalOutBASE);
-      }
-       
-      console.log("Debalanced @" + i + ": " + debalanced[0].toFixed(4) + " ETH + " + debalanced[1].toFixed(2) + " DAI");
-    */
+      // debalance for max UNDER
+      let debalancedUNDER = debalanceETH(i, startBASE, totalOutUNDER, 0);
+      console.log("debalanced UNDER @" + i.toFixed(3) + ": " + debalancedUNDER[0].toFixed(4) + " UNDER + " + debalancedUNDER[1].toFixed(4) + " BASE");
+      let profitUNDER = debalancedUNDER[0] - startUNDER;
+      let hodlUNDER = startBASE / i + startUNDER;
+      let aprTargetUNDER = profitUNDER / hodlUNDER / daysSinceStart * 365 * 100;
+
       //balanceArrayETH.push({x: i, y: (totalOutBASE / totalInUNDER * 100)});
-      balanceArrayTKN.push({x: i, y: ((totalOutBASE - totalInBASE) / totalInBASE * 100)});
+      //balancePercentagesBASE.push({x: i, y: (debalanced[1] / startBASE * 100)});
+      balancePercentagesBASE.push({x: i, y: aprTargetBASE});
+      balancePercentagesUNDER.push({x: i, y: aprTargetUNDER});
+      profitsBASE.push({x: i, y: profitBASE});
+      profitsUNDER.push({x: i, y: profitUNDER});
 
       // find maximums
-      /*if(maxBalanceETH < debalanced[0]) {
-        maxBalanceETH = debalanced[0];
-        priceForMaxETH = i;
-      }*/
-      if(maxBalanceTKN < totalOutBASE) {
-        maxBalanceTKN = totalOutBASE;
-        priceForMaxTKN = i;
+      if(maxTotalOutBASE < totalOutBASE) {
+        maxTotalOutBASE = totalOutBASE;
+        maxPrice = i;
       }
     }
     //console.log("Max profit in ETH: " + maxBalanceETH + " @" + priceForMaxETH + " TKN");
-    console.log("Max profit in TKN: " + maxBalanceTKN + " @" + priceForMaxTKN + " TKN");
+    //console.log("Max balance BASE: " + maxTotalOutBASE + " @" + maxPrice + " BASE");
 
-    return [balanceArrayETH, balanceArrayTKN];
+    return [balancePercentagesBASE, profitsBASE, profitsUNDER];
+
   }
-
-
-  prepareDataset(apyPercentage, market) {
-    let balanceArrayETH = [], balanceArrayTKN = [];
-
-    let openPrice = (market.poolBASE / market.poolUNDER);
-    
-    // inputs for profit taking currency
-    let e = document.getElementById("profit_taking_currency");
-    let isTokenProfitTakingCurrency = true;//e.options[e.selectedIndex].value == "token";
-
-    // inputs for uniswap
-    let uniswapInTKN = openPrice; //new Number(document.getElementById("uniswap_tkn").value);
-    let uniswapInETH = 1; //new Number(document.getElementById("uniswap_eth").value);
-
-    // inputs for dydx
-    let dydxLongSize = 0; //new Number(document.getElementById("dydx_long_size").value);
-    let dydxLongLeverage = 1; //new Number(document.getElementById("dydx_long_leverage").value);
-    let dydxLongInETH = dydxLongSize / dydxLongLeverage;
-
-    let dydxShortSize = 0; //new Number(document.getElementById("dydx_short_size").value);
-    let dydxShortLeverage = 1; //new Number(document.getElementById("dydx_short_leverage").value);
-    let dydxShortInTKN = dydxShortSize * openPrice / dydxShortLeverage;
-  
-    // inputs for options
-    // let option1Quantity = new Number(document.getElementById("option1_quantity").value);
-    // let e1 = document.getElementById("option1_call_put");
-    // let isOption1Call = e1.options[e1.selectedIndex].value;
-    // let option1Strike = new Number(document.getElementById("option1_strike").value);
-    // let option1DaysToExpiry = new Number(document.getElementById("option1_days_to_expiry").value);
-    // let option1Volatility = new Number(document.getElementById("option1_volatility").value);
-    let option1InTKN = 0; //option1Quantity * optionMath.blackScholes(isOption1Call, openPrice, option1Strike, option1DaysToExpiry / 365, 0.02, option1Volatility / 100);
-    console.log("Option1InTKN: " + option1InTKN)
-
-    // let option2Quantity = new Number(document.getElementById("option2_quantity").value);
-    // let e2 = document.getElementById("option2_call_put");
-    // let isOption2Call = e2.options[e2.selectedIndex].value;
-    // let option2Strike = new Number(document.getElementById("option2_strike").value);
-    // let option2DaysToExpiry = new Number(document.getElementById("option2_days_to_expiry").value);
-    // let option2Volatility = new Number(document.getElementById("option2_volatility").value);
-    let option2InTKN = 0; //option2Quantity * optionMath.blackScholes(isOption2Call, openPrice, option2Strike, option2DaysToExpiry / 365, 0.02, option2Volatility / 100);
-    console.log("option2InTKN: " + option2InTKN)
-
-    let optionInETH = 0;
-
-    // calculate totals In
-    let totalInETH = uniswapInETH + dydxLongInETH + optionInETH;
-    let totalInTKN = uniswapInTKN + dydxShortInTKN + option1InTKN + option2InTKN;
-
-    console.log("Total in: " + totalInETH + " ETH + " + totalInTKN + " TKN");
-
-    // rebalance before adding liquidity on uniswap
-    let rebalancedTKN = (uniswapInTKN + uniswapInETH * openPrice) / 2;
-    let rebalancedETH = rebalancedTKN / openPrice;
-    console.log("Rebalanced: " + rebalancedETH + " ETH + " + rebalancedTKN + " TKN");
-    let lptTokens = market.addLiquidity(rebalancedETH, rebalancedTKN);
-
-    // apply uniswap profit
-    market.poolBASE += market.poolBASE * apyPercentage / 100;
-    market.poolUNDER += market.poolUNDER * apyPercentage / 100;
-
-    balanceArrayETH.splice(0, balanceArrayETH.length);
-    balanceArrayTKN.splice(0, balanceArrayTKN.length);
-    let startPrice = 10, endPrice = 3000;
-    let priceForMaxTKN = 0, priceForMaxETH = 0;	
-    let maxBalanceETH = -1000000, maxBalanceTKN = -1000000;
-    for(let i = startPrice; i < endPrice; i += 10) {
-      market.setMarketPrice(i);
-
-      // get uniswap
-      let uniswapOuts = checkBalances(market, lptTokens);
-      //console.log("Optimum @" + i + ": " + uniswapOuts[0].toFixed(4) + " ETH + " + uniswapOuts[1].toFixed(2) + " DAI");
-
-      // get dydx
-      let dydxOutETH = getDyDxLongBalanceInETH(dydxLongSize, dydxLongLeverage, openPrice, i);
-      let dydxOutTKN = getDyDxShortBalanceInDAI(dydxShortSize, dydxShortLeverage, openPrice, i);
-
-      // get options
-      let optionOutETH = 0;
-      let option1OutTKN = 0; //option1Quantity * optionMath.blackScholes(isOption1Call, i, option1Strike, (option1DaysToExpiry - daysPass) / 365, 0.02, option1Volatility / 100);
-      //console.log("Option1 value @ " + i + ": " + option1OutTKN);
-      let option2OutTKN = 0; //option2Quantity * optionMath.blackScholes(isOption2Call, i, option2Strike, (option2DaysToExpiry - daysPass) / 365, 0.02, option2Volatility / 100);
-      //console.log("Option2 value @ " + i + ": " + option2OutTKN);
-
-      // get totals Out
-      let totalOutETH = uniswapOuts[0] + dydxOutETH + optionOutETH;
-      let totalOutTKN = uniswapOuts[1] + dydxOutTKN + option1OutTKN + option2OutTKN;
-
-
-      let debalanced;
-      if (isTokenProfitTakingCurrency) {
-        debalanced = debalanceDAI(market, totalInETH, totalOutETH, totalOutTKN);
-      } else {
-        debalanced = debalanceETH(market, totalInTKN, totalOutETH, totalOutTKN);
-      }
-       
-      //console.log("Debalanced @" + i + ": " + debalanced[0].toFixed(4) + " ETH + " + debalanced[1].toFixed(2) + " DAI");
-    
-      balanceArrayETH.push({x: i, y: (debalanced[0] / totalInETH * 100)});
-      balanceArrayTKN.push({x: i, y: (debalanced[1] / totalInTKN * 100)});
-
-      // find maximums
-      if(maxBalanceETH < debalanced[0]) {
-        maxBalanceETH = debalanced[0];
-        priceForMaxETH = i;
-      }
-      if(maxBalanceTKN < debalanced[1]) {
-        maxBalanceTKN = debalanced[1];
-        priceForMaxTKN = i;
-      }
-    }
-    console.log("Max profit in ETH: " + maxBalanceETH + " @" + priceForMaxETH + " TKN");
-    console.log("Max profit in TKN: " + maxBalanceTKN + " @" + priceForMaxTKN + " TKN");
-
-    return [balanceArrayETH, balanceArrayTKN];
-  }
-
 
   getPerformanceChartOptions(props) {
+    console.log(props)
+    console.log(props.selectedPosition != null ? props.selectedPosition.name : "unknown")
     const performanceOptions = {
       chart: {
-        type: 'line'
+        type: 'line',
+        height: '600'
       },
       title: {
-        text: null
+        text: 'APR for position: ' + (props.selectedPosition != null ? props.selectedPosition.name : 'unknown')
       },
-      plotOptions: {
+      xAxis: {
+        plotBands: [
+          {
+            from: 900,
+            to: 1100,
+            color: 'rgba(165, 244, 151, 0.4)',
+            label: {
+                text: 'Max UNDER Range',
+                style: {
+                    color: '#606060'
+                }
+            }
+          },
+          { 
+            from: 1200,
+            to: 1500,
+            color: 'rgba(242, 240, 150, 0.4)',
+            label: {
+                text: 'Max BASE Range',
+                style: {
+                    color: '#606060'
+                }
+            }
+          },
+          { 
+            from: 2050,
+            to: 2060,
+            color: 'rgba(27, 27, 27, 0.8)',
+            label: {
+                text: 'ETH Price',
+                style: {
+                    color: '#606060',
+                    textalign: 'right'
+                }
+            }
+          }
+        ]
+      },
+      yAxis: [
+        {
+          title: {
+            text: 'APR [%]'
+          },
+          min: 0
+        },
+        {
+          title: {
+            text: 'Profit [BASE]'
+          },
+          opposite: true
+        },
+        {
+          title: {
+            text: 'Profit [UNDER]'
+          },
+          opposite: true
+        }
+      ],
+      /*plotOptions: {
         series: {
           stacking: 'normal',
           lineColor: '#666666',
@@ -273,13 +185,36 @@ class PositionChartCard extends Component {
               lineColor: '#666666'
           }
         }
-      },     
+      },   */  
       series: [
-        { data: this.state.chartData}
+        { 
+          name: "APR [%] (BASE or UNDER)", 
+          data: this.state.chartData1,
+          tooltip: {
+            valueSuffix: '%'
+          }
+        },
+        { 
+          name: "Profit [BASE]", 
+          data: this.state.chartData2,
+          yAxis: 1,
+          visible: false,
+          tooltip: {
+            valueSuffix: 'BASE' // todo
+          }
+        },
+        { 
+          name: "Profit [UNDER]", 
+          data: this.state.chartData3,
+          yAxis: 2,
+          visible: false,
+          tooltip: {
+            valueSuffix: 'UNDER' // todo
+          }
+        }
       ],
       tooltip: {
         shared: true, // this doesn't work
-        valueSuffix: '%',
         valueDecimals: 2
       },
       credits: {

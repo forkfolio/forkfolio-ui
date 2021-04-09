@@ -168,21 +168,19 @@ class PositionsView extends Component {
 
       // target BASE
       let priceAndProfitBASE = this.findMaxBASE(pos);
-      console.log(priceAndProfitBASE)
       let targetPriceBASE = priceAndProfitBASE[0];
       let targetProfitBASE = priceAndProfitBASE[1];
-      let targetTotalOutBASE = priceAndProfitBASE[2];
+      let targetHodlBASE = priceAndProfitBASE[2];
       let profitPerMonthTargetBASE = targetProfitBASE * 30.4167 / daysSinceStart;	
-      let aprTargetBASE = targetProfitBASE / targetTotalOutBASE / daysSinceStart * 365 * 100;
+      let aprTargetBASE = targetProfitBASE / targetHodlBASE / daysSinceStart * 365 * 100;
       
       // target UNDER
       let priceAndProfitUNDER = this.findMaxUNDER(pos);
-      console.log(priceAndProfitUNDER)
       let targetPriceUNDER = priceAndProfitUNDER[0];
       let targetProfitUNDER = priceAndProfitUNDER[1];
-      let targetTotalOutUNDER = priceAndProfitUNDER[2];
+      let targetHodlUNDER = priceAndProfitUNDER[2];
       let profitPerMonthTargetUNDER = targetProfitUNDER * 30.4167 / daysSinceStart;	
-      let aprTargetUNDER = targetProfitUNDER / targetTotalOutUNDER / daysSinceStart * 365 * 100;
+      let aprTargetUNDER = targetProfitUNDER / targetHodlUNDER / daysSinceStart * 365 * 100;
 
       // profits in (USD)
       let profitTargetETHUSD = targetProfitUNDER * targetPriceUNDER * market.priceBASEUSD;
@@ -282,7 +280,7 @@ class PositionsView extends Component {
     let maxPrice = startPrice;			
     let maxBalanceBASE = -100000000000;
     let maxProfitBASE = -100000000000;
-    let maxTotalOutBASE = -100000000000;
+    let maxTotalHodlBASE = -100000000000;
 
     for(let i = startPrice; i < endPrice; i += 0.01) {
       let totalOutBASE = 0, startBASE = 0, startUNDER = 0;
@@ -299,20 +297,18 @@ class PositionsView extends Component {
         totalOutBASE += subpos.service.getCurrentValue(i)[0] + extraBASE;
       }
 
-      //console.log("totalOutBASE: " + totalOutBASE)
-
       // debalance for max BASE
       let debalanced = debalanceDAI(i, startUNDER, 0, totalOutBASE);
-      //console.log("debalanced @" + i.toFixed(3) + ": " + debalanced[0].toFixed(4) + " UNDER + " + debalanced[1].toFixed(4) + " BASE");
+      console.log("debalanced @" + i.toFixed(3) + ": " + debalanced[0].toFixed(4) + " UNDER + " + debalanced[1].toFixed(4) + " BASE");
       if(maxBalanceBASE < debalanced[1]) {
         maxBalanceBASE = debalanced[1];
         maxProfitBASE = debalanced[1] - startBASE;
         maxPrice = i;
-        maxTotalOutBASE = debalanced[0] * maxPrice + maxBalanceBASE;
+        maxTotalHodlBASE = startBASE + startUNDER * maxPrice;
       }
     }
 
-    return [maxPrice, maxProfitBASE, maxTotalOutBASE];
+    return [maxPrice, maxProfitBASE, maxTotalHodlBASE];
   }
 
   findMaxUNDER(position) {
@@ -321,7 +317,7 @@ class PositionsView extends Component {
     let maxPrice = startPrice;			
     let maxBalanceUNDER = -100000000000;
     let maxProfitUNDER = -100000000000;
-    let maxTotalOutUNDER = -100000000000;
+    let maxTotalHodlUNDER = -100000000000;
 
     for(let i = startPrice; i < endPrice; i += 0.01) {
       let totalOutUNDER = 0, startBASE = 0, startUNDER = 0;
@@ -345,83 +341,11 @@ class PositionsView extends Component {
         maxBalanceUNDER = debalanced[0];
         maxProfitUNDER = debalanced[0] - startUNDER;
         maxPrice = i;
-        maxTotalOutUNDER = maxBalanceUNDER + debalanced[1] / maxPrice;
+        maxTotalHodlUNDER = startBASE / maxPrice + startUNDER;
       }
     }
 
-    return [maxPrice, maxProfitUNDER, maxTotalOutUNDER];
-  }
-
-  /*
-  *	Finds the price and profit at which uniswap + long position 
-  *	yield maximum token returns. 
-  */
-  findPriceAndProfitForMaxToken(market, position) {
-    let startPrice = 0.1;
-    let endPrice = 3000;	
-    let maxProfitPrice = startPrice;			
-    let maxBalanceDAI = -100000000000;
-    let maxDebalanced;
-    let totalInETH = position.startUNDER + position.longPos[0] / position.longPos[1];
-    for(let i = startPrice; i < endPrice; i += 0.01) {
-      market.setMarketPrice(i);
-
-      // get uniswap balance
-      let uniBalances = checkBalances(market, position.currentLPT);
-      //console.log("optimum @" + i.toFixed(3) + ": " + uniBalances[0].toFixed(4) + " ETH + " + uniBalances[1].toFixed(4) + " COMP");
-
-      // get dydx balance
-      let longBalETH = getDyDxLongBalanceInETH(position.longPos[0], position.longPos[1], position.longPos[2], i);
-
-      // debalance for max dai
-      let debalanced = debalanceDAI(market.getPrice(), totalInETH, uniBalances[0] + longBalETH + position.extraUNDER, uniBalances[1] + position.extraBASE);
-      //console.log("debalanced @" + i.toFixed(3) + ": " + debalanced[0].toFixed(4) + " ETH + " + debalanced[1].toFixed(4) + " COMP");
-      if(maxBalanceDAI < debalanced[1]) {
-        maxBalanceDAI = debalanced[1];
-        maxProfitPrice = i;
-        maxDebalanced = debalanced;
-      }
-    }			
-    //console.log(position.name + ": max balance: " + maxBalanceDAI + " DAI: @" + maxProfitPrice);
-    console.log(position.name + " for max TKN: " + maxDebalanced);
-    
-    return [maxProfitPrice, maxBalanceDAI - position.startBASE];
-  }
-  
-  /*
-  *	Finds the price and profit at which uniswap + long position 
-  *	yield maximum ETH returns. 
-  */
-  findPriceAndProfitForMaxETH(market, position) {
-    let startPrice = 0.1;
-    let endPrice = 3000;		
-    let maxProfitPrice = startPrice;		
-    let maxBalanceETH = -100000000000;
-    let maxDebalanced;
-    let totalInETH = position.startUNDER + position.longPos[0] / position.longPos[1];
-    for(let i = startPrice; i < endPrice; i += 0.01) {
-      market.setMarketPrice(i);
-
-      // get uniswap balance
-      let uniBalances = checkBalances(market, position.currentLPT);
-      //console.log("ETH optimum @" + i + ": " + uniBalances[0].toFixed(4) + " ETH + " + uniBalances[1].toFixed(2) + " DAI");
-
-      // get dydx balance
-      let longBalETH = getDyDxLongBalanceInETH(position.longPos[0], position.longPos[1], position.longPos[2], i);
-
-      // debalance for max dai
-      let debalanced = debalanceETH(market.getPrice(), position.startBASE, uniBalances[0] + longBalETH + position.extraUNDER, uniBalances[1] + position.extraBASE);
-      //console.log("Profit in DAI @" + i + ": " + ((debalanced[0] - position.startUNDER)  * i).toFixed(3) + " DAI = " + (debalanced[0] - position.startUNDER).toFixed(5) + " ETH")
-      if(maxBalanceETH < debalanced[0]) {
-        maxBalanceETH = debalanced[0];
-        maxProfitPrice = i;
-        maxDebalanced = debalanced;
-      }
-    }			
-    //console.log(position.name + ": max balance: " + maxBalanceETH + " ETH: @" + maxProfitPrice);
-    console.log(position.name + " for max ETH: " + maxDebalanced);
-    
-    return [maxProfitPrice, maxBalanceETH - totalInETH]; 
+    return [maxPrice, maxProfitUNDER, maxTotalHodlUNDER];
   }
 
   getTotalProfitSum() {
