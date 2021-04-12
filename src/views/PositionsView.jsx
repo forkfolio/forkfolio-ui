@@ -12,8 +12,7 @@ import ReactGA from 'react-ga';
 import Web3 from 'web3';
 import Uniswap from '../web3/Uniswap';
 import PositionChartCard from "./positions/PositionChartCard";
-import PositionChartDialog from "./dialogs/PositionChartDialog";
-import { clone, checkBalances, getDyDxLongBalanceInETH, getDyDxShortBalanceInDAI, debalanceETH, debalanceDAI } from '../web3/common.js';
+import { clone, debalanceETH, debalanceDAI } from '../web3/common.js';
 
 class PositionsView extends Component {
   constructor(props) {
@@ -144,18 +143,17 @@ class PositionsView extends Component {
         }
       }
 
-      let totalInBASE = 0, totalInUNDER = 0, totalOutBASE = 0, startBASE = 0, startUNDER = 0;
+      let totalInBASE = 0, totalOutBASE = 0;//, startBASE = 0, startUNDER = 0;
       for(let j = 0; j < pos.subpositions.length; j++) {
         let subpos = pos.subpositions[j];
 
         // calculate Ins
         totalInBASE += subpos.base.start + subpos.under.start * market.getPrice();
-        totalInUNDER += subpos.under.start + subpos.base.start / market.getPrice();
-        startBASE += subpos.base.start;
-        startUNDER += subpos.under.start;
+        //totalInUNDER += subpos.under.start + subpos.base.start / market.getPrice();
+        //startBASE += subpos.base.start;
+        //startUNDER += subpos.under.start;
 
         // calculate Outs
-        // todo: add extra 
         let extraBASE = subpos.base.extra + subpos.under.extra * market.getPrice();
         totalOutBASE += subpos.service.getCurrentValue(market.getPrice())[0] + extraBASE; 
       }
@@ -184,9 +182,9 @@ class PositionsView extends Component {
 
       // profits in (USD)
       let profitTargetETHUSD = targetProfitUNDER * targetPriceUNDER * market.priceBASEUSD;
-      let profitTargetTokenUSD = pos.base.symbol == "DAI" || pos.base.symbol == "USDC" ? targetProfitBASE * market.priceBASEUSD : targetProfitBASE / targetPriceBASE * market.priceUNDERUSD;
+      let profitTargetTokenUSD = pos.base.symbol === "DAI" || pos.base.symbol === "USDC" ? targetProfitBASE * market.priceBASEUSD : targetProfitBASE / targetPriceBASE * market.priceUNDERUSD;
       let profitPerMonthTargetETHUSD = profitPerMonthTargetUNDER * targetPriceUNDER * market.priceBASEUSD;
-      let profitPerMonthTargetTokenUSD = pos.base.symbol == "DAI" || pos.base.symbol == "USDC" ? profitPerMonthTargetBASE * market.priceBASEUSD : profitPerMonthTargetBASE / targetPriceBASE * market.priceUNDERUSD;
+      let profitPerMonthTargetTokenUSD = pos.base.symbol === "DAI" || pos.base.symbol === "USDC" ? profitPerMonthTargetBASE * market.priceBASEUSD : profitPerMonthTargetBASE / targetPriceBASE * market.priceUNDERUSD;
 
       pos.maxProfitTargetUSD = Math.max(profitTargetETHUSD, profitTargetTokenUSD);
       pos.maxProfitPerMonthTargetUSD = Math.max(profitPerMonthTargetTokenUSD, profitPerMonthTargetETHUSD);
@@ -381,9 +379,9 @@ class PositionsView extends Component {
   
   displayLinks = (description) => {
     return (
-      description.links.map(link => {
+      description.links.map((link, key) => {
         return (
-          <span>
+          <span key={key}>
             <a href={link.link}>{link.anchor}</a>{" "}
           </span>
         );
@@ -608,23 +606,9 @@ class PositionsView extends Component {
       />
     );
 
-    let positionChartDialog = (
-      <PositionChartDialog
-        isDialogShown={this.state.isChartDialogShown}
-        hideDialog={this.hideChartDialog}
-        selectedPosition={this.state.selectedPosition}
-      />
-    );
-
     const tooltipHelpText1 = <Tooltip id="edit_tooltip">
       123 help
-    </Tooltip>; 
-    const tooltipHelpText2 = <Tooltip id="edit_tooltip">
-      Portfolio history panel displays a chart of daily historical snapshots of your portfolio. 
-      All changes to your portfolio are taken into account: trades, deposits and withdrawals. 
-      <br/><br/> 
-      Easily zoom in/out with predefined time periods, or use the slider on the bottom to fine tune.
-    </Tooltip>; 
+    </Tooltip>;
 
     return (
       <div className="main-content">
@@ -634,7 +618,7 @@ class PositionsView extends Component {
               <Card
                 title="What are my opened positions?"
                 rightSection={
-                  <div>
+                  <span>
                     <Button
                       // was like this for without color
                       //special
@@ -657,7 +641,7 @@ class PositionsView extends Component {
                         <i className={"fa fa-question-circle"} /> Help 
                       </Button> 
                     </OverlayTrigger>
-                  </div>
+                  </span>
                 }
                 category={tradeCount + " trade" + (tradeCount === 1 ? "" : "s")}
                 content={this.state.data ? 
@@ -674,7 +658,6 @@ class PositionsView extends Component {
               {this.props.isAddTradeDialogShown ? addTradeDialog : ""}
               {this.props.isEditTradeDialogShown ? editTradeDialog : ""}
               {this.state.isConfirmDialogShown ? confirmRemoveTransactionDialog : ""}
-              {this.state.isChartDialogShown ? positionChartDialog : ""}
             </Col>
           </Row>
           <Row>

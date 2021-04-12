@@ -44,31 +44,11 @@ export function getContractInstance(web3, abi, address) {
 	return new web3.eth.Contract(abi, address);
 }
 
-export function checkBalances(market, balanceLPT) {
+/*export function checkBalances(market, balanceLPT) {
     let balanceETH = balanceLPT * market.poolUNDER / market.poolLIQ;
     let balanceToken = balanceLPT * market.poolBASE / market.poolLIQ;
     return [balanceETH, balanceToken];
-}
-
-// tode: delete when dydx is implemented
-export function getDyDxLongBalanceInETH(size, leverage, openPrice, currentPrice) {
-    let depositETH = size / leverage;
-    let marketBuyETH = size - depositETH;
-    let debtDAI = marketBuyETH * openPrice;
-    let currentDAI = size * currentPrice - debtDAI;
-    let currentETH = currentDAI / currentPrice;
-
-    return Math.max(0, currentETH);
-  }
-
-export function getDyDxShortBalanceInDAI(size, leverage, openPrice, currentPrice) {
-    let depositDAI = size * openPrice / leverage;
-    let marketBuyDAI = size * openPrice - depositDAI;
-    let debtETH = marketBuyDAI / openPrice;
-    let currentDAI = size * openPrice - debtETH * currentPrice;
-
-    return Math.max(0, currentDAI);
-  }
+}*/
   
 export function debalanceETH(currentPrice, startBASE, ethTokens, daiTokens) {
     let diffDai = startBASE - daiTokens;
@@ -90,18 +70,6 @@ export function debalanceDAI(currentPrice, startUNDER, ethTokens, daiTokens) {
  * @param {object} instance The class instance you want to clone.
  * @returns {object} A new cloned instance.
  */
-/*export function clone(instance) {
-	return Object.assign(
-	  Object.create(
-		// Set the prototype of the new object to the prototype of the instance.
-		// Used to allow new object behave like class instance.
-		Object.getPrototypeOf(instance),
-	  ),
-	  // Prevent shallow copies of nested structures like arrays, etc
-	  JSON.parse(JSON.stringify(instance)),
-	);
-}*/
-
 export function clone(original) {
   var copied = Object.assign(
     Object.create(
@@ -126,7 +94,7 @@ export function clone(original) {
   want to do it to have more elegant code I left a commented CND function in
   the end)
 */
-class OptionMath {
+export class OptionMath {
 	blackScholes(PutCallFlag, S, X, T, r, v) {
 	  let d1 = (Math.log(S / X) + (r + v * v / 2) * T) / (v * Math.sqrt(T));
 	  let d2 = d1 - v * Math.sqrt(T);

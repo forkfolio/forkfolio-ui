@@ -7,7 +7,7 @@ class CoinGeckoPrices {
 		const response = await fetch(url);
 		const myJson = await response.json();
 		if(myJson[address.toLowerCase()]) {
-			return new Number(myJson[address.toLowerCase()].usd);
+			return Number(myJson[address.toLowerCase()].usd);
 		}
 			
 		return 1;

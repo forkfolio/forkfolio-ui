@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 // react component for creating dynamic tables
-import { Grid, Row, Col, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
-import { formatUtils } from '../../utils/FormatUtils';
-import Uniswap from '../../web3/Uniswap';
-import dYdXLong from '../../web3/dYdXLong';
-import dYdXShort from '../../web3/dYdXShort';
+//import { formatUtils } from '../../utils/FormatUtils';
+//import Uniswap from '../../web3/Uniswap';
+//import dYdXLong from '../../web3/dYdXLong';
+//import dYdXShort from '../../web3/dYdXShort';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { clone, uniswapV2USDCWETHAddress, checkBalances, getDyDxLongBalanceInETH, getDyDxShortBalanceInDAI, debalanceETH, debalanceDAI } from '../../web3/common.js';
+import { debalanceETH, debalanceDAI } from '../../web3/common.js';
 
 class PositionChartCard extends Component {
   constructor(props) {
@@ -36,7 +36,7 @@ class PositionChartCard extends Component {
   }
 
   refreshChart() {
-    console.log("Refreshing chart data");
+    console.log("Refreshing chart data. Position: ");
     let pos = this.props.selectedPosition;   
     console.log(pos)
     
@@ -105,12 +105,10 @@ class PositionChartCard extends Component {
 
   getRangePoints(profits) {
     // find maximum profit
-    let maxPrice = 0;
     let maxProfit = -100000000000;
     for(let i = 0; i < profits.length; i++) {
       if(maxProfit < profits[i].y) {
         maxProfit = profits[i].y;
-        maxPrice = profits[i].x;
       }
     }
 
