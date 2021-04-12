@@ -224,7 +224,7 @@ class PositionsView extends Component {
             <Button
               onClick={() => {
                 this.setState({
-                  isChartDialogShown: true,
+                  isChartDialogShown: false, // todo: maybe enable later
                   selectedPosition: positions[i]
                 });
                 return true;

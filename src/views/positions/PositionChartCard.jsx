@@ -21,12 +21,12 @@ class PositionChartCard extends Component {
     };
   }
 
-  async componentDidUpdate() {
+  async componentDidUpdate(prevProps) {
     if (this.userModelLoaded() && this.props.selectedPosition) {
       // call only once
-      if(!this.state.chartLoaded) {
+      if(!this.state.chartLoaded || prevProps.selectedPosition !== this.props.selectedPosition) {
         this.refreshChart();
-      }
+      } 
     }
   }
 
