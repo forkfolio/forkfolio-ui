@@ -96,7 +96,7 @@ class PositionsView extends Component {
           web3DataLoaded: true
         });
         // NOTE: here I can create JSON objects and append to positions
-        let dydxLong = {
+        /*let testPosition = {
           name: "DYDX LONG 1x",
           startDate: "2021-02-14T15:01:00.000Z",
           base: {
@@ -128,11 +128,44 @@ class PositionsView extends Component {
             text: "some text",
             links: []
           }
+        }*/
+        let testPosition = {
+          name: "DYDX SHORT 1x",
+          startDate: "2021-02-14T15:01:00.000Z",
+          base: {
+            address: "0x6b175474e89094c44da98b954eedeac495271d0f",
+            symbol: "DAI"
+          },
+          under: {
+            address: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            symbol: "ETH"
+          },
+          subpositions: [
+            {
+              type: "dydx-short",
+              base: {
+                start: 1800,
+                extra: 0
+              },
+              under: {
+                start: 0,
+                extra: 0
+              },
+              collateralBASE: 1800,
+              borrowedUNDER: 1,
+              boughtBASE: 1800,
+              openingPrice: 1800
+            }
+          ],
+          description: {
+            text: "some text",
+            links: []
+          }
         }
-        let appendedPositions = [...this.props.userModel.positions, dydxLong];
+        let appendedPositions = [/*...this.props.userModel.positions,*/ testPosition];
         console.log(appendedPositions)
 
-        // get live market data from Uniswap smart contracts via web3
+        // get live market data from smart contracts via web3
         await this.loadWeb3Data(appendedPositions);
 
         // calculate data for table
@@ -141,7 +174,7 @@ class PositionsView extends Component {
         // update table
         this.setState({
           data: tableData,
-          selectedPosition: this.props.userModel.positions[0]
+          selectedPosition: appendedPositions[0]
         });
       }
     }
