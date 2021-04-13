@@ -11,6 +11,8 @@ import { formatUtils } from '../utils/FormatUtils';
 import ReactGA from 'react-ga';
 import Web3 from 'web3';
 import Uniswap from '../web3/Uniswap';
+import dYdXLong from '../web3/dYdXLong';
+import dYdXShort from '../web3/dYdXShort';
 import PositionChartCard from "./positions/PositionChartCard";
 import { clone, debalanceETH, debalanceDAI } from '../web3/common.js';
 
@@ -93,11 +95,49 @@ class PositionsView extends Component {
         this.setState({
           web3DataLoaded: true
         });
+        // NOTE: here I can create JSON objects and append to positions
+        let dydxLong = {
+          name: "DYDX LONG 1x",
+          startDate: "2021-02-14T15:01:00.000Z",
+          base: {
+            address: "0x6b175474e89094c44da98b954eedeac495271d0f",
+            symbol: "DAI"
+          },
+          under: {
+            address: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            symbol: "ETH"
+          },
+          subpositions: [
+            {
+              type: "dydx-long",
+              base: {
+                start: 0,
+                extra: 0
+              },
+              under: {
+                start: 1,
+                extra: 0
+              },
+              collateralUNDER: 1, 
+              borrowedBASE: 1800, 
+              boughtUNDER: 1, 
+              openingPrice: 1800
+            }
+          ],
+          description: {
+            text: "some text",
+            links: []
+          }
+        }
+        let appendedPositions = [...this.props.userModel.positions, dydxLong];
+        console.log(appendedPositions)
+
         // get live market data from Uniswap smart contracts via web3
-        await this.loadWeb3Data();
+        await this.loadWeb3Data(appendedPositions);
+
         // calculate data for table
-        let tableData = this.prepareTableData(this.props.userModel.positions);
-        console.log(tableData)
+        let tableData = this.prepareTableData(appendedPositions);
+
         // update table
         this.setState({
           data: tableData,
@@ -107,19 +147,27 @@ class PositionsView extends Component {
     }
   }
 
-  async loadWeb3Data() {
-    for(let i = 0; i < this.props.userModel.positions.length; i++) {
-      let pos = this.props.userModel.positions[i];
+  async loadWeb3Data(positions) {
+    for(let i = 0; i < positions.length; i++) {
+      let pos = positions[i];
       for(let j = 0; j < pos.subpositions.length; j++) {
         let subpos = pos.subpositions[j];
         let service;
-        if(subpos.type === "uniswap") {
-          service = new Uniswap(subpos.marketAddress, pos.base.address, pos.under.address, subpos.startLIQ);
-          //console.log("Printing uniswap")
-          //console.log(service)
-          await service.getMarketData(this.state.web3, pos);
+        switch (subpos.type) {
+          case "uniswap":
+            service = new Uniswap(subpos.marketAddress, pos.base.address, pos.under.address, subpos.startLIQ);
+            break;
+          case "dydx-long":
+            service = new dYdXLong(subpos.collateralUNDER, subpos.borrowedBASE, subpos.boughtUNDER, subpos.openingPrice);
+            break;
+          case "dydx-short":
+            service = new dYdXShort(subpos.collateralBASE, subpos.borrowedUNDER, subpos.boughtBASE, subpos.openingPrice);
+            break;
         }
-        // todo: add other types of service other than uniswap
+
+        console.log("Service: ")
+        console.log(service)
+        await service.getMarketData(this.state.web3, pos);
         // todo: dirty adding to position
         subpos.service = service;
       }
@@ -135,27 +183,38 @@ class PositionsView extends Component {
       let daysSinceStart = (new Date() - startDate) / (1000 * 60 * 60 * 24);
 
       // find uniswap market
-      let market;
+      let market, currentPrice;
       for(let j = 0; j < pos.subpositions.length; j++) {
         let subpos = pos.subpositions[j];
         if(subpos.type === "uniswap") {
           market = clone(subpos.service);
+          currentPrice = market.getPrice();
         }
       }
+
+      // todo: delete dirty hack
+      if(!market) {
+        market = {
+          priceBASEUSD: 1,
+          priceUNDERUSD: 2200
+        }
+        currentPrice = 2200;
+      }
+
 
       let totalInBASE = 0, totalOutBASE = 0;//, startBASE = 0, startUNDER = 0;
       for(let j = 0; j < pos.subpositions.length; j++) {
         let subpos = pos.subpositions[j];
 
         // calculate Ins
-        totalInBASE += subpos.base.start + subpos.under.start * market.getPrice();
-        //totalInUNDER += subpos.under.start + subpos.base.start / market.getPrice();
+        totalInBASE += subpos.base.start + subpos.under.start * currentPrice;
+        //totalInUNDER += subpos.under.start + subpos.base.start / currentPrice;
         //startBASE += subpos.base.start;
         //startUNDER += subpos.under.start;
 
         // calculate Outs
-        let extraBASE = subpos.base.extra + subpos.under.extra * market.getPrice();
-        totalOutBASE += subpos.service.getCurrentValue(market.getPrice())[0] + extraBASE; 
+        let extraBASE = subpos.base.extra + subpos.under.extra * currentPrice;
+        totalOutBASE += subpos.service.getCurrentValue(currentPrice)[0] + extraBASE; 
       }
 
       // today
@@ -199,7 +258,7 @@ class PositionsView extends Component {
         },
         price: {
           lower: [targetPriceUNDER, pos.base.symbol],
-          current: [market.getPrice(), pos.base.symbol],
+          current: [currentPrice, pos.base.symbol],
           higher: [targetPriceBASE, pos.base.symbol]
         },
         totalprofit: {

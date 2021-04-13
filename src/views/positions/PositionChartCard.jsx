@@ -126,6 +126,10 @@ class PositionChartCard extends Component {
       prevPoint = { x: profits[i].x, y: profits[i].y };
     }
 
+    if(rightPoint === null) {
+      rightPoint = prevPoint;
+    }
+
     return [leftPoint, rightPoint]
   }
 

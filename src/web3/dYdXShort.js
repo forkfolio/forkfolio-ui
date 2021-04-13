@@ -1,9 +1,9 @@
 		
 export default class dYdXShort {		
-	constructor(daiCollateral, ethBorrowed, daiBought, openingPrice) {
-		this.daiCollateral = daiCollateral;
-		this.ethBorrowed = ethBorrowed;
-		this.daiBought = daiBought;
+	constructor(collateralBASE, borrowedUNDER, boughtBASE, openingPrice) {
+		this.collateralBASE = collateralBASE;
+		this.borrowedUNDER = borrowedUNDER;
+		this.boughtBASE = boughtBASE;
 		this.openingPrice = openingPrice;
 	}
 
@@ -15,12 +15,12 @@ export default class dYdXShort {
 
 	// gets current value in [BASE, UNDER]
 	getCurrentValue(currentPrice) {
-		let positionDAI = this.daiCollateral + this.daiBought - this.ethBorrowed * currentPrice;
-		return [Math.max(0, positionDAI), Math.max(0, positionDAI) / currentPrice];
+		let positionBASE = this.collateralBASE + this.boughtBASE - this.borrowedUNDER * currentPrice;
+		return [Math.max(0, positionBASE), Math.max(0, positionBASE) / currentPrice];
 	}
 
 	// gets opening value in [BASE, UNDER]
 	getOpeningValue() {
-		return [this.daiCollateral, this.daiCollateral / this.openingPrice];
+		return [this.collateralBASE, this.collateralBASE / this.openingPrice];
 	}
 }		
