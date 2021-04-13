@@ -96,8 +96,8 @@ class PositionsView extends Component {
           web3DataLoaded: true
         });
         // NOTE: here I can create JSON objects and append to positions
-        /*let testPosition = {
-          name: "DYDX LONG 1x",
+        let testPosition = {
+          name: "Uniswap + DYDX LONG 1x",
           startDate: "2021-02-14T15:01:00.000Z",
           base: {
             address: "0x6b175474e89094c44da98b954eedeac495271d0f",
@@ -108,6 +108,19 @@ class PositionsView extends Component {
             symbol: "ETH"
           },
           subpositions: [
+            {
+              type: "uniswap",
+              marketAddress: "0xA478c2975Ab1Ea89e8196811F51A7B7Ade33eB11",
+              base: {
+                start: 1800,
+                extra: 0
+              },
+              under: {
+                start: 1,
+                extra: 0
+              },
+              startLIQ: 30.67
+            },
             {
               type: "dydx-long",
               base: {
@@ -128,8 +141,8 @@ class PositionsView extends Component {
             text: "some text",
             links: []
           }
-        }*/
-        let testPosition = {
+        }
+        /*let testPosition = {
           name: "DYDX SHORT 1x",
           startDate: "2021-02-14T15:01:00.000Z",
           base: {
@@ -161,8 +174,8 @@ class PositionsView extends Component {
             text: "some text",
             links: []
           }
-        }
-        let appendedPositions = [/*...this.props.userModel.positions,*/ testPosition];
+        }*/
+        let appendedPositions = [...this.props.userModel.positions, testPosition];
         console.log(appendedPositions)
 
         // get live market data from smart contracts via web3

@@ -45,7 +45,7 @@ class PositionChartCard extends Component {
     
     let currentPrice = 0;
     let startPrice = 500;
-    let endPrice = 3000;	
+    let endPrice = 4000;	
     let aprsBASE = [], profitsBASE = [], profitsUNDER = [];
     for(let i = startPrice; i < endPrice; i += 10) {
       let totalOutBASE = 0, totalOutUNDER = 0, startBASE = 0, startUNDER = 0;
@@ -143,6 +143,14 @@ class PositionChartCard extends Component {
         text: 'APR for position: ' + (this.props.selectedPosition != null ? this.props.selectedPosition.name : 'unknown')
       },
       xAxis: {
+        plotLines: [{
+          color: '#3D3D3D',
+          width: 2,
+          value: this.state.currentPrice ? this.state.currentPrice : 0,
+          label: {
+            text: "Current price"
+          }
+      }],
         plotBands: [
           {
             from: this.state.rangeEdgesUNDER ? this.state.rangeEdgesUNDER[0].x : 0,
@@ -165,18 +173,6 @@ class PositionChartCard extends Component {
                     color: '#606060'
                 }
             }
-          },
-          { 
-            from: this.state.currentPrice ? this.state.currentPrice * 0.998 : 0,
-            to: this.state.currentPrice ? this.state.currentPrice * 1.002 : 0,
-            color: 'rgba(27, 27, 27, 0.8)',
-            label: {
-                text: 'ETH Price',
-                style: {
-                    color: '#606060',
-                    textalign: 'right'
-                }
-            }
           }
         ]
       },
@@ -185,7 +181,17 @@ class PositionChartCard extends Component {
           title: {
             text: 'APR [%]'
           },
-          min: 0
+          min: -100,
+          plotBands: [
+            {
+              from: 0,
+              to: -10000000000,
+              color: 'rgba(255, 33, 33, 0.06)',
+              label: {
+                  text: 'Red Zone',
+              }
+            }
+          ]
         },
         {
           title: {
@@ -225,7 +231,7 @@ class PositionChartCard extends Component {
           yAxis: 1,
           visible: false,
           tooltip: {
-            valueSuffix: 'BASE' // todo
+            valueSuffix: ' BASE' // todo
           }
         },
         { 
@@ -234,7 +240,7 @@ class PositionChartCard extends Component {
           yAxis: 2,
           visible: false,
           tooltip: {
-            valueSuffix: 'UNDER' // todo
+            valueSuffix: ' UNDER' // todo
           }
         }
       ],

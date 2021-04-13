@@ -1,6 +1,6 @@
 		
 export default class GammaOptions {		
-	constructor(ethCollateral, daiBorrowed, ethBought, openingPrice) {
+	constructor(isCall, isLong, quantity, strike, daysToExpiry, iv, collateralBASE, openingPrice) {
 		this.ethCollateral = ethCollateral;
 		this.daiBorrowed = daiBorrowed;
 		this.ethBought = ethBought;
