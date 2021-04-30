@@ -43,11 +43,14 @@ class PositionChartCard extends Component {
     // time 
     let daysSinceStart = (new Date() - new Date(pos.startDate)) / (1000 * 60 * 60 * 24);
     
+    let chartWindow = this.getChartWindow(pos);
     let currentPrice = 0;
-    let startPrice = 500;
-    let endPrice = 4000;	
+    let startPrice = chartWindow.step;
+    let endPrice = chartWindow.right;	
+    let step = chartWindow.step;	
+    console.log("Step: " + step)
     let aprsBASE = [], profitsBASE = [], profitsUNDER = [];
-    for(let i = startPrice; i < endPrice; i += 10) {
+    for(let i = startPrice; i < endPrice; i += step) {
       let totalOutBASE = 0, totalOutUNDER = 0, startBASE = 0, startUNDER = 0;
       // get totals out
       for(let j = 0; j < pos.subpositions.length; j++) {
@@ -103,6 +106,42 @@ class PositionChartCard extends Component {
     });
   }
 
+  /**
+   * Returns start, end prices for chart.
+   *
+   * @param {object}   pos       Position.
+   * @return {type} Return value description.
+   */
+  getChartWindow(pos) {
+    let pivot = pos.entryPrice;
+    let step;
+    if(pivot < 1) {
+      step = 0.001;
+    } else if(pivot < 10) {
+      step = 0.01;
+    } else if(pivot < 100) {
+      step = 0.1;
+    } else if(pivot < 1000) {
+      step = 1;
+    } else if(pivot < 10000) {
+      step = 10;
+    } else if(pivot < 100000) {
+      step = 100;
+    }
+
+    return {
+      left: Number(pivot / 3),
+      right: Number(pivot * 3),
+      step: step
+    }
+  }
+
+  /**
+   * Returns points for range ploting (90%).
+   *
+   * @param {Array}   profits       Profit points on chart.
+   * @return {type} Return value description.
+   */
   getRangePoints(profits) {
     // find maximum profit
     let maxProfit = -100000000000;
@@ -223,7 +262,8 @@ class PositionChartCard extends Component {
           data: this.state.chartData1,
           tooltip: {
             valueSuffix: '%'
-          }
+          },
+          turboThreshold: 10000
         },
         { 
           name: "Profit [BASE]", 
@@ -232,7 +272,8 @@ class PositionChartCard extends Component {
           visible: false,
           tooltip: {
             valueSuffix: ' BASE' // todo
-          }
+          },
+          turboThreshold: 10000
         },
         { 
           name: "Profit [UNDER]", 
@@ -241,7 +282,8 @@ class PositionChartCard extends Component {
           visible: false,
           tooltip: {
             valueSuffix: ' UNDER' // todo
-          }
+          },
+          turboThreshold: 10000
         }
       ],
       tooltip: {

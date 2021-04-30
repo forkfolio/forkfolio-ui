@@ -169,7 +169,7 @@ class PositionsView extends Component {
               boughtBASE: 1800,
               openingPrice: 1800
             }
-          ],
+          ], 
           description: {
             text: "some text",
             links: []
