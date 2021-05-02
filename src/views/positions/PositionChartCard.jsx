@@ -3,10 +3,6 @@ import React, { Component } from "react";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
-//import { formatUtils } from '../../utils/FormatUtils';
-//import Uniswap from '../../web3/Uniswap';
-//import dYdXLong from '../../web3/dYdXLong';
-//import dYdXShort from '../../web3/dYdXShort';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { debalanceETH, debalanceDAI } from '../../web3/common.js';
@@ -48,7 +44,6 @@ class PositionChartCard extends Component {
     let startPrice = chartWindow.step;
     let endPrice = chartWindow.right;	
     let step = chartWindow.step;	
-    console.log("Step: " + step)
     let aprsBASE = [], profitsBASE = [], profitsUNDER = [];
     for(let i = startPrice; i < endPrice; i += step) {
       let totalOutBASE = 0, totalOutUNDER = 0, startBASE = 0, startUNDER = 0;
@@ -92,6 +87,7 @@ class PositionChartCard extends Component {
     }
 
     let rangeEdgesBASE = this.getRangePoints(profitsBASE);
+    console.log(profitsUNDER)
     let rangeEdgesUNDER = this.getRangePoints(profitsUNDER);
 
 
@@ -151,14 +147,18 @@ class PositionChartCard extends Component {
       }
     }
 
-    let leftPoint = null, rightPoint = null, prevPoint;
+    console.log("maxProfit: " + maxProfit)
+
+    let firstPoint = { x: profits[0].x, y: profits[0].y };
+    let leftPoint = firstPoint; 
+    let rightPoint = null, prevPoint;
     // find left and right range edge [90%]
     for(let i = 0; i < profits.length; i++) {
-      if(leftPoint === null && profits[i].y > maxProfit * 0.9) {
+      if(leftPoint === firstPoint && profits[i].y >= maxProfit * 0.9) {
         leftPoint = { x: profits[i].x, y: profits[i].y };
       } 
       
-      if(leftPoint !== null && rightPoint === null && profits[i].y < maxProfit * 0.9) {
+      if(leftPoint !== firstPoint && rightPoint === null && profits[i].y < maxProfit * 0.9) {
         rightPoint = prevPoint;
       }
 
@@ -196,7 +196,7 @@ class PositionChartCard extends Component {
             to: this.state.rangeEdgesUNDER ? this.state.rangeEdgesUNDER[1].x : 0,
             color: 'rgba(165, 244, 151, 0.4)',
             label: {
-                text: 'Max UNDER Range',
+                text: '90% UNDER',
                 style: {
                     color: '#606060'
                 }
@@ -207,7 +207,7 @@ class PositionChartCard extends Component {
             to: this.state.rangeEdgesBASE ? this.state.rangeEdgesBASE[1].x : 0,
             color: 'rgba(242, 240, 150, 0.4)',
             label: {
-                text: 'Max BASE Range',
+                text: '90% BASE',
                 style: {
                     color: '#606060'
                 }

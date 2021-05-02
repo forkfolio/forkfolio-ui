@@ -13,8 +13,10 @@ import Web3 from 'web3';
 import Uniswap from '../web3/Uniswap';
 import dYdXLong from '../web3/dYdXLong';
 import dYdXShort from '../web3/dYdXShort';
+import GammaOptions from '../web3/GammaOptions';
 import PositionChartCard from "./positions/PositionChartCard";
 import { clone, debalanceETH, debalanceDAI } from '../web3/common.js';
+import { uniswapdYdXTest, dydxShortTest, callOptionTest } from '../web3/templates/positions.js';
 
 class PositionsView extends Component {
   constructor(props) {
@@ -96,86 +98,8 @@ class PositionsView extends Component {
           web3DataLoaded: true
         });
         // NOTE: here I can create JSON objects and append to positions
-        let testPosition = {
-          name: "Uniswap + DYDX LONG 1x",
-          startDate: "2021-02-14T15:01:00.000Z",
-          base: {
-            address: "0x6b175474e89094c44da98b954eedeac495271d0f",
-            symbol: "DAI"
-          },
-          under: {
-            address: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-            symbol: "ETH"
-          },
-          subpositions: [
-            {
-              type: "uniswap",
-              marketAddress: "0xA478c2975Ab1Ea89e8196811F51A7B7Ade33eB11",
-              base: {
-                start: 1800,
-                extra: 0
-              },
-              under: {
-                start: 1,
-                extra: 0
-              },
-              startLIQ: 30.67
-            },
-            {
-              type: "dydx-long",
-              base: {
-                start: 0,
-                extra: 0
-              },
-              under: {
-                start: 1,
-                extra: 0
-              },
-              collateralUNDER: 1, 
-              borrowedBASE: 1800, 
-              boughtUNDER: 1, 
-              openingPrice: 1800
-            }
-          ],
-          description: {
-            text: "some text",
-            links: []
-          }
-        }
-        /*let testPosition = {
-          name: "DYDX SHORT 1x",
-          startDate: "2021-02-14T15:01:00.000Z",
-          base: {
-            address: "0x6b175474e89094c44da98b954eedeac495271d0f",
-            symbol: "DAI"
-          },
-          under: {
-            address: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-            symbol: "ETH"
-          },
-          subpositions: [
-            {
-              type: "dydx-short",
-              base: {
-                start: 1800,
-                extra: 0
-              },
-              under: {
-                start: 0,
-                extra: 0
-              },
-              collateralBASE: 1800,
-              borrowedUNDER: 1,
-              boughtBASE: 1800,
-              openingPrice: 1800
-            }
-          ], 
-          description: {
-            text: "some text",
-            links: []
-          }
-        }*/
-        let appendedPositions = [...this.props.userModel.positions, testPosition];
+
+        let appendedPositions = [this.props.userModel.positions[0], callOptionTest];
         console.log(appendedPositions)
 
         // get live market data from smart contracts via web3
@@ -208,6 +132,9 @@ class PositionsView extends Component {
             break;
           case "dydx-short":
             service = new dYdXShort(subpos.collateralBASE, subpos.borrowedUNDER, subpos.boughtBASE, subpos.openingPrice);
+            break;
+          case "option":
+            service = new GammaOptions(subpos.isCall, subpos.isLong, subpos.quantity, subpos.strike, subpos.daysToExpiry, subpos.iv, subpos.openingPrice, subpos.openingPrice);
             break;
         }
 

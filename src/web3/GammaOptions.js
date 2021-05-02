@@ -1,22 +1,27 @@
-		
+import { OptionMath } from './common.js'
 export default class GammaOptions {		
-	constructor(isCall, isLong, quantity, strike, daysToExpiry, iv, collateralBASE, openingPrice) {
-		this.ethCollateral = ethCollateral;
-		this.daiBorrowed = daiBorrowed;
-		this.ethBought = ethBought;
+	constructor(isCall, isLong, quantity, strike, daysToExpiry, iv, openingPrice) {
+		this.isCall = isCall;
+		this.isLong = isLong;
+		this.quantity = quantity;
+		this.strike = strike;
+		this.daysToExpiry = daysToExpiry;
+		this.iv = iv;
 		this.openingPrice = openingPrice;
+		this.optionMath = new OptionMath(); 
 	}
 
 	// gets live market data via web3 
 	async getMarketData(web3, position) {
 		// do nothing for now
-		console.log("dYdXLong market data loaded. ");
+		console.log("GammaOptions market data loaded. ");
 	}
 
 	// gets current value in [BASE, UNDER]
 	getCurrentValue(currentPrice) {
-		let positionDAI = (this.ethCollateral + this.ethBought) * currentPrice - this.daiBorrowed;
-		return [Math.max(0, positionDAI), Math.max(0, positionDAI) / currentPrice];
+		let currentValueBASE = this.quantity * this.optionMath.blackScholes(this.isCall ? 'call' : 'put', currentPrice, this.strike, this.daysToExpiry / 365, 0.02, this.iv / 100);
+		//console.log("optionBASE: " + optionBASE);
+		return [currentValueBASE, currentValueBASE / currentPrice];
 	}
 
 	// gets opening value in [BASE, UNDER]
