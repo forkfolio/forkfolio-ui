@@ -16,7 +16,7 @@ import dYdXShort from '../web3/dYdXShort';
 import GammaOptions from '../web3/GammaOptions';
 import PositionChartCard from "./positions/PositionChartCard";
 import { clone, debalanceETH, debalanceDAI } from '../web3/common.js';
-import { uniswapdYdXTest, dydxShortTest, callOptionTest } from '../web3/templates/positions.js';
+import { uniswapdYdXTest, dydxShortTest, callOptionTest, putOptionTest } from '../web3/templates/positions.js';
 
 class PositionsView extends Component {
   constructor(props) {
@@ -99,7 +99,7 @@ class PositionsView extends Component {
         });
         // NOTE: here I can create JSON objects and append to positions
 
-        let appendedPositions = [this.props.userModel.positions[0], callOptionTest];
+        let appendedPositions = [this.props.userModel.positions[0], putOptionTest];
         console.log(appendedPositions)
 
         // get live market data from smart contracts via web3
@@ -408,17 +408,24 @@ class PositionsView extends Component {
     return total;
   }
 
-  
+  displayDescription = (description) => {
+    return (description ? description.text : null)
+  };
+
   displayLinks = (description) => {
-    return (
-      description.links.map((link, key) => {
-        return (
-          <span key={key}>
-            <a href={link.link}>{link.anchor}</a>{" "}
-          </span>
-        );
-      })
-    )
+    if(description) {
+      return (
+        description.links.map((link, key) => {
+          return (
+            <span key={key}>
+              <a href={link.link}>{link.anchor}</a>{" "}
+            </span>
+          );
+        })
+      )
+    }
+
+    return null;
   };
 
   getTableColumns() {
@@ -430,7 +437,7 @@ class PositionsView extends Component {
           return (
             <span style={{ float: "left" }}>
               <b>{row.value[0]}</b><br></br>
-              {row.value[1].text}<br></br>
+              {this.displayDescription(row.value[1])}<br></br>
               {this.displayLinks(row.value[1])}
               <a href={"https://zapper.fi/dashboard?address=" + row.value[2]}>Zap</a>
             </span>

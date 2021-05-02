@@ -42,11 +42,7 @@ export const uniswapdYdXTest = {
       boughtUNDER: 1, 
       openingPrice: 1800
     }
-  ],
-  description: {
-    text: "some text",
-    links: []
-  }
+  ]
 }
 
 export const dydxShortTest = {
@@ -71,11 +67,7 @@ export const dydxShortTest = {
       boughtBASE: 1800,
       openingPrice: 1800
     }
-  ], 
-  description: {
-    text: "some text",
-    links: []
-  }
+  ]
 }
 
 export const callOptionTest = {
@@ -99,19 +91,15 @@ export const callOptionTest = {
       isLong: true, 
       quantity: 1, 
       strike: 2000,
-      daysToExpiry: 1,
+      daysToExpiry: 30,
       iv: 90,
       openingPrice: 2800,
     },
-  ],
-  /*description: {
-    text: "some text",
-    links: []
-  }*/
+  ]
 }
 
 export const putOptionTest = {
-  name: "C2000 Month away",
+  name: "P2000 Month away",
   startDate: "2021-05-01T15:01:00.000Z",
   base: dai,
   under: eth,
@@ -127,17 +115,13 @@ export const putOptionTest = {
         start: 0,
         extra: 0
       },
-      isCall: true, 
+      isCall: false, 
       isLong: true, 
       quantity: 1, 
       strike: 2000,
-      daysToExpiry: 1,
+      daysToExpiry: 30,
       iv: 90,
       openingPrice: 2800,
     },
-  ],
-  description: {
-    text: "some text",
-    links: []
-  }
+  ]
 }
