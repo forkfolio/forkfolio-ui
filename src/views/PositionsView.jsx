@@ -16,6 +16,7 @@ import dYdXShort from '../web3/dYdXShort';
 import GammaOptions from '../web3/GammaOptions';
 import PositionChartCard from "./positions/PositionChartCard";
 import { clone, debalanceETH, debalanceDAI } from '../web3/common.js';
+import { CoinGeckoPrices } from '../web3/CoinGeckoPrices.js';
 import { uniswapdYdXTest, dydxShortTest, callOptionTest, putOptionTest } from '../web3/templates/positions.js';
 
 class PositionsView extends Component {
@@ -99,14 +100,14 @@ class PositionsView extends Component {
         });
         // NOTE: here I can create JSON objects and append to positions
 
-        let appendedPositions = [this.props.userModel.positions[0], putOptionTest];
+        let appendedPositions = [this.props.userModel.positions[0], callOptionTest];
         console.log(appendedPositions)
 
         // get live market data from smart contracts via web3
         await this.loadWeb3Data(appendedPositions);
 
         // calculate data for table
-        let tableData = this.prepareTableData(appendedPositions);
+        let tableData = await this.prepareTableData(appendedPositions);
 
         // update table
         this.setState({
@@ -147,7 +148,8 @@ class PositionsView extends Component {
     }
   }
 
-  prepareTableData(positions) {
+  async prepareTableData(positions) {
+    console.log(this.props)
     let uniswapTableSet = [];
     for(let i = 0; i < positions.length; i++) {
       let pos = positions[i];
@@ -165,13 +167,16 @@ class PositionsView extends Component {
         }
       }
 
-      // todo: delete dirty hack
+      // if there is no uniswap market, use coingecko api
       if(!market) {
+        //let priceBASEUSD = await CoinGeckoPrices.getTokenPriceInUSD(pos.base.address);
+        //let priceUNDERUSD = await CoinGeckoPrices.getTokenPriceInUSD(pos.under.address);
+        //console.log(priceUNDERUSD)
         market = {
-          priceBASEUSD: 1,
-          priceUNDERUSD: 2200
+          priceBASEUSD: await CoinGeckoPrices.getTokenPriceInUSD(pos.base.address),
+          priceUNDERUSD: await CoinGeckoPrices.getTokenPriceInUSD(pos.under.address)
         }
-        currentPrice = 2200;
+        currentPrice = market.priceUNDERUSD / market.priceBASEUSD;
       }
 
 
@@ -306,7 +311,7 @@ class PositionsView extends Component {
 
   findMaxBASE(position) {
     let startPrice = 0.1;
-    let endPrice = 3000;	
+    let endPrice = 5000;	
     let maxPrice = startPrice;			
     let maxBalanceBASE = -100000000000;
     let maxProfitBASE = -100000000000;
@@ -343,7 +348,7 @@ class PositionsView extends Component {
 
   findMaxUNDER(position) {
     let startPrice = 0.1;
-    let endPrice = 3000;	
+    let endPrice = 5000;	
     let maxPrice = startPrice;			
     let maxBalanceUNDER = -100000000000;
     let maxProfitUNDER = -100000000000;

@@ -8,7 +8,7 @@ const eth = {
 }
 
 export const uniswapdYdXTest = {
-  name: "Uniswap + DYDX LONG 1x",
+  name: "(T) Uniswap + DYDX LONG 1x",
   startDate: "2021-02-14T15:01:00.000Z",
   base: dai,
   under: eth,
@@ -46,7 +46,7 @@ export const uniswapdYdXTest = {
 }
 
 export const dydxShortTest = {
-  name: "DYDX SHORT 1x",
+  name: "(T) DYDX SHORT 1x",
   startDate: "2021-02-14T15:01:00.000Z",
   base: dai,
   under: eth,
@@ -71,16 +71,16 @@ export const dydxShortTest = {
 }
 
 export const callOptionTest = {
-  name: "C2000 Month away",
+  name: "(T) C3200 26 days",
   startDate: "2021-05-01T15:01:00.000Z",
   base: dai,
   under: eth,
-  entryPrice: 2800,
+  entryPrice: 2900,
   subpositions: [
     {
       type: "option",
       base: {
-        start: 1000,
+        start: 183,
         extra: 0
       },
       under: {
@@ -90,16 +90,16 @@ export const callOptionTest = {
       isCall: true, 
       isLong: true, 
       quantity: 1, 
-      strike: 2000,
-      daysToExpiry: 30,
-      iv: 90,
+      strike: 3200,
+      daysToExpiry: 26,
+      iv: 86,
       openingPrice: 2800,
     },
   ]
 }
 
 export const putOptionTest = {
-  name: "P2000 Month away",
+  name: "(T) P2000 Month away",
   startDate: "2021-05-01T15:01:00.000Z",
   base: dai,
   under: eth,
