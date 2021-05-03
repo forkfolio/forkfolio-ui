@@ -14,6 +14,7 @@ import Uniswap from '../web3/Uniswap';
 import dYdXLong from '../web3/dYdXLong';
 import dYdXShort from '../web3/dYdXShort';
 import GammaOptions from '../web3/GammaOptions';
+import Manual from '../web3/Manual';
 import PositionChartCard from "./positions/PositionChartCard";
 import { clone, debalanceETH, debalanceDAI } from '../web3/common.js';
 import { CoinGeckoPrices } from '../web3/CoinGeckoPrices.js';
@@ -100,8 +101,7 @@ class PositionsView extends Component {
         });
         // NOTE: here I can create JSON objects and append to positions
 
-        let appendedPositions = [this.props.userModel.positions[0], callOptionTest];
-        console.log(appendedPositions)
+        let appendedPositions = [...this.props.userModel.positions, callOptionTest];
 
         // get live market data from smart contracts via web3
         await this.loadWeb3Data(appendedPositions);
@@ -136,6 +136,9 @@ class PositionsView extends Component {
             break;
           case "option":
             service = new GammaOptions(subpos.isCall, subpos.isLong, subpos.quantity, subpos.strike, subpos.daysToExpiry, subpos.iv, subpos.openingPrice, subpos.openingPrice);
+            break;
+          case "manual":
+            service = new Manual(subpos.base.start, subpos.base.extra, subpos.under.start, subpos.under.extra);
             break;
         }
 
@@ -194,6 +197,8 @@ class PositionsView extends Component {
         let extraBASE = subpos.base.extra + subpos.under.extra * currentPrice;
         totalOutBASE += subpos.service.getCurrentValue(currentPrice)[0] + extraBASE; 
       }
+
+      console.log(totalOutBASE)
 
       // today
       let profitTodayToken = totalOutBASE - totalInBASE;				
