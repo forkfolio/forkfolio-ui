@@ -131,7 +131,7 @@ export const uniswapv3Test = {
   startDate: "2021-05-01T15:01:00.000Z",
   base: dai,
   under: eth,
-  entryPrice: 2800,
+  entryPrice: 4000,
   subpositions: [
     {
       type: "uniswapv3",
@@ -143,8 +143,8 @@ export const uniswapv3Test = {
         start: 0,
         extra: 0
       },
-      minPrice: 3000, 
-      maxPrice: 4000, 
+      minPrice: 4000, 
+      maxPrice: 7000, 
       feeInPercent: 0.3
     },
   ]
