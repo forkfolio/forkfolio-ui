@@ -125,3 +125,27 @@ export const putOptionTest = {
     },
   ]
 }
+
+export const uniswapv3Test = {
+  name: "(T) Uniswap V3",
+  startDate: "2021-05-01T15:01:00.000Z",
+  base: dai,
+  under: eth,
+  entryPrice: 2800,
+  subpositions: [
+    {
+      type: "uniswapv3",
+      base: {
+        start: 1000,
+        extra: 0
+      },
+      under: {
+        start: 0,
+        extra: 0
+      },
+      minPrice: 3000, 
+      maxPrice: 4000, 
+      feeInPercent: 0.3
+    },
+  ]
+}

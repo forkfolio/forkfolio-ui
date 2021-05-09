@@ -15,10 +15,17 @@ import dYdXLong from '../web3/dYdXLong';
 import dYdXShort from '../web3/dYdXShort';
 import GammaOptions from '../web3/GammaOptions';
 import Manual from '../web3/Manual';
+import UniswapV3 from '../web3/UniswapV3';
 import PositionChartCard from "./positions/PositionChartCard";
 import { clone, debalanceETH, debalanceDAI } from '../web3/common.js';
 import { CoinGeckoPrices } from '../web3/CoinGeckoPrices.js';
-import { uniswapdYdXTest, dydxShortTest, callOptionTest, putOptionTest } from '../web3/templates/positions.js';
+import { 
+  uniswapdYdXTest, 
+  dydxShortTest, 
+  callOptionTest, 
+  putOptionTest,
+  uniswapv3Test
+ } from '../web3/templates/positions.js';
 
 class PositionsView extends Component {
   constructor(props) {
@@ -100,8 +107,7 @@ class PositionsView extends Component {
           web3DataLoaded: true
         });
         // NOTE: here I can create JSON objects and append to positions
-
-        let appendedPositions = [...this.props.userModel.positions, callOptionTest];
+        let appendedPositions = [...this.props.userModel.positions/*, uniswapv3Test*/];
 
         // get live market data from smart contracts via web3
         await this.loadWeb3Data(appendedPositions);
@@ -139,6 +145,9 @@ class PositionsView extends Component {
             break;
           case "manual":
             service = new Manual(subpos.base.start, subpos.base.extra, subpos.under.start, subpos.under.extra);
+            break;
+          case "uniswapv3":
+            service = new UniswapV3(subpos.base.start, subpos.under.start, pos.entryPrice, subpos.minPrice, subpos.maxPrice, subpos.feeInPercent);
             break;
         }
 
@@ -459,7 +468,7 @@ class PositionsView extends Component {
         Cell: row => (
           <div>
             <div style={{ float: "right" }}>
-              {formatUtils.formatNumber(row.value.size[0], 0) + " " + row.value.size[1]}
+              {"$" + formatUtils.formatNumber(row.value.size[0], 0)}
             </div>
             <br/>
             <div style={{ float: "right" }}>
@@ -511,15 +520,15 @@ class PositionsView extends Component {
         Cell: row => (
           <div>
             <div style={{ float: "right" }}>
-              {formatUtils.formatNumber(row.value.lower[0], 0) + " " + row.value.lower[1] + " (" + formatUtils.formatNumber(row.value.lower[2], 0) + " USD)"}
+              {formatUtils.formatNumber(row.value.lower[0], 0) + " " + row.value.lower[1] + " ($" + formatUtils.formatNumber(row.value.lower[2], 0) + ")"}
             </div>
             <br/>
             <div style={{ float: "right" }}>
-              {formatUtils.formatNumber(row.value.current[0], 0) + " " + row.value.current[1] + " (" + formatUtils.formatNumber(row.value.current[2], 0) + " USD)"}
+              {formatUtils.formatNumber(row.value.current[0], 0) + " " + row.value.current[1] + " ($" + formatUtils.formatNumber(row.value.current[2], 0) + ")"}
             </div>
             <br/>
             <div style={{ float: "right" }}>
-              {formatUtils.formatNumber(row.value.higher[0], 0) + " " + row.value.higher[1] + " (" + formatUtils.formatNumber(row.value.higher[2], 0) + " USD)"}
+              {formatUtils.formatNumber(row.value.higher[0], 0) + " " + row.value.higher[1] + " ($" + formatUtils.formatNumber(row.value.higher[2], 0) + ")"}
             </div>
           </div>
         ),
@@ -541,15 +550,15 @@ class PositionsView extends Component {
         Cell: row => (
           <div>
             <div style={{ float: "right" }}>
-              {formatUtils.formatNumber(row.value.lower[0], 0) + " " + row.value.lower[1] + " (" + formatUtils.formatNumber(row.value.lower[2], 0) + " USD)"}
+              {formatUtils.formatNumber(row.value.lower[0], 0) + " " + row.value.lower[1] + " ($" + formatUtils.formatNumber(row.value.lower[2], 0) + ")"}
             </div>
             <br/>
             <div style={{ float: "right" }}>
-              {formatUtils.formatNumber(row.value.current[0], 0) + " " + row.value.current[1] + " (" + formatUtils.formatNumber(row.value.current[2], 0) + " USD)"}
+              {formatUtils.formatNumber(row.value.current[0], 0) + " " + row.value.current[1] + " ($" + formatUtils.formatNumber(row.value.current[2], 0) + ")"}
             </div>
             <br/>
             <div style={{ float: "right" }}>
-              {formatUtils.formatNumber(row.value.higher[0], 0) + " " + row.value.higher[1] + " (" + formatUtils.formatNumber(row.value.higher[2], 0) + " USD)"}
+              {formatUtils.formatNumber(row.value.higher[0], 0) + " " + row.value.higher[1] + " ($" + formatUtils.formatNumber(row.value.higher[2], 0) + ")"}
             </div>
           </div>
         ),
