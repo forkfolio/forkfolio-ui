@@ -127,7 +127,7 @@ class PositionChartCard extends Component {
 
     return {
       left: Number(pivot / 3),
-      right: Number(pivot * 3),
+      right: Number(pivot * 4),
       step: step
     }
   }
