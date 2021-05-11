@@ -1,6 +1,13 @@
 import React, { Component } from "react";
 // react component for creating dynamic tables
-import { Tooltip, OverlayTrigger } from "react-bootstrap";
+import { 
+  Tooltip, 
+  OverlayTrigger,
+  Grid,
+  Row,
+  Col,
+  FormControl
+ } from "react-bootstrap";
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import Highcharts from 'highcharts';
@@ -13,7 +20,9 @@ class PositionChartCard extends Component {
 
     this.state = {
       chartLoaded: false,
-      chartData: [Math.random() * 5, 2, 1]
+      chartData: [Math.random() * 5, 2, 1],
+      customMin: 100,
+      customMax: 3000
     };
   }
 
@@ -98,7 +107,9 @@ class PositionChartCard extends Component {
       chartData3: profitsUNDER,
       rangeEdgesBASE: rangeEdgesBASE, 
       rangeEdgesUNDER: rangeEdgesUNDER,
-      currentPrice: currentPrice
+      currentPrice: currentPrice,
+      customMin: chartWindow.left,
+      customMax: chartWindow.right
     });
   }
 
@@ -173,6 +184,7 @@ class PositionChartCard extends Component {
   }
 
   getPerformanceChartOptions() {
+    console.log(this.state.customMin)
     const performanceOptions = {
       chart: {
         type: 'line',
@@ -182,6 +194,8 @@ class PositionChartCard extends Component {
         text: 'APR for position: ' + (this.props.selectedPosition != null ? this.props.selectedPosition.name : 'unknown')
       },
       xAxis: {
+        min: this.state.customMin,
+        max: this.state.customMax,
         plotLines: [{
           color: '#3D3D3D',
           width: 2,
@@ -189,7 +203,7 @@ class PositionChartCard extends Component {
           label: {
             text: "Current price"
           }
-      }],
+        }],
         plotBands: [
           {
             from: this.state.rangeEdgesUNDER ? this.state.rangeEdgesUNDER[0].x : 0,
@@ -245,17 +259,6 @@ class PositionChartCard extends Component {
           opposite: true
         }
       ],
-      /*plotOptions: {
-        series: {
-          stacking: 'normal',
-          lineColor: '#666666',
-          lineWidth: 1,
-          marker: {
-              lineWidth: 1,
-              lineColor: '#666666'
-          }
-        }
-      },   */  
       series: [
         { 
           name: "APR [%] (BASE or UNDER)", 
@@ -324,11 +327,58 @@ class PositionChartCard extends Component {
           </OverlayTrigger>
         }
         content={
-          <HighchartsReact
-            highcharts={Highcharts}
-            //constructorType={'stockChart'}
-            options={this.getPerformanceChartOptions()}
-          />
+          <div className="main-content">
+          <Grid fluid>
+            <Row>
+              <Col md={12}>
+                <HighchartsReact
+                  highcharts={Highcharts}
+                  options={this.getPerformanceChartOptions()}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col md={1}>
+                Min X:
+              </Col>
+              <Col md={2}>
+                <FormControl
+                  placeholder={"Min X"}
+                  type="number"
+                  name="customMin"
+                  min={0}
+                  value={this.state.customMin}
+                  onChange={event => {
+                    this.setState({
+                      customMin: Number(event.target.value)
+                    });
+                  }}
+                />
+              </Col>
+              <Col md={3}>
+              </Col>
+              <Col md={1}>
+                Max X:
+              </Col>
+              <Col md={2}>
+                <FormControl
+                  placeholder={"Max X"}
+                  type="number"
+                  name="customMax"
+                  min={0}
+                  value={this.state.customMax}
+                  onChange={event => {
+                    this.setState({
+                      customMax: Number(event.target.value)
+                    });
+                  }}
+                />
+              </Col>
+              <Col md={3}>
+              </Col>
+            </Row>
+          </Grid>
+        </div>
         }
       />
     );
