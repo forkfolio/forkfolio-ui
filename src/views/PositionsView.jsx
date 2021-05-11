@@ -107,7 +107,7 @@ class PositionsView extends Component {
           web3DataLoaded: true
         });
         // NOTE: here I can create JSON objects and append to positions
-        let appendedPositions = [this.props.userModel.positions[0], uniswapv3Test];
+        let appendedPositions = [...this.props.userModel.positions, uniswapv3Test];
 
         // get live market data from smart contracts via web3
         await this.loadWeb3Data(appendedPositions);
@@ -331,7 +331,7 @@ class PositionsView extends Component {
     let maxProfitBASE = -100000000000;
     let maxTotalHodlBASE = -100000000000;
 
-    for(let i = startPrice; i < endPrice; i += 100/*0.01*/) {
+    for(let i = startPrice; i < endPrice; i += 0.01) {
       let totalOutBASE = 0, startBASE = 0, startUNDER = 0;
       // get totals out
       for(let j = 0; j < position.subpositions.length; j++) {

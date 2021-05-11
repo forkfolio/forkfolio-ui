@@ -12,12 +12,21 @@ export default class UniswapV3 {
 		this.maxPrice = maxPrice;
 		this.feeInPercent = feeInPercent;
 
-		// calculate myBASE and myUNDER given openingPrice and range
-		// NOTE: i.e. user can add 1000 DAI, but maybe DAI needs to be sold 
-
+		// total in BASE amd total in UNDER
 		this.openingTotalBASE = myBASE + myUNDER * openingPrice;
-		this.openingTotalUNDER = myBASE / openingPrice + myUNDER;
-		console.log("this.openingTotalUNDER: " + this.openingTotalUNDER)
+
+		this.token1V2 = this.openingTotalBASE / 2;
+		this.token2V2 = this.token1V2 / openingPrice;
+		this.L = Math.sqrt(this.token1V2 * this.token2V2);
+		this.L2 = this.token1V2 * this.token2V2;
+		this.T = this.L * Math.sqrt(minPrice);
+		this.H = this.L / Math.sqrt(maxPrice);
+		this.maxToken2 = this.L2 / this.H - this.T;
+		this.maxToken1 = this.L2 / this.T - this.H;
+		this.LP_a = openingPrice > maxPrice ? 0 : (this.L / Math.sqrt(openingPrice) - this.H) * openingPrice;
+		this.LP_b = openingPrice > maxPrice ? this.maxToken2 : this.L * Math.sqrt(openingPrice) - this.T;
+		this.LP = this.LP_a + this.LP_b;
+		this.multiplier = openingPrice > minPrice ? this.openingTotalBASE / this.LP : this.openingTotalBASE / (openingPrice * this.maxToken1);
 	}
 
 	// gets pool sizes and prices from live market 
@@ -25,38 +34,23 @@ export default class UniswapV3 {
 		console.log("UniswapV3 market data not needed to be loaded, skip. ");
 	}
 
-	// gets user balance in [BASE, UNDER] for given price. 
+	// gets user balance in [BASE, UNDER] for given price 
 	getCurrentValue(newPrice) {
-		// if price is below minPrice, I have UNDER only
-		if(newPrice <= this.minPrice) {
-			//let balanceBASE = this.openingTotalUNDER * this.minPrice;
-
-
-			//let balanceUNDER = this.totalBASE / this.minPrice;
-			return [this.openingTotalUNDER * newPrice, this.openingTotalUNDER];
+		let x, y, value; // x is BASE. y is UNDER
+		if (newPrice < this.minPrice) {
+			x = this.maxToken1 * this.multiplier;
+			y = 0;
+			value = x * newPrice;
+		} else if (newPrice >= this.minPrice && newPrice <= this.maxPrice) {
+			x = (this.L / Math.sqrt(newPrice) - this.H) * this.multiplier;
+			y = (this.L * Math.sqrt(newPrice) - this.T) * this.multiplier;
+			value = x * newPrice + y;
+		} else if (newPrice > this.maxPrice) {
+			x = 0;
+			y = this.maxToken2 * this.multiplier;
+			value = y;
 		}
 
-		// in the range, sell UNDER incrementally 
-		if(newPrice > this.minPrice && newPrice < this.maxPrice) {
-			return this.getCurveBalances(newPrice);
-		}
-
-		return this.getCurveBalances(this.maxPrice);
-	}
-
-	getCurveBalances(newPrice) {
-		// NOTE: only works when range is > entryPrice
-		let parts = 1000;
-		let finalBASE = 0;
-		let finalUNDER = this.openingTotalUNDER;//this.myBASE / this.minPrice + this.myUNDER;
-		let partUNDER = finalUNDER / parts;
-		let step = (this.maxPrice - this.minPrice) / parts;
-		for(let price = this.minPrice + step; price <= newPrice; price += step) {
-			// sell UNDER
-			finalBASE += partUNDER * price;
-			finalUNDER -= partUNDER;
-		}
-			
-		return [finalBASE + finalUNDER * newPrice, finalBASE / newPrice + finalUNDER];
+		return [value, value / newPrice];
 	}
 }		

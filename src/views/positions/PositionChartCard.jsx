@@ -41,7 +41,7 @@ class PositionChartCard extends Component {
     
     let chartWindow = this.getChartWindow(pos);
     let currentPrice = 0;
-    let startPrice = chartWindow.step;
+    let startPrice = chartWindow.step * 25;
     let endPrice = chartWindow.right;	
     let step = chartWindow.step;	
     let aprsBASE = [], profitsBASE = [], profitsUNDER = [];
