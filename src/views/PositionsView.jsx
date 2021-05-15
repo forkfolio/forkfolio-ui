@@ -107,8 +107,8 @@ class PositionsView extends Component {
           web3DataLoaded: true
         });
         // NOTE: here I can create JSON objects and append to positions
-        //let appendedPositions = [...this.props.userModel.positions, uniswapv3Test];
-        let appendedPositions = [this.props.userModel.positions[0], uniswapv3Test];
+        let appendedPositions = [...this.props.userModel.positions, uniswapv3Test];
+        //let appendedPositions = [this.props.userModel.positions[0], uniswapv3Test];
 
         // get live market data from smart contracts via web3
         await this.loadWeb3Data(appendedPositions);
@@ -724,6 +724,7 @@ class PositionsView extends Component {
               <PositionChartCard 
                 selectedPosition={this.state.selectedPosition}
                 userModel={this.props.userModel}
+                resModel={this.props.resModel}
               />
             </Col>
           </Row>

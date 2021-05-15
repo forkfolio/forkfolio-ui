@@ -9,6 +9,8 @@ import {
   FormControl
  } from "react-bootstrap";
 import Card from "components/Card/Card.jsx";
+import SubpositionCard from "./SubpositionCard.jsx";
+import AddSubpositionCard from "./AddSubpositionCard.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -301,6 +303,52 @@ class PositionChartCard extends Component {
     return performanceOptions;
   }
 
+  getSubpositionCards() {
+    return (
+      <div>
+      <Col md={4}>
+        <SubpositionCard
+          id={0}
+          portfolio={this.props.userModel.portfolios.slice(-1)[0]}
+          resModel={this.props.resModel}
+          userModel={this.props.userModel}
+        />
+      </Col>
+      <Col md={4}>
+        <SubpositionCard
+          id={1}
+          portfolio={this.props.userModel.portfolios.slice(-1)[0]}
+          resModel={this.props.resModel}
+          userModel={this.props.userModel}
+        />
+      </Col>
+      <Col md={4}>
+        <SubpositionCard
+          id={2}
+          portfolio={this.props.userModel.portfolios.slice(-1)[0]}
+          resModel={this.props.resModel}
+          userModel={this.props.userModel}
+        />
+      </Col>
+      <Col md={4}>
+        <SubpositionCard
+          id={3}
+          portfolio={this.props.userModel.portfolios.slice(-1)[0]}
+          resModel={this.props.resModel}
+          userModel={this.props.userModel}
+        />
+      </Col>
+      <Col md={4}>
+        <AddSubpositionCard
+          portfolio={this.props.userModel.portfolios.slice(-1)[0]}
+          resModel={this.props.resModel}
+          userModel={this.props.userModel}
+        />
+      </Col>
+      </div>
+    )
+  }
+
   render() {
     const tooltipHelpText2 = <Tooltip id="edit_tooltip">
       Portfolio history panel displays a chart of daily historical snapshots of your portfolio. 
@@ -376,6 +424,7 @@ class PositionChartCard extends Component {
               </Col>
               <Col md={3}>
               </Col>
+              {this.getSubpositionCards()}
             </Row>
           </Grid>
         </div>
