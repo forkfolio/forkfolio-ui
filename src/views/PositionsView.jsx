@@ -108,7 +108,7 @@ class PositionsView extends Component {
         });
         // NOTE: here I can create JSON objects and append to positions
         //let appendedPositions = [...this.props.userModel.positions, uniswapv3Test];
-        let appendedPositions = [uniswapdYdXTest, this.props.userModel.positions[0]];
+        let appendedPositions = [uniswapdYdXTest, dydxShortTest, this.props.userModel.positions[0]];
 
         // get live market data from smart contracts via web3
         await this.loadWeb3Data(appendedPositions);
@@ -139,7 +139,7 @@ class PositionsView extends Component {
             service = new dYdXLong(subpos.under.start, subpos.borrowedBASE, subpos.boughtUNDER, subpos.openingPrice);
             break;
           case "dydx-short":
-            service = new dYdXShort(subpos.collateralBASE, subpos.borrowedUNDER, subpos.boughtBASE, subpos.openingPrice);
+            service = new dYdXShort(subpos.base.start, subpos.borrowedUNDER, subpos.boughtBASE, subpos.openingPrice);
             break;
           case "option":
             service = new GammaOptions(subpos.isCall, subpos.isLong, subpos.quantity, subpos.strike, subpos.daysToExpiry, subpos.iv, subpos.openingPrice, subpos.openingPrice);

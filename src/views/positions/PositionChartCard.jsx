@@ -12,6 +12,7 @@ import Card from "components/Card/Card.jsx";
 import AddSubpositionCard from "./AddSubpositionCard.jsx";
 import UniswapV2Card from "./subpositions/UniswapV2Card.jsx";
 import DYDXLongCard from "./subpositions/DYDXLongCard.jsx";
+import DYDXShortCard from "./subpositions/DYDXShortCard.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -324,9 +325,49 @@ class PositionChartCard extends Component {
     });
   }
 
+  displayCard(subpos, index) {
+    if(subpos.type === 'uniswap') {
+      return (
+        <UniswapV2Card
+          index={index}
+          subposition={subpos}
+          updateSubposition={this.updateSubposition}
+        />
+      );
+    } else if(subpos.type === 'dydx-long') {
+      return (
+        <DYDXLongCard
+          index={index}
+          subposition={subpos}
+          resModel={this.props.resModel}
+          userModel={this.props.userModel}
+          updateSubposition={this.updateSubposition}
+        />
+      );
+    } else if(subpos.type === 'dydx-short') {
+      return (
+        <DYDXShortCard
+          index={index}
+          subposition={subpos}
+          resModel={this.props.resModel}
+          userModel={this.props.userModel}
+          updateSubposition={this.updateSubposition}
+        />
+      );
+    }
+  }
+
   getSubpositionCards() {
     if(this.state.customPosition) {
-      return (
+      return this.state.customPosition.subpositions.map((subpos, index) => {
+      //for(let i = 0; i < this.state.customPosition.subpositions.length; i++) {
+        return (
+          <Col md={4}>
+            {this.displayCard(subpos, index)}
+          </Col>
+        )
+      });
+      /*return (
         <div>
         <Col md={4}>
           <UniswapV2Card
@@ -354,7 +395,7 @@ class PositionChartCard extends Component {
           />
         </Col>
         </div>
-      )
+      )*/
     }
 
     return null;
@@ -436,6 +477,13 @@ class PositionChartCard extends Component {
               <Col md={3}>
               </Col>
               {this.getSubpositionCards()}
+              <Col md={4}>
+                <AddSubpositionCard
+                  portfolio={this.props.userModel.portfolios.slice(-1)[0]}
+                  resModel={this.props.resModel}
+                  userModel={this.props.userModel}
+                />
+              </Col>
             </Row>
           </Grid>
         </div>

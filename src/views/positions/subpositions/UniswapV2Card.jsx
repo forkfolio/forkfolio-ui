@@ -76,7 +76,6 @@ class UniswapV2Card extends Component {
               <FormControl
                 placeholder={"Amount"}
                 type="number"
-                name="startBASE"
                 min={0}
                 value={this.props.subposition.base.start}
                 onChange={(event) => this.onChangeStartBase(event.target.value)}
@@ -91,7 +90,6 @@ class UniswapV2Card extends Component {
               <FormControl
                 placeholder={"Amount"}
                 type="number"
-                name="extraBASE"
                 min={0}
                 value={this.props.subposition.base.extra}
                 onChange={(event) => this.onChangeExtraBase(event.target.value)}
@@ -106,7 +104,6 @@ class UniswapV2Card extends Component {
               <FormControl
                 placeholder={"Amount"}
                 type="number"
-                name="startUNDER"
                 min={0}
                 value={this.props.subposition.under.start}
                 onChange={(event) => this.onChangeStartUnder(event.target.value)}
@@ -121,7 +118,6 @@ class UniswapV2Card extends Component {
               <FormControl
                 placeholder={"Amount"}
                 type="number"
-                name="extraUNDER"
                 min={0}
                 value={this.props.subposition.under.extra}
                 onChange={(event) => this.onChangeExtraUnder(event.target.value)}
@@ -136,7 +132,6 @@ class UniswapV2Card extends Component {
               <FormControl
                 placeholder={"Amount"}
                 type="number"
-                name="startLIQ"
                 min={0}
                 value={this.props.subposition.liq.start}
                 onChange={(event) => this.onChangeStartLiq(event.target.value)}
@@ -151,7 +146,6 @@ class UniswapV2Card extends Component {
               <FormControl
                 placeholder={"Amount"}
                 type="number"
-                name="extraLIQ"
                 min={0}
                 value={this.props.subposition.liq.extra}
                 onChange={(event) => this.onChangeExtraLiq(event.target.value)}
@@ -166,7 +160,6 @@ class UniswapV2Card extends Component {
               <FormControl
                 placeholder={"%"}
                 type="number"
-                name="apr"
                 min={0}
                 value={20}
                 onChange={event => {

@@ -64,7 +64,6 @@ export const dydxShortTest = {
         start: 0,
         extra: 0
       },
-      collateralBASE: 1800,
       borrowedUNDER: 1,
       boughtBASE: 1800,
       openingPrice: 1800

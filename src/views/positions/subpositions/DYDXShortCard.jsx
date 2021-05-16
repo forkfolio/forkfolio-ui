@@ -4,29 +4,29 @@ import { Col, Row, Tooltip, OverlayTrigger, FormControl } from "react-bootstrap"
 import Button from "components/CustomButton/CustomButton.jsx";
 import { clone } from '../../../web3/common.js';
 
-class DYDXLongCard extends Component {
+class DYDXShortCard extends Component {
   constructor(props) {
     super(props);
   }
 
-  onChangeStartUnder(newValue) {
+  onChangeStartBase(newValue) {
     let subpos = clone(this.props.subposition);
-    subpos.under.start = Number(newValue);
-    subpos.service.collateralUNDER = Number(newValue);
+    subpos.base.start = Number(newValue);
+    subpos.service.collateralBASE = Number(newValue);
     this.props.updateSubposition(this.props.index, subpos);
   }
 
-  onChangeBorrowedBase(newValue) {
+  onChangeBorrowedUnder(newValue) {
     let subpos = clone(this.props.subposition);
-    subpos.borrowedBASE = Number(newValue);
-    subpos.service.borrowedBASE = Number(newValue);
+    subpos.borrowedUNDER = Number(newValue);
+    subpos.service.borrowedUNDER = Number(newValue);
     this.props.updateSubposition(this.props.index, subpos);
   }
 
-  onChangeBoughtUnder(newValue) {
+  onChangeBoughtBase(newValue) {
     let subpos = clone(this.props.subposition);
-    subpos.boughtUNDER = Number(newValue);
-    subpos.service.boughtUNDER = Number(newValue);
+    subpos.boughtBASE = Number(newValue);
+    subpos.service.boughtBASE = Number(newValue);
     this.props.updateSubposition(this.props.index, subpos);
   }
 
@@ -36,7 +36,7 @@ class DYDXLongCard extends Component {
     </Tooltip>; 
     return (
       <Card
-        title={'dYdX Long'}
+        title={'dYdX Short'}
         rightSection={
           <OverlayTrigger placement="bottom" overlay={tooltipHelpText}>
             <Button
@@ -53,43 +53,43 @@ class DYDXLongCard extends Component {
           <div>
           <Row>
             <Col md={6}>
-              Start UNDER:
+              Start BASE:
             </Col>
             <Col md={6}>
               <FormControl
                 placeholder={"Amount"}
                 type="number"
                 min={0}
-                value={this.props.subposition.under.start}
-                onChange={(event) => this.onChangeStartUnder(event.target.value)}
+                value={this.props.subposition.base.start}
+                onChange={(event) => this.onChangeStartBase(event.target.value)}
               />
             </Col>
           </Row>
           <Row>
             <Col md={6}>
-              Borrowed BASE:
+              Borrowed UNDER:
             </Col>
             <Col md={6}>
               <FormControl
                 placeholder={"Amount"}
                 type="number"
                 min={0}
-                value={this.props.subposition.borrowedBASE}
-                onChange={(event) => this.onChangeBorrowedBase(event.target.value)}
+                value={this.props.subposition.borrowedUNDER}
+                onChange={(event) => this.onChangeBorrowedUnder(event.target.value)}
               />
             </Col>
           </Row>
           <Row>
             <Col md={6}>
-              Bought UNDER:
+              Bought BASE:
             </Col>
             <Col md={6}>
               <FormControl
                 placeholder={"Amount"}
                 type="number"
                 min={0}
-                value={this.props.subposition.boughtUNDER}
-                onChange={(event) => this.onChangeBoughtUnder(event.target.value)}
+                value={this.props.subposition.boughtBASE}
+                onChange={(event) => this.onChangeBoughtBase(event.target.value)}
               />
             </Col>
           </Row>
@@ -100,4 +100,4 @@ class DYDXLongCard extends Component {
   }
 }
 
-export default DYDXLongCard;
+export default DYDXShortCard;
