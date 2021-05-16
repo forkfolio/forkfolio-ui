@@ -31,6 +31,7 @@ class PositionChartCard extends Component {
     };
 
     this.updateSubposition = this.updateSubposition.bind(this);
+    this.removeSubposition = this.removeSubposition.bind(this);
   }
 
   async componentDidUpdate(prevProps, prevState) {
@@ -326,6 +327,16 @@ class PositionChartCard extends Component {
     });
   }
 
+  removeSubposition(index) {
+    console.log("removeSubposition called")
+    console.log(this.state)
+    let updatedPosition = clone(this.state.customPosition);
+    updatedPosition.subpositions.splice(index, 1);
+    this.setState({
+      customPosition: updatedPosition
+    });
+  }
+
   displayCard(subpos, index) {
     if(subpos.type === 'uniswap') {
       return (
@@ -333,6 +344,7 @@ class PositionChartCard extends Component {
           index={index}
           subposition={subpos}
           updateSubposition={this.updateSubposition}
+          removeSubposition={this.removeSubposition}
         />
       );
     } else if(subpos.type === 'dydx-long') {
@@ -341,6 +353,7 @@ class PositionChartCard extends Component {
           index={index}
           subposition={subpos}
           updateSubposition={this.updateSubposition}
+          removeSubposition={this.removeSubposition}
         />
       );
     } else if(subpos.type === 'dydx-short') {
@@ -349,6 +362,7 @@ class PositionChartCard extends Component {
           index={index}
           subposition={subpos}
           updateSubposition={this.updateSubposition}
+          removeSubposition={this.removeSubposition}
         />
       );
     } else if(subpos.type === 'option') {
@@ -357,6 +371,7 @@ class PositionChartCard extends Component {
           index={index}
           subposition={subpos}
           updateSubposition={this.updateSubposition}
+          removeSubposition={this.removeSubposition}
         />
       );
     }

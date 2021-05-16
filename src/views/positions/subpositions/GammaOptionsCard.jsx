@@ -63,7 +63,7 @@ class GammaOptionsCard extends Component {
               bsStyle="default"
               special
               simple
-              onClick={() => this.props.closeSubposition(this.props.index)}
+              onClick={() => this.props.removeSubposition(this.props.index)}
             >
               <i className={"fa fa-times"} />
             </Button> 
