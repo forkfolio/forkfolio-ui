@@ -1,13 +1,12 @@
 import { OptionMath } from './common.js'
 export default class GammaOptions {		
-	constructor(isCall, isLong, quantity, strike, daysToExpiry, iv, openingPrice) {
+	constructor(isCall, isLong, quantity, strike, daysToExpiry, iv) {
 		this.isCall = isCall;
 		this.isLong = isLong;
 		this.quantity = quantity;
 		this.strike = strike;
 		this.daysToExpiry = daysToExpiry;
 		this.iv = iv;
-		this.openingPrice = openingPrice;
 		this.optionMath = new OptionMath(); 
 	}
 
@@ -22,10 +21,5 @@ export default class GammaOptions {
 		let currentValueBASE = this.quantity * this.optionMath.blackScholes(this.isCall ? 'call' : 'put', currentPrice, this.strike, this.daysToExpiry / 365, 0.02, this.iv / 100);
 		//console.log("optionBASE: " + optionBASE);
 		return [currentValueBASE, currentValueBASE / currentPrice];
-	}
-
-	// gets opening value in [BASE, UNDER]
-	getOpeningValue() {
-		return [this.ethCollateral * this.openingPrice, this.ethCollateral];
 	}
 }		

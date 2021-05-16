@@ -18,10 +18,4 @@ export default class Manual {
 		let positionBASE = this.startBASE + this.startUNDER * currentPrice;
 		return [positionBASE, positionBASE / currentPrice];
 	}
-
-	// gets opening value in [BASE, UNDER]
-	getOpeningValue() {
-		// todo: check if this method is ever called, remove it
-		return [this.collateralUNDER * this.openingPrice, this.collateralUNDER];
-	}
 }		

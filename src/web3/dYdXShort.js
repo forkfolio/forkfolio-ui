@@ -18,9 +18,4 @@ export default class dYdXShort {
 		let positionBASE = this.collateralBASE + this.boughtBASE - this.borrowedUNDER * currentPrice;
 		return [Math.max(0, positionBASE), Math.max(0, positionBASE) / currentPrice];
 	}
-
-	// gets opening value in [BASE, UNDER]
-	getOpeningValue() {
-		return [this.collateralBASE, this.collateralBASE / this.openingPrice];
-	}
 }		

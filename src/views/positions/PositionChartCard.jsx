@@ -13,6 +13,7 @@ import AddSubpositionCard from "./AddSubpositionCard.jsx";
 import UniswapV2Card from "./subpositions/UniswapV2Card.jsx";
 import DYDXLongCard from "./subpositions/DYDXLongCard.jsx";
 import DYDXShortCard from "./subpositions/DYDXShortCard.jsx";
+import GammaOptionsCard from "./subpositions/GammaOptionsCard.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -339,8 +340,6 @@ class PositionChartCard extends Component {
         <DYDXLongCard
           index={index}
           subposition={subpos}
-          resModel={this.props.resModel}
-          userModel={this.props.userModel}
           updateSubposition={this.updateSubposition}
         />
       );
@@ -349,8 +348,14 @@ class PositionChartCard extends Component {
         <DYDXShortCard
           index={index}
           subposition={subpos}
-          resModel={this.props.resModel}
-          userModel={this.props.userModel}
+          updateSubposition={this.updateSubposition}
+        />
+      );
+    } else if(subpos.type === 'option') {
+      return (
+        <GammaOptionsCard
+          index={index}
+          subposition={subpos}
           updateSubposition={this.updateSubposition}
         />
       );
@@ -360,42 +365,12 @@ class PositionChartCard extends Component {
   getSubpositionCards() {
     if(this.state.customPosition) {
       return this.state.customPosition.subpositions.map((subpos, index) => {
-      //for(let i = 0; i < this.state.customPosition.subpositions.length; i++) {
         return (
           <Col md={4}>
             {this.displayCard(subpos, index)}
           </Col>
         )
       });
-      /*return (
-        <div>
-        <Col md={4}>
-          <UniswapV2Card
-            index={0}
-            subposition={this.state.customPosition.subpositions[0]}
-            resModel={this.props.resModel}
-            userModel={this.props.userModel}
-            updateSubposition={this.updateSubposition}
-          />
-        </Col>
-        <Col md={4}>
-          <DYDXLongCard
-            index={1}
-            subposition={this.state.customPosition.subpositions[1]}
-            resModel={this.props.resModel}
-            userModel={this.props.userModel}
-            updateSubposition={this.updateSubposition}
-          />
-        </Col>
-        <Col md={4}>
-          <AddSubpositionCard
-            portfolio={this.props.userModel.portfolios.slice(-1)[0]}
-            resModel={this.props.resModel}
-            userModel={this.props.userModel}
-          />
-        </Col>
-        </div>
-      )*/
     }
 
     return null;

@@ -71,11 +71,6 @@ export default class Uniswap {
 		return [myBASE, myUNDER];
 	}
 
-	// gets opening value in [BASE, UNDER] todo
-	getOpeningValue() {
-		//return [this.ethCollateral * this.openingPrice, this.ethCollateral];
-	}
-
 	addLiquidity(exactUNDER, exactBASE) {
 		let exactLIQ = exactUNDER * (this.poolLIQ / this.poolUNDER);
 		//console.log("Pool before: " + market.poolUNDER + " ETH + " + market.poolBASE + " Token");

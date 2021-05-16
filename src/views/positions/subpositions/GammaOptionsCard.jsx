@@ -4,7 +4,7 @@ import { Col, Row, Tooltip, OverlayTrigger, FormControl } from "react-bootstrap"
 import Button from "components/CustomButton/CustomButton.jsx";
 import { clone } from '../../../web3/common.js';
 
-class DYDXShortCard extends Component {
+class GammaOptionsCard extends Component {
   constructor(props) {
     super(props);
   }
@@ -12,21 +12,41 @@ class DYDXShortCard extends Component {
   onChangeStartBase(newValue) {
     let subpos = clone(this.props.subposition);
     subpos.base.start = Number(newValue);
-    subpos.service.collateralBASE = Number(newValue);
     this.props.updateSubposition(this.props.index, subpos);
   }
 
-  onChangeBorrowedUnder(newValue) {
+  onChangeIsCall(newValue) {
     let subpos = clone(this.props.subposition);
-    subpos.borrowedUNDER = Number(newValue);
-    subpos.service.borrowedUNDER = Number(newValue);
+    subpos.isCall = newValue === 'C';
+    subpos.service.isCall = newValue === 'C';
     this.props.updateSubposition(this.props.index, subpos);
   }
 
-  onChangeBoughtBase(newValue) {
+  onChangeQuantity(newValue) {
     let subpos = clone(this.props.subposition);
-    subpos.boughtBASE = Number(newValue);
-    subpos.service.boughtBASE = Number(newValue);
+    subpos.quantity = Number(newValue);
+    subpos.service.quantity = Number(newValue);
+    this.props.updateSubposition(this.props.index, subpos);
+  }
+
+  onChangeStrike(newValue) {
+    let subpos = clone(this.props.subposition);
+    subpos.strike = Number(newValue);
+    subpos.service.strike = Number(newValue);
+    this.props.updateSubposition(this.props.index, subpos);
+  }
+
+  onChangeDaysToExpiry(newValue) {
+    let subpos = clone(this.props.subposition);
+    subpos.daysToExpiry = Number(newValue);
+    subpos.service.daysToExpiry = Number(newValue);
+    this.props.updateSubposition(this.props.index, subpos);
+  }
+
+  onChangeIV(newValue) {
+    let subpos = clone(this.props.subposition);
+    subpos.iv = Number(newValue);
+    subpos.service.iv = Number(newValue);
     this.props.updateSubposition(this.props.index, subpos);
   }
 
@@ -36,7 +56,7 @@ class DYDXShortCard extends Component {
     </Tooltip>; 
     return (
       <Card
-        title={'dYdX Short'}
+        title={'Gamma Options'}
         rightSection={
           <OverlayTrigger placement="bottom" overlay={tooltipHelpText}>
             <Button
@@ -67,29 +87,70 @@ class DYDXShortCard extends Component {
           </Row>
           <Row>
             <Col md={6}>
-              Borrowed UNDER:
+              Call or Put:
             </Col>
             <Col md={6}>
               <FormControl
                 placeholder={"Amount"}
-                type="number"
-                min={0}
-                value={this.props.subposition.borrowedUNDER}
-                onChange={(event) => this.onChangeBorrowedUnder(event.target.value)}
+                type="text"
+                value={this.props.subposition.isCall ? 'C' : 'P'}
+                onChange={(event) => this.onChangeIsCall(event.target.value)}
               />
             </Col>
           </Row>
           <Row>
             <Col md={6}>
-              Bought BASE:
+              Quantity:
             </Col>
             <Col md={6}>
               <FormControl
                 placeholder={"Amount"}
                 type="number"
                 min={0}
-                value={this.props.subposition.boughtBASE}
-                onChange={(event) => this.onChangeBoughtBase(event.target.value)}
+                value={this.props.subposition.quantity}
+                onChange={(event) => this.onChangeQuantity(event.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              Strike:
+            </Col>
+            <Col md={6}>
+              <FormControl
+                placeholder={"Amount"}
+                type="number"
+                min={0}
+                value={this.props.subposition.strike}
+                onChange={(event) => this.onChangeStrike(event.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              Days to expiry:
+            </Col>
+            <Col md={6}>
+              <FormControl
+                placeholder={"Amount"}
+                type="number"
+                min={0}
+                value={this.props.subposition.daysToExpiry}
+                onChange={(event) => this.onChangeDaysToExpiry(event.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              IV [%]:
+            </Col>
+            <Col md={6}>
+              <FormControl
+                placeholder={"Amount"}
+                type="number"
+                min={0}
+                value={this.props.subposition.iv}
+                onChange={(event) => this.onChangeIV(event.target.value)}
               />
             </Col>
           </Row>
@@ -100,4 +161,4 @@ class DYDXShortCard extends Component {
   }
 }
 
-export default DYDXShortCard;
+export default GammaOptionsCard;

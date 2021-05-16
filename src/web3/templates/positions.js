@@ -93,8 +93,7 @@ export const callOptionTest = {
       quantity: 1, 
       strike: 3200,
       daysToExpiry: 26,
-      iv: 86,
-      openingPrice: 2800,
+      iv: 86
     },
   ]
 }
@@ -121,8 +120,7 @@ export const putOptionTest = {
       quantity: 1, 
       strike: 2000,
       daysToExpiry: 30,
-      iv: 90,
-      openingPrice: 2800,
+      iv: 90
     },
   ]
 }
