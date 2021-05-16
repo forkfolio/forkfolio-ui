@@ -33,6 +33,20 @@ class UniswapV2Card extends Component {
     this.props.updateSubposition(this.props.index, subpos);
   }
 
+  onChangeStartLiq(newValue) {
+    let subpos = clone(this.props.subposition);
+    subpos.liq.start = Number(newValue);
+    subpos.service.myLIQ = Number(newValue) + subpos.liq.extra;
+    this.props.updateSubposition(this.props.index, subpos);
+  }
+
+  onChangeExtraLiq(newValue) {
+    let subpos = clone(this.props.subposition);
+    subpos.liq.extra = Number(newValue);
+    subpos.service.myLIQ = subpos.liq.start + Number(newValue);
+    this.props.updateSubposition(this.props.index, subpos);
+  }
+
   render() {
     const tooltipHelpText = <Tooltip id="edit_tooltip">
       Close this subposition
@@ -111,6 +125,36 @@ class UniswapV2Card extends Component {
                 min={0}
                 value={this.props.subposition.under.extra}
                 onChange={(event) => this.onChangeExtraUnder(event.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              Start LIQ:
+            </Col>
+            <Col md={6}>
+              <FormControl
+                placeholder={"Amount"}
+                type="number"
+                name="startLIQ"
+                min={0}
+                value={this.props.subposition.liq.start}
+                onChange={(event) => this.onChangeStartLiq(event.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              Extra LIQ:
+            </Col>
+            <Col md={6}>
+              <FormControl
+                placeholder={"Amount"}
+                type="number"
+                name="extraLIQ"
+                min={0}
+                value={this.props.subposition.liq.extra}
+                onChange={(event) => this.onChangeExtraLiq(event.target.value)}
               />
             </Col>
           </Row>
