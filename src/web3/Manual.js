@@ -21,6 +21,7 @@ export default class Manual {
 
 	// gets opening value in [BASE, UNDER]
 	getOpeningValue() {
+		// todo: check if this method is ever called, remove it
 		return [this.collateralUNDER * this.openingPrice, this.collateralUNDER];
 	}
 }		

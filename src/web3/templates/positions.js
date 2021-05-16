@@ -40,7 +40,6 @@ export const uniswapdYdXTest = {
         start: 1,
         extra: 0
       },
-      collateralUNDER: 1, 
       borrowedBASE: 1800, 
       boughtUNDER: 1, 
       openingPrice: 1800

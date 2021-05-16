@@ -9,9 +9,9 @@ import {
   FormControl
  } from "react-bootstrap";
 import Card from "components/Card/Card.jsx";
-import SubpositionCard from "./SubpositionCard.jsx";
 import AddSubpositionCard from "./AddSubpositionCard.jsx";
 import UniswapV2Card from "./subpositions/UniswapV2Card.jsx";
+import DYDXLongCard from "./subpositions/DYDXLongCard.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -338,27 +338,12 @@ class PositionChartCard extends Component {
           />
         </Col>
         <Col md={4}>
-          <SubpositionCard
-            id={1}
-            portfolio={this.props.userModel.portfolios.slice(-1)[0]}
+          <DYDXLongCard
+            index={1}
+            subposition={this.state.customPosition.subpositions[1]}
             resModel={this.props.resModel}
             userModel={this.props.userModel}
-          />
-        </Col>
-        <Col md={4}>
-          <SubpositionCard
-            id={2}
-            portfolio={this.props.userModel.portfolios.slice(-1)[0]}
-            resModel={this.props.resModel}
-            userModel={this.props.userModel}
-          />
-        </Col>
-        <Col md={4}>
-          <SubpositionCard
-            id={3}
-            portfolio={this.props.userModel.portfolios.slice(-1)[0]}
-            resModel={this.props.resModel}
-            userModel={this.props.userModel}
+            updateSubposition={this.updateSubposition}
           />
         </Col>
         <Col md={4}>

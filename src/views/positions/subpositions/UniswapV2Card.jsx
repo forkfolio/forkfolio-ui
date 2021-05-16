@@ -57,14 +57,14 @@ class UniswapV2Card extends Component {
         rightSection={
           <OverlayTrigger placement="bottom" overlay={tooltipHelpText}>
             <Button
-            bsStyle="default"
-            special
-            simple
-            onClick={() => this.props.closeSubposition(this.props.index)}
-          >
-            <i className={"fa fa-times"} />
-          </Button> 
-        </OverlayTrigger>
+              bsStyle="default"
+              special
+              simple
+              onClick={() => this.props.closeSubposition(this.props.index)}
+            >
+              <i className={"fa fa-times"} />
+            </Button> 
+          </OverlayTrigger>
         }
         content={
           <div>
