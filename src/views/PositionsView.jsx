@@ -107,8 +107,8 @@ class PositionsView extends Component {
           web3DataLoaded: true
         });
         // NOTE: here I can create JSON objects and append to positions
-        let appendedPositions = [...this.props.userModel.positions, uniswapv3Test];
-        //let appendedPositions = [this.props.userModel.positions[0], uniswapv3Test];
+        //let appendedPositions = [...this.props.userModel.positions, uniswapv3Test];
+        let appendedPositions = [this.props.userModel.positions[0], uniswapv3Test];
 
         // get live market data from smart contracts via web3
         await this.loadWeb3Data(appendedPositions);
@@ -162,7 +162,6 @@ class PositionsView extends Component {
   }
 
   async prepareTableData(positions) {
-    console.log(this.props)
     let uniswapTableSet = [];
     for(let i = 0; i < positions.length; i++) {
       let pos = positions[i];
@@ -207,8 +206,6 @@ class PositionsView extends Component {
         let extraBASE = subpos.base.extra + subpos.under.extra * currentPrice;
         totalOutBASE += subpos.service.getCurrentValue(currentPrice)[0] + extraBASE; 
       }
-
-      console.log(totalOutBASE)
 
       // today
       let profitTodayToken = totalOutBASE - totalInBASE;				
@@ -680,7 +677,6 @@ class PositionsView extends Component {
                   <span>
                     <Button
                       // was like this for without color
-                      //special
                       //simple
                       bsStyle="info"
                       fill

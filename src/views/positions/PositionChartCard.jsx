@@ -11,10 +11,11 @@ import {
 import Card from "components/Card/Card.jsx";
 import SubpositionCard from "./SubpositionCard.jsx";
 import AddSubpositionCard from "./AddSubpositionCard.jsx";
+import UniswapV2Card from "./subpositions/UniswapV2Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { debalanceETH, debalanceDAI } from '../../web3/common.js';
+import { debalanceETH, debalanceDAI, clone } from '../../web3/common.js';
 
 class PositionChartCard extends Component {
   constructor(props) {
@@ -26,14 +27,26 @@ class PositionChartCard extends Component {
       customMin: 100,
       customMax: 3000
     };
+
+    this.updateSubposition = this.updateSubposition.bind(this);
   }
 
-  async componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps, prevState) {
+    
     if (this.userModelLoaded() && this.props.selectedPosition) {
-      // call only once
-      if(!this.state.chartLoaded || prevProps.selectedPosition !== this.props.selectedPosition) {
-        this.refreshChart();
-      } 
+      // set customPosition if there is a change in props
+      if(prevProps.selectedPosition !== this.props.selectedPosition) {
+        console.log("setting customPosition")
+        this.setState({
+          customPosition: clone(this.props.selectedPosition)
+        });
+      } else {
+        // refresh chart if customPosition is updated
+        if(prevState.customPosition !== this.state.customPosition) {
+          console.log("refreshing chart")
+          this.refreshChart();
+        }
+      }
     }
   }
 
@@ -44,7 +57,7 @@ class PositionChartCard extends Component {
 
   refreshChart() {
     console.log("Refreshing chart data. Position: ");
-    let pos = this.props.selectedPosition;   
+    let pos = this.state.customPosition;   
     console.log(pos)
     
     // time 
@@ -98,7 +111,6 @@ class PositionChartCard extends Component {
     }
 
     let rangeEdgesBASE = this.getRangePoints(profitsBASE);
-    console.log(profitsUNDER)
     let rangeEdgesUNDER = this.getRangePoints(profitsUNDER);
 
 
@@ -186,14 +198,13 @@ class PositionChartCard extends Component {
   }
 
   getPerformanceChartOptions() {
-    console.log(this.state.customMin)
     const performanceOptions = {
       chart: {
         type: 'line',
         height: '600'
       },
       title: {
-        text: 'APR for position: ' + (this.props.selectedPosition != null ? this.props.selectedPosition.name : 'unknown')
+        text: 'APR for position: ' + (this.state.customPosition != null ? this.state.customPosition.name : 'unknown')
       },
       xAxis: {
         min: this.state.customMin,
@@ -303,50 +314,65 @@ class PositionChartCard extends Component {
     return performanceOptions;
   }
 
+  updateSubposition(index, subpos) {
+    console.log("updateSubposition called")
+    console.log(this.state)
+    let updatedPosition = clone(this.state.customPosition);
+    updatedPosition.subpositions[index] = subpos;
+    this.setState({
+      customPosition: updatedPosition
+    });
+  }
+
   getSubpositionCards() {
-    return (
-      <div>
-      <Col md={4}>
-        <SubpositionCard
-          id={0}
-          portfolio={this.props.userModel.portfolios.slice(-1)[0]}
-          resModel={this.props.resModel}
-          userModel={this.props.userModel}
-        />
-      </Col>
-      <Col md={4}>
-        <SubpositionCard
-          id={1}
-          portfolio={this.props.userModel.portfolios.slice(-1)[0]}
-          resModel={this.props.resModel}
-          userModel={this.props.userModel}
-        />
-      </Col>
-      <Col md={4}>
-        <SubpositionCard
-          id={2}
-          portfolio={this.props.userModel.portfolios.slice(-1)[0]}
-          resModel={this.props.resModel}
-          userModel={this.props.userModel}
-        />
-      </Col>
-      <Col md={4}>
-        <SubpositionCard
-          id={3}
-          portfolio={this.props.userModel.portfolios.slice(-1)[0]}
-          resModel={this.props.resModel}
-          userModel={this.props.userModel}
-        />
-      </Col>
-      <Col md={4}>
-        <AddSubpositionCard
-          portfolio={this.props.userModel.portfolios.slice(-1)[0]}
-          resModel={this.props.resModel}
-          userModel={this.props.userModel}
-        />
-      </Col>
-      </div>
-    )
+    if(this.state.customPosition) {
+      return (
+        <div>
+        <Col md={4}>
+          <UniswapV2Card
+            index={0}
+            subposition={this.state.customPosition.subpositions[0]}
+            resModel={this.props.resModel}
+            userModel={this.props.userModel}
+            updateSubposition={this.updateSubposition}
+          />
+        </Col>
+        <Col md={4}>
+          <SubpositionCard
+            id={1}
+            portfolio={this.props.userModel.portfolios.slice(-1)[0]}
+            resModel={this.props.resModel}
+            userModel={this.props.userModel}
+          />
+        </Col>
+        <Col md={4}>
+          <SubpositionCard
+            id={2}
+            portfolio={this.props.userModel.portfolios.slice(-1)[0]}
+            resModel={this.props.resModel}
+            userModel={this.props.userModel}
+          />
+        </Col>
+        <Col md={4}>
+          <SubpositionCard
+            id={3}
+            portfolio={this.props.userModel.portfolios.slice(-1)[0]}
+            resModel={this.props.resModel}
+            userModel={this.props.userModel}
+          />
+        </Col>
+        <Col md={4}>
+          <AddSubpositionCard
+            portfolio={this.props.userModel.portfolios.slice(-1)[0]}
+            resModel={this.props.resModel}
+            userModel={this.props.userModel}
+          />
+        </Col>
+        </div>
+      )
+    }
+
+    return null;
   }
 
   render() {
