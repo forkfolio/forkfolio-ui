@@ -25,7 +25,10 @@ export const uniswapdYdXTest = {
         start: 1,
         extra: 0
       },
-      startLIQ: 30.67
+      liq: {
+        start: 30.67,
+        extra: 0
+      }
     },
     {
       type: "dydx-long",

@@ -133,7 +133,7 @@ class PositionsView extends Component {
         let service;
         switch (subpos.type) {
           case "uniswap":
-            service = new Uniswap(subpos.marketAddress, pos.base.address, pos.under.address, subpos.startLIQ);
+            service = new Uniswap(subpos.marketAddress, pos.base.address, pos.under.address, subpos.liq.start);
             break;
           case "dydx-long":
             service = new dYdXLong(subpos.collateralUNDER, subpos.borrowedBASE, subpos.boughtUNDER, subpos.openingPrice);
