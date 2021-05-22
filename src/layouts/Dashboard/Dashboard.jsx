@@ -148,7 +148,7 @@ class Dashboard extends Component {
   // fetches a list of all curencies, crypto and fiat, and stores them in resModel
   fetchCurrencies() {
     return new Promise((accept, reject) => {
-      let url = config.restURL + (config.isLocalhost ? 'currencies.json' :  + 'currencies');
+      let url = config.restURL + (config.isLocalhost ? 'currencies.json' : 'currencies');
       fetch(url).then((response) => {
         return response.text()
       }).then((body) => {
