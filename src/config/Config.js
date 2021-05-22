@@ -10,6 +10,7 @@ function getRestURL() {
 }
 
 function isLocalhost() {
+    console.log("Is localhost: " + (window.location.host === 'localhost:3000'))
     return window.location.host === 'localhost:3000';
 }
 

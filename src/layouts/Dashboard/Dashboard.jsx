@@ -149,6 +149,7 @@ class Dashboard extends Component {
   fetchCurrencies() {
     return new Promise((accept, reject) => {
       let url = config.restURL + (config.isLocalhost ? 'currencies.json' : 'currencies');
+      console.log("Fetching: " + url)
       fetch(url).then((response) => {
         return response.text()
       }).then((body) => {
