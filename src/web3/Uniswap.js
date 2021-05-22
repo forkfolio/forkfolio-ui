@@ -1,7 +1,7 @@
 import { CoinGeckoPrices } from './CoinGeckoPrices.js';
 import uniswapABI from "../abis/uniswapABI.json";
 import daiABI from "../abis/daiABI.json";
-import { usdcAddress, getContractInstance } from './common.js'
+import { usdcAddress, wbtcAddress, getContractInstance } from './common.js'
 		
 export default class Uniswap {		
 	constructor(marketAddress, addressBASE, addressUNDER, myLIQ) {
@@ -39,7 +39,7 @@ export default class Uniswap {
 		}
 
 		// save to position
-		this.poolUNDER = poolUNDER / (this.addressUNDER !== usdcAddress ? 10 ** 18 : 10 ** 6);  
+		this.poolUNDER = poolUNDER / 10 ** this.getDecimals(this.addressUNDER); 
 		this.poolLIQ = poolLIQ / 10 ** 18; 
 		this.poolBASE = poolBASE / (this.addressBASE !== usdcAddress ? 10 ** 18 : 10 ** 6);
 		this.k = this.poolUNDER * this.poolBASE;
@@ -52,6 +52,16 @@ export default class Uniswap {
 		this.priceUNDERUSD = await CoinGeckoPrices.getTokenPriceInUSD(this.addressUNDER);
 
 		console.log("AMM market data loaded. " + position.base.symbol + ": " + this.priceBASEUSD + " USD, " + position.under.symbol + ": " + this.priceUNDERUSD + " USD");
+	}
+
+	getDecimals() {
+		if(this.addressUNDER === usdcAddress) {
+			return 6;
+		} else if (this.addressUNDER === wbtcAddress) {
+			return 8;
+		}
+
+		return 18;
 	}
 
 	// gets user balance in [BASE, UNDER] for given price. 

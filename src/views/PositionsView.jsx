@@ -35,6 +35,7 @@ class PositionsView extends Component {
     this.hideChartDialog = this.hideChartDialog.bind(this);
     this.loadWeb3 = this.loadWeb3.bind(this);
     this.loadWeb3Account = this.loadWeb3Account.bind(this);
+    this.addService = this.addService.bind(this);
 
     // load web3
     let web3;
@@ -107,8 +108,9 @@ class PositionsView extends Component {
           web3DataLoaded: true
         });
         // NOTE: here I can create JSON objects and append to positions
-        //let appendedPositions = [...this.props.userModel.positions, uniswapv3Test];
-        let appendedPositions = [callOptionTest, uniswapdYdXTest, dydxShortTest, this.props.userModel.positions[0]];
+        let appendedPositions = [...this.props.userModel.positions, uniswapv3Test];
+        //let appendedPositions = [this.props.userModel.positions[6], uniswapv3Test];
+        //let appendedPositions = [callOptionTest, uniswapdYdXTest, dydxShortTest, this.props.userModel.positions[0]];
 
         // get live market data from smart contracts via web3
         await this.loadWeb3Data(appendedPositions);
@@ -130,35 +132,39 @@ class PositionsView extends Component {
       let pos = positions[i];
       for(let j = 0; j < pos.subpositions.length; j++) {
         let subpos = pos.subpositions[j];
-        let service;
-        switch (subpos.type) {
-          case "uniswap":
-            service = new Uniswap(subpos.marketAddress, pos.base.address, pos.under.address, subpos.liq.start);
-            break;
-          case "dydx-long":
-            service = new dYdXLong(subpos.under.start, subpos.borrowedBASE, subpos.boughtUNDER, subpos.openingPrice);
-            break;
-          case "dydx-short":
-            service = new dYdXShort(subpos.base.start, subpos.borrowedUNDER, subpos.boughtBASE, subpos.openingPrice);
-            break;
-          case "option":
-            service = new GammaOptions(subpos.isCall, subpos.isLong, subpos.quantity, subpos.strike, subpos.daysToExpiry, subpos.iv);
-            break;
-          case "manual":
-            service = new Manual(subpos.base.start, subpos.base.extra, subpos.under.start, subpos.under.extra);
-            break;
-          case "uniswapv3":
-            service = new UniswapV3(subpos.base.start, subpos.under.start, pos.entryPrice, subpos.minPrice, subpos.maxPrice, subpos.feeInPercent);
-            break;
-        }
+        await this.addService(pos, subpos);
 
-        console.log("Service: ")
-        console.log(service)
-        await service.getMarketData(this.state.web3, pos);
-        // todo: dirty adding to position
-        subpos.service = service;
       }
     }
+  }
+
+  async addService(pos, subpos) {
+    let service;
+    switch (subpos.type) {
+      case "uniswap":
+        service = new Uniswap(subpos.marketAddress, pos.base.address, pos.under.address, subpos.liq.start);
+        break;
+      case "dydx-long":
+        service = new dYdXLong(subpos.under.start, subpos.borrowedBASE, subpos.boughtUNDER, subpos.openingPrice);
+        break;
+      case "dydx-short":
+        service = new dYdXShort(subpos.base.start, subpos.borrowedUNDER, subpos.boughtBASE, subpos.openingPrice);
+        break;
+      case "option":
+        service = new GammaOptions(subpos.isCall, subpos.isLong, subpos.quantity, subpos.strike, subpos.daysToExpiry, subpos.iv);
+        break;
+      case "manual":
+        service = new Manual(subpos.base.start, subpos.base.extra, subpos.under.start, subpos.under.extra);
+        break;
+      case "uniswapv3":
+        service = new UniswapV3(subpos.base.start, subpos.under.start, pos.entryPrice, subpos.minPrice, subpos.maxPrice, subpos.feeInPercent);
+        break;
+    }
+
+    await service.getMarketData(this.state.web3, pos);
+    console.log(service)
+    // todo: dirty adding to position
+    subpos.service = service;
   }
 
   async prepareTableData(positions) {
@@ -198,9 +204,6 @@ class PositionsView extends Component {
 
         // calculate Ins
         totalInBASE += subpos.base.start + subpos.under.start * currentPrice;
-        //totalInUNDER += subpos.under.start + subpos.base.start / currentPrice;
-        //startBASE += subpos.base.start;
-        //startUNDER += subpos.under.start;
 
         // calculate Outs
         let extraBASE = subpos.base.extra + subpos.under.extra * currentPrice;
@@ -212,28 +215,46 @@ class PositionsView extends Component {
       let profitPerMonthTodayToken = profitTodayToken * 30.4167 / daysSinceStart;						
       let aprToday = profitTodayToken / totalInBASE / daysSinceStart * 365 * 100;	
 
+      let subpos = pos.subpositions[0];
+
+      // target UNDER
+      // default is if there is only one asset on opening
+      let targetPriceUNDER = currentPrice;
+      let targetProfitUNDER = profitTodayToken / currentPrice;
+      let profitPerMonthTargetUNDER = profitPerMonthTodayToken / currentPrice;
+      let aprTargetUNDER = aprToday;
+      // if there base and under, calculate real target values
+      if(subpos.type === 'uniswap' && subpos.base.start > 0 && subpos.under.start > 0) {
+        let priceAndProfitUNDER = this.findMaxUNDER(pos);
+        targetPriceUNDER = priceAndProfitUNDER[0];
+        targetProfitUNDER = priceAndProfitUNDER[1];
+        let targetHodlUNDER = priceAndProfitUNDER[2];
+        profitPerMonthTargetUNDER = targetProfitUNDER * 30.4167 / daysSinceStart;	
+        aprTargetUNDER = targetProfitUNDER / targetHodlUNDER / daysSinceStart * 365 * 100;
+      } 
 
       // target BASE
-      let priceAndProfitBASE = this.findMaxBASE(pos);
-      let targetPriceBASE = priceAndProfitBASE[0];
-      let targetProfitBASE = priceAndProfitBASE[1];
-      let targetHodlBASE = priceAndProfitBASE[2];
-      let profitPerMonthTargetBASE = targetProfitBASE * 30.4167 / daysSinceStart;	
-      let aprTargetBASE = targetProfitBASE / targetHodlBASE / daysSinceStart * 365 * 100;
-      
-      // target UNDER
-      let priceAndProfitUNDER = this.findMaxUNDER(pos);
-      let targetPriceUNDER = priceAndProfitUNDER[0];
-      let targetProfitUNDER = priceAndProfitUNDER[1];
-      let targetHodlUNDER = priceAndProfitUNDER[2];
-      let profitPerMonthTargetUNDER = targetProfitUNDER * 30.4167 / daysSinceStart;	
-      let aprTargetUNDER = targetProfitUNDER / targetHodlUNDER / daysSinceStart * 365 * 100;
-
+      // default is if there is only one asset on opening
+      let targetPriceBASE = currentPrice;
+      let targetProfitBASE = profitTodayToken;
+      let profitPerMonthTargetBASE = profitPerMonthTodayToken;
+      let aprTargetBASE = aprToday;
+      // if there base and under, calculate real target values
+      if(subpos.type === 'uniswap' && subpos.base.start > 0 && subpos.under.start > 0) {
+        let priceAndProfitBASE = this.findMaxBASE(pos);
+        targetPriceBASE = priceAndProfitBASE[0];
+        targetProfitBASE = priceAndProfitBASE[1];
+        let targetHodlBASE = priceAndProfitBASE[2];
+        console.log("targetHodlBASE: " + targetHodlBASE)
+        profitPerMonthTargetBASE = targetProfitBASE * 30.4167 / daysSinceStart;	
+        aprTargetBASE = targetProfitBASE / targetHodlBASE / daysSinceStart * 365 * 100;
+      } 
+            
       // profits in (USD)
       let profitTargetETHUSD = targetProfitUNDER * targetPriceUNDER * market.priceBASEUSD;
-      let profitTargetTokenUSD = pos.base.symbol === "DAI" || pos.base.symbol === "USDC" ? targetProfitBASE * market.priceBASEUSD : targetProfitBASE / targetPriceBASE * market.priceUNDERUSD;
+      let profitTargetTokenUSD = pos.base.symbol === "DAI" || pos.base.symbol === "USDC" || pos.base.symbol === "UST" ? targetProfitBASE * market.priceBASEUSD : targetProfitBASE / targetPriceBASE * market.priceUNDERUSD;
       let profitPerMonthTargetETHUSD = profitPerMonthTargetUNDER * targetPriceUNDER * market.priceBASEUSD;
-      let profitPerMonthTargetTokenUSD = pos.base.symbol === "DAI" || pos.base.symbol === "USDC" ? profitPerMonthTargetBASE * market.priceBASEUSD : profitPerMonthTargetBASE / targetPriceBASE * market.priceUNDERUSD;
+      let profitPerMonthTargetTokenUSD = pos.base.symbol === "DAI" || pos.base.symbol === "USDC" || pos.base.symbol === "UST" ? profitPerMonthTargetBASE * market.priceBASEUSD : profitPerMonthTargetBASE / targetPriceBASE * market.priceUNDERUSD;
 
       pos.maxProfitTargetUSD = Math.max(profitTargetETHUSD, profitTargetTokenUSD);
       pos.maxProfitPerMonthTargetUSD = Math.max(profitPerMonthTargetTokenUSD, profitPerMonthTargetETHUSD);
@@ -721,6 +742,7 @@ class PositionsView extends Component {
                 selectedPosition={this.state.selectedPosition}
                 userModel={this.props.userModel}
                 resModel={this.props.resModel}
+                addService={this.addService}
               />
             </Col>
           </Row>

@@ -15,6 +15,7 @@ export const sushiAddress = "0x6b3595068778dd592e39a122f4f5a5cf09c90fe2";
 export const alphaAddress = "0xa1faa113cbe53436df28ff0aee54275c13b40975";
 export const ibethAddress = "0x67B66C99D3Eb37Fa76Aa3Ed1ff33E8e39F0b9c7A";
 export const bacAddress = "0x3449FC1Cd036255BA1EB19d65fF4BA2b8903A69a";
+export const wbtcAddress = "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599";
 
 export const ustAddress = "0xa47c8bf37f92abed4a126bda807a7b7498661acd";
 export const mmsftAddress = "0x41bbedd7286daab5910a1f15d12cbda839852bd7";

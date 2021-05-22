@@ -30,6 +30,7 @@ class PositionChartCard extends Component {
       customMax: 3000
     };
 
+    this.addSubposition = this.addSubposition.bind(this);
     this.updateSubposition = this.updateSubposition.bind(this);
     this.removeSubposition = this.removeSubposition.bind(this);
   }
@@ -288,7 +289,6 @@ class PositionChartCard extends Component {
           name: "Profit [BASE]", 
           data: this.state.chartData2,
           yAxis: 1,
-          visible: false,
           tooltip: {
             valueSuffix: ' BASE' // todo
           },
@@ -298,7 +298,6 @@ class PositionChartCard extends Component {
           name: "Profit [UNDER]", 
           data: this.state.chartData3,
           yAxis: 2,
-          visible: false,
           tooltip: {
             valueSuffix: ' UNDER' // todo
           },
@@ -317,9 +316,83 @@ class PositionChartCard extends Component {
     return performanceOptions;
   }
 
+  async addSubposition(type) {
+    let newSubpos;
+    if(type === 'uniswap') {
+      newSubpos = {
+        type: type,
+        marketAddress: "0xA478c2975Ab1Ea89e8196811F51A7B7Ade33eB11",
+        base: {
+          start: 1800,
+          extra: 0
+        },
+        under: {
+          start: 1,
+          extra: 0
+        },
+        liq: {
+          start: 30.67,
+          extra: 0
+        },
+      }
+    } else if(type === 'dydx-long') {
+      newSubpos = {
+        type: "dydx-long",
+        base: {
+          start: 0,
+          extra: 0
+        },
+        under: {
+          start: 1,
+          extra: 0
+        },
+        borrowedBASE: 2700, 
+        boughtUNDER: 1, 
+        openingPrice: 2700
+      }
+    } else if(type === 'dydx-short') {
+      newSubpos = {
+        type: "dydx-short",
+        base: {
+          start: 2700,
+          extra: 0
+        },
+        under: {
+          start: 0,
+          extra: 0
+        },
+        borrowedUNDER: 1,
+        boughtBASE: 2700,
+        openingPrice: 2700
+      }
+    } else if(type === 'option') {
+      newSubpos = {
+        type: type,
+        base: {
+          start: 183,
+          extra: 0
+        },
+        under: {
+          start: 0,
+          extra: 0
+        },
+        isCall: true, 
+        isLong: true, 
+        quantity: 1, 
+        strike: 3200,
+        daysToExpiry: 26,
+        iv: 86
+      }
+    }
+    await this.props.addService(this.state.customPosition, newSubpos);
+    let updatedPosition = clone(this.state.customPosition);
+    updatedPosition.subpositions.push(newSubpos);
+    this.setState({
+      customPosition: updatedPosition
+    });
+  }
+
   updateSubposition(index, subpos) {
-    console.log("updateSubposition called")
-    console.log(this.state)
     let updatedPosition = clone(this.state.customPosition);
     updatedPosition.subpositions[index] = subpos;
     this.setState({
@@ -328,8 +401,6 @@ class PositionChartCard extends Component {
   }
 
   removeSubposition(index) {
-    console.log("removeSubposition called")
-    console.log(this.state)
     let updatedPosition = clone(this.state.customPosition);
     updatedPosition.subpositions.splice(index, 1);
     this.setState({
@@ -338,6 +409,7 @@ class PositionChartCard extends Component {
   }
 
   displayCard(subpos, index) {
+
     if(subpos.type === 'uniswap') {
       return (
         <UniswapV2Card
@@ -469,9 +541,8 @@ class PositionChartCard extends Component {
               {this.getSubpositionCards()}
               <Col md={4}>
                 <AddSubpositionCard
-                  portfolio={this.props.userModel.portfolios.slice(-1)[0]}
-                  resModel={this.props.resModel}
-                  userModel={this.props.userModel}
+                  types={['uniswap', 'dydx-long', 'dydx-short', 'option']}
+                  addSubposition={this.addSubposition}
                 />
               </Col>
             </Row>
