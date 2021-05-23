@@ -53,7 +53,8 @@ class PositionsView extends Component {
       removedTransaction: null,
       isChartDialogShown: false,
       web3DataLoaded: false,
-      selectedPosition: null
+      selectedPosition: null,
+      console: "Loading positions..."
     };
   }
   
@@ -157,12 +158,16 @@ class PositionsView extends Component {
           web3DataLoaded: true
         });
         // NOTE: here I can create JSON objects and append to positions
-        let appendedPositions = [...this.props.userModel.positions, uniswapv3Test];
+        let appendedPositions = [...this.props.userModel.positions];
         //let appendedPositions = [this.props.userModel.positions[6], uniswapv3Test];
         //let appendedPositions = [callOptionTest, uniswapdYdXTest, dydxShortTest, this.props.userModel.positions[0]];
 
         // get live market data from smart contracts via web3
         await this.loadWeb3Data(appendedPositions);
+
+        this.setState({
+          console: "Preparing table data..."
+        })
 
         // calculate data for table
         let tableData = await this.prepareTableData(appendedPositions);
@@ -172,6 +177,10 @@ class PositionsView extends Component {
           data: tableData,
           selectedPosition: appendedPositions[0]
         });
+
+        this.setState({
+          console: appendedPositions.length + " positions"
+        })
       }
     }
   }
@@ -181,8 +190,10 @@ class PositionsView extends Component {
       let pos = positions[i];
       for(let j = 0; j < pos.subpositions.length; j++) {
         let subpos = pos.subpositions[j];
+        this.setState({
+          console: "Loading " + (i + 1) + "/" + positions.length + "..."
+        })
         await this.addService(pos, subpos);
-
       }
     }
   }
@@ -743,6 +754,7 @@ class PositionsView extends Component {
             <Col md={12}>
               <Card
                 title="What are my opened positions?"
+                category={this.state.console}
                 rightSection={
                   <span>
                     <Button
@@ -768,7 +780,6 @@ class PositionsView extends Component {
                     </OverlayTrigger>
                   </span>
                 }
-                category={tradeCount + " trade" + (tradeCount === 1 ? "" : "s")}
                 content={this.state.data ? 
                   <ReactTable
                     className="-highlight"
