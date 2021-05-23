@@ -37,9 +37,9 @@
     "react-syntax-highlighter": "^7.0.2",
     "react-table": "^6.8.0",
     "react-tagsinput": "^3.19.0",
+    "web3": "1.2.9",
     "whatwg-fetch": "^2.0.4",
-    "wnumb": "^1.1.0",
-    "web3": "1.2.9"
+    "wnumb": "^1.1.0"
   },
   "scripts": {
     "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
