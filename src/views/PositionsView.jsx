@@ -114,8 +114,7 @@ class PositionsView extends Component {
     console.log("web3")
     console.log(web3)
     this.setState({
-      web3: web3,
-      account: await this.loadWeb3Account(web3)
+      web3: web3
     });
   }
 
@@ -155,8 +154,16 @@ class PositionsView extends Component {
       if (!this.state.web3DataLoaded) {
         console.log("Loading web3 data and setting up data for table")
         this.setState({
+          console: "Loading web3 data and setting up data for table"
+        })
+        this.setState({
           web3DataLoaded: true
         });
+
+        this.setState({
+          console: "Loading web3 data and setting up data for table"
+        })
+
         // NOTE: here I can create JSON objects and append to positions
         let appendedPositions = [...this.props.userModel.positions];
         //let appendedPositions = [this.props.userModel.positions[6], uniswapv3Test];
