@@ -26,6 +26,8 @@ import {
   putOptionTest,
   uniswapv3Test
  } from '../web3/templates/positions.js';
+import Web3Modal from "web3modal";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
 class PositionsView extends Component {
   constructor(props) {
@@ -37,19 +39,19 @@ class PositionsView extends Component {
     this.loadWeb3Account = this.loadWeb3Account.bind(this);
     this.addService = this.addService.bind(this);
 
-    // load web3
-    let web3;
-    if (typeof window.web3 !== "undefined") {
-      web3 = this.loadWeb3();
-    }
+    // OLD WAY: load web3
+    //let web3;
+    //if (typeof window.web3 !== "undefined") {
+    //  web3 = this.loadWeb3();
+    //}
+
+
 
     this.state = {
       //data: null,
       isConfirmDialogShown: false,
       removedTransaction: null,
       isChartDialogShown: false,
-      web3: web3,
-      account: null,
       web3DataLoaded: false,
       selectedPosition: null
     };
@@ -59,14 +61,61 @@ class PositionsView extends Component {
     console.log("Navigate to: " + window.location.pathname + window.location.hash);
     ReactGA.pageview(window.location.pathname + window.location.hash);
 
-    // load account
-    const web3 = this.state.web3;
-    if (web3) {
-      const userAccount = await this.loadWeb3Account(web3);
-      this.setState({
-        account: userAccount
-      });
-    }
+    // OLD WAY: load account
+    //const web3 = this.state.web3;
+    //if (web3) {
+    //  const userAccount = await this.loadWeb3Account(web3);
+    //  this.setState({
+    //    account: userAccount
+    //  });
+    //}
+
+    const providerOptions = {
+      /* See Provider Options Section */
+      walletconnect: {
+        package: WalletConnectProvider, // required
+        options: {
+          infuraId: "1e22b4bd561c46ada64b5690d1fbb261" // required
+        }
+      }
+    };
+    
+    const web3Modal = new Web3Modal({
+      network: "mainnet", // optional
+      cacheProvider: true, // optional
+      providerOptions // required
+    });
+    
+    const provider = await web3Modal.connect();
+    
+    const web3 = new Web3(provider);
+
+    // Subscribe to accounts change
+    provider.on("accountsChanged", (accounts: string[]) => {
+      console.log("accountsChanged: " + accounts);
+    });
+
+    // Subscribe to chainId change
+    provider.on("chainChanged", (chainId: number) => {
+      console.log("chainChanged: " + chainId);
+    });
+
+    // Subscribe to provider connection
+    provider.on("connect", (info: { chainId: number }) => {
+      console.log("connect: " + info);
+    });
+
+    // Subscribe to provider disconnection
+    provider.on("disconnect", (error: { code: number; message: string }) => {
+      console.log("disconnect: " + error);
+    });
+
+    console.log("web3")
+    console.log(web3)
+    this.setState({
+      web3: web3,
+      account: await this.loadWeb3Account(web3)
+    });
   }
 
   loadWeb3() {

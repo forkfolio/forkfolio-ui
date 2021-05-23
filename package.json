@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://forkfol.io/app",
   "dependencies": {
+    "@walletconnect/web3-provider": "^1.4.1",
     "bluebird": "^3.5.1",
     "bootstrap": "^3.3.7",
     "chartist": "^0.10.1",
@@ -38,6 +39,7 @@
     "react-table": "^6.8.0",
     "react-tagsinput": "^3.19.0",
     "web3": "1.2.9",
+    "web3modal": "^1.9.3",
     "whatwg-fetch": "^2.0.4",
     "wnumb": "^1.1.0"
   },
