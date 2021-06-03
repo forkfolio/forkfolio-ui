@@ -11,6 +11,7 @@ import {
 import Card from "components/Card/Card.jsx";
 import AddSubpositionCard from "./AddSubpositionCard.jsx";
 import UniswapV2Card from "./subpositions/UniswapV2Card.jsx";
+import UniswapV3Card from "./subpositions/UniswapV3Card.jsx";
 import DYDXLongCard from "./subpositions/DYDXLongCard.jsx";
 import DYDXShortCard from "./subpositions/DYDXShortCard.jsx";
 import GammaOptionsCard from "./subpositions/GammaOptionsCard.jsx";
@@ -41,8 +42,13 @@ class PositionChartCard extends Component {
       // set customPosition if there is a change in props
       if(prevProps.selectedPosition !== this.props.selectedPosition) {
         console.log("setting customPosition")
+        let customPosition = clone(this.props.selectedPosition);
+        // add enabled flag
+        for(let j = 0; j < customPosition.subpositions.length; j++) {
+          customPosition.subpositions[j].enabled = true;
+        }
         this.setState({
-          customPosition: clone(this.props.selectedPosition)
+          customPosition: customPosition
         });
       } else {
         // refresh chart if customPosition is updated
@@ -79,16 +85,18 @@ class PositionChartCard extends Component {
       for(let j = 0; j < pos.subpositions.length; j++) {
         let subpos = pos.subpositions[j];
 
-        // get ins
-        startBASE += subpos.base.start;
-        startUNDER += subpos.under.start;
+        if(subpos.enabled) {
+          // get ins
+          startBASE += subpos.base.start;
+          startUNDER += subpos.under.start;
 
-        // get outs
-        let extraBASE = subpos.base.extra + subpos.under.extra * i;
-        totalOutBASE += subpos.service.getCurrentValue(i)[0] + extraBASE;
+          // get outs
+          let extraBASE = subpos.base.extra + subpos.under.extra * i;
+          totalOutBASE += subpos.service.getCurrentValue(i)[0] + extraBASE;
 
-        let extraUNDER = subpos.base.extra / i + subpos.under.extra;
-        totalOutUNDER += subpos.service.getCurrentValue(i)[1] + extraUNDER;
+          let extraUNDER = subpos.base.extra / i + subpos.under.extra;
+          totalOutUNDER += subpos.service.getCurrentValue(i)[1] + extraUNDER;
+        }
 
         if(subpos.type === "uniswap") {
           currentPrice = subpos.service.getPrice();
@@ -156,7 +164,7 @@ class PositionChartCard extends Component {
 
     return {
       left: Number(pivot / 3),
-      right: Number(pivot * 4),
+      right: Number(pivot * 10),
       step: step
     }
   }
@@ -335,6 +343,23 @@ class PositionChartCard extends Component {
           extra: 0
         },
       }
+    } else if(type === 'uniswapv3') {
+      newSubpos = {
+        type: type,
+        marketAddress: "0xA478c2975Ab1Ea89e8196811F51A7B7Ade33eB11",
+        base: {
+          start: 1800,
+          extra: 0
+        },
+        under: {
+          start: 1,
+          extra: 0
+        },
+        liq: {
+          start: 30.67,
+          extra: 0
+        },
+      }
     } else if(type === 'dydx-long') {
       newSubpos = {
         type: "dydx-long",
@@ -386,6 +411,7 @@ class PositionChartCard extends Component {
     }
     await this.props.addService(this.state.customPosition, newSubpos);
     let updatedPosition = clone(this.state.customPosition);
+    newSubpos.enabled = true;
     updatedPosition.subpositions.push(newSubpos);
     this.setState({
       customPosition: updatedPosition
@@ -413,6 +439,15 @@ class PositionChartCard extends Component {
     if(subpos.type === 'uniswap') {
       return (
         <UniswapV2Card
+          index={index}
+          subposition={subpos}
+          updateSubposition={this.updateSubposition}
+          removeSubposition={this.removeSubposition}
+        />
+      );
+    } else if(subpos.type === 'uniswapv3') {
+      return (
+        <UniswapV3Card
           index={index}
           subposition={subpos}
           updateSubposition={this.updateSubposition}
@@ -541,7 +576,7 @@ class PositionChartCard extends Component {
               {this.getSubpositionCards()}
               <Col md={4}>
                 <AddSubpositionCard
-                  types={['uniswap', 'dydx-long', 'dydx-short', 'option']}
+                  types={['uniswap','uniswapv3', 'dydx-long', 'dydx-short', 'option']}
                   addSubposition={this.addSubposition}
                 />
               </Col>

@@ -7,9 +7,6 @@ import { clone } from '../../../web3/common.js';
 class UniswapV2Card extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      enabled: true
-    }
   }
 
   onChangeStartBase(newValue) {
@@ -67,7 +64,7 @@ class UniswapV2Card extends Component {
           />
         </Col>
         <Col md={6}>
-          UniswapV2
+          UniswapV3
         </Col>
       </Row>
     );
