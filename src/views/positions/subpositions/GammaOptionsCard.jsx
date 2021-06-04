@@ -9,11 +9,11 @@ class GammaOptionsCard extends Component {
     super(props);
   }
 
-  onChangeStartBase(newValue) {
-    let subpos = clone(this.props.subposition);
-    subpos.base.start = Number(newValue);
-    this.props.updateSubposition(this.props.index, subpos);
-  }
+  //onChangeStartBase(newValue) {
+  //  let subpos = clone(this.props.subposition);
+  //  subpos.base.start = Number(newValue);
+  //  this.props.updateSubposition(this.props.index, subpos);
+  //}
 
   onChangeIsCall(newValue) {
     let subpos = clone(this.props.subposition);
@@ -100,10 +100,11 @@ class GammaOptionsCard extends Component {
             </Col>
             <Col md={6}>
               <FormControl
+                disabled
                 placeholder={"Amount"}
                 type="number"
                 min={0}
-                value={this.props.subposition.base.start}
+                value={this.props.subposition.base.start.toFixed(2)}
                 onChange={(event) => this.onChangeStartBase(event.target.value)}
               />
             </Col>

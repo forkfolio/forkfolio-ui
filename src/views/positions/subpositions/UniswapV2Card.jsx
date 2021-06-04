@@ -7,9 +7,6 @@ import { clone } from '../../../web3/common.js';
 class UniswapV2Card extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      enabled: true
-    }
   }
 
   onChangeStartBase(newValue) {

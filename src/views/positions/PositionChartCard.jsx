@@ -421,6 +421,9 @@ class PositionChartCard extends Component {
   updateSubposition(index, subpos) {
     let updatedPosition = clone(this.state.customPosition);
     updatedPosition.subpositions[index] = subpos;
+    if(subpos.type === 'option') {
+      subpos.base.start = subpos.service.getCurrentValue(this.state.currentPrice)[0];
+    }
     this.setState({
       customPosition: updatedPosition
     });
