@@ -88,12 +88,67 @@ export const callOptionTest = {
         start: 0,
         extra: 0
       },
+      isBuy: true,
       isCall: true, 
       isLong: true, 
       quantity: 1, 
       strike: 3200,
       daysToExpiry: 26,
       iv: 86
+    },
+  ]
+}
+
+export const shortCallOptionTest = {
+  name: "(T) SHORT-C2700 26 days",
+  startDate: "2021-05-01T15:01:00.000Z",
+  base: dai,
+  under: eth,
+  entryPrice: 2700,
+  subpositions: [
+    {
+      type: "option",
+      base: {
+        start: -387,
+        extra: 0
+      },
+      under: {
+        start: 1,
+        extra: 0
+      },
+      isCall: true, 
+      isLong: false, 
+      quantity: 1, 
+      strike: 2700,
+      daysToExpiry: 26,
+      iv: 135
+    },
+  ]
+}
+
+export const shortPutOptionTest = {
+  name: "(T) SHORT-P2700 26 days",
+  startDate: "2021-05-01T15:01:00.000Z",
+  base: dai,
+  under: eth,
+  entryPrice: 2700,
+  subpositions: [
+    {
+      type: "option",
+      base: {
+        start: 2700 - 382,
+        extra: 0
+      },
+      under: {
+        start: 0,
+        extra: 0
+      },
+      isCall: false, 
+      isLong: false, 
+      quantity: 1, 
+      strike: 2700,
+      daysToExpiry: 26,
+      iv: 135
     },
   ]
 }

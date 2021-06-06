@@ -19,7 +19,17 @@ export default class GammaOptions {
 	// gets current value in [BASE, UNDER]
 	getCurrentValue(currentPrice) {
 		let currentValueBASE = this.quantity * this.optionMath.blackScholes(this.isCall ? 'call' : 'put', currentPrice, this.strike, this.daysToExpiry / 365, 0.02, this.iv / 100);
-		//console.log("optionBASE: " + optionBASE);
-		return [currentValueBASE, currentValueBASE / currentPrice];
+		// long
+		if(this.isLong) {
+			return [currentValueBASE, currentValueBASE / currentPrice];
+		}
+
+		// short call
+		if(this.isCall) {
+			return [this.quantity * currentPrice - currentValueBASE, (this.quantity * currentPrice - currentValueBASE) / currentPrice];
+		}
+		
+		// short put
+		return [this.quantity * this.strike - currentValueBASE, 0];
 	}
 }		

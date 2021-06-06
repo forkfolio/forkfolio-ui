@@ -19,6 +19,7 @@ import Button from "components/CustomButton/CustomButton.jsx";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { debalanceETH, debalanceDAI, clone } from '../../web3/common.js';
+import { CoinGeckoPrices } from '../../web3/CoinGeckoPrices.js';
 
 class PositionChartCard extends Component {
   constructor(props) {
@@ -28,7 +29,8 @@ class PositionChartCard extends Component {
       chartLoaded: false,
       chartData: [Math.random() * 5, 2, 1],
       customMin: 100,
-      customMax: 3000
+      customMax: 3000,
+      currentPrice: 0
     };
 
     this.addSubposition = this.addSubposition.bind(this);
@@ -54,7 +56,7 @@ class PositionChartCard extends Component {
         // refresh chart if customPosition is updated
         if(prevState.customPosition !== this.state.customPosition) {
           console.log("refreshing chart")
-          this.refreshChart();
+          await this.refreshChart();
         }
       }
     }
@@ -65,7 +67,7 @@ class PositionChartCard extends Component {
     return userModel && userModel.positions && Array.isArray(userModel.positions);
   }
 
-  refreshChart() {
+  async refreshChart() {
     console.log("Refreshing chart data. Position: ");
     let pos = this.state.customPosition;   
     console.log(pos)
@@ -98,8 +100,17 @@ class PositionChartCard extends Component {
           totalOutUNDER += subpos.service.getCurrentValue(i)[1] + extraUNDER;
         }
 
-        if(subpos.type === "uniswap") {
-          currentPrice = subpos.service.getPrice();
+        if(currentPrice === 0) {
+          if(subpos.type === "uniswap") {
+            currentPrice = subpos.service.getPrice();
+          } else {
+            // todo: used here and in PositionsView, move somewhere
+            let market = {
+              priceBASEUSD: await CoinGeckoPrices.getTokenPriceInUSD(pos.base.address),
+              priceUNDERUSD: await CoinGeckoPrices.getTokenPriceInUSD(pos.under.address)
+            }
+            currentPrice = market.priceUNDERUSD / market.priceBASEUSD;
+          }
         }
       }
 
@@ -124,7 +135,6 @@ class PositionChartCard extends Component {
 
     let rangeEdgesBASE = this.getRangePoints(profitsBASE);
     let rangeEdgesUNDER = this.getRangePoints(profitsUNDER);
-
 
     this.setState({
       chartLoaded: true,
@@ -164,7 +174,7 @@ class PositionChartCard extends Component {
 
     return {
       left: Number(pivot / 3),
-      right: Number(pivot * 10),
+      right: Number(pivot * 3),
       step: step
     }
   }
@@ -422,8 +432,18 @@ class PositionChartCard extends Component {
     let updatedPosition = clone(this.state.customPosition);
     updatedPosition.subpositions[index] = subpos;
     if(subpos.type === 'option') {
-      subpos.base.start = subpos.service.getCurrentValue(this.state.currentPrice)[0];
+      let currentValue = subpos.service.getCurrentValue(this.state.currentPrice)[0];
+      if(subpos.isLong) {
+        subpos.base.start = currentValue;
+      } else {
+        if(subpos.isCall) {
+          subpos.under.start = subpos.quantity;
+          subpos.base.start = currentValue - subpos.quantity * this.state.currentPrice
+        }
+      }
+      
     }
+    console.log(updatedPosition)
     this.setState({
       customPosition: updatedPosition
     });

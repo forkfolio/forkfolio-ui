@@ -14,6 +14,12 @@ class GammaOptionsCard extends Component {
   //  subpos.base.start = Number(newValue);
   //  this.props.updateSubposition(this.props.index, subpos);
   //}
+  onChangeIsLong(newValue) {
+    let subpos = clone(this.props.subposition);
+    subpos.isLong = newValue === 'B';
+    subpos.service.isLong = newValue === 'B';
+    this.props.updateSubposition(this.props.index, subpos);
+  }
 
   onChangeIsCall(newValue) {
     let subpos = clone(this.props.subposition);
@@ -103,9 +109,34 @@ class GammaOptionsCard extends Component {
                 disabled
                 placeholder={"Amount"}
                 type="number"
-                min={0}
                 value={this.props.subposition.base.start.toFixed(2)}
-                onChange={(event) => this.onChangeStartBase(event.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              Start UNDER:
+            </Col>
+            <Col md={6}>
+              <FormControl
+                disabled
+                placeholder={"Amount"}
+                type="number"
+                min={0}
+                value={this.props.subposition.under.start.toFixed(2)}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              Buy or Sell:
+            </Col>
+            <Col md={6}>
+              <FormControl
+                placeholder={"BuyOrSell"}
+                type="text"
+                value={this.props.subposition.isLong ? 'B' : 'S'}
+                onChange={(event) => this.onChangeIsLong(event.target.value)}
               />
             </Col>
           </Row>

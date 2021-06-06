@@ -24,7 +24,9 @@ import {
   dydxShortTest, 
   callOptionTest, 
   putOptionTest,
-  uniswapv3Test
+  uniswapv3Test,
+  shortCallOptionTest,
+  shortPutOptionTest
  } from '../web3/templates/positions.js';
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
@@ -165,9 +167,9 @@ class PositionsView extends Component {
         })
 
         // NOTE: here I can create JSON objects and append to positions
-        let appendedPositions = [...this.props.userModel.positions];
+        //let appendedPositions = [...this.props.userModel.positions];
         //let appendedPositions = [this.props.userModel.positions[6], uniswapv3Test];
-        //let appendedPositions = [callOptionTest, uniswapdYdXTest, dydxShortTest, this.props.userModel.positions[0]];
+        let appendedPositions = [shortCallOptionTest, shortPutOptionTest, callOptionTest, this.props.userModel.positions[0]];
 
         // get live market data from smart contracts via web3
         await this.loadWeb3Data(appendedPositions);
