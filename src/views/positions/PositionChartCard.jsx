@@ -435,12 +435,14 @@ class PositionChartCard extends Component {
       let currentValue = subpos.service.getCurrentValue(this.state.currentPrice)[0];
       if(subpos.isLong) {
         subpos.base.start = currentValue;
+        subpos.under.start = 0;
       } else {
         if(subpos.isCall) {
+          subpos.base.start = currentValue - subpos.quantity * this.state.currentPrice;
           subpos.under.start = subpos.quantity;
-          subpos.base.start = currentValue - subpos.quantity * this.state.currentPrice
         } else {
           subpos.base.start = currentValue;
+          subpos.under.start = 0;
         }
       }
       
