@@ -30,6 +30,6 @@ export default class GammaOptions {
 		}
 		
 		// short put
-		return [this.quantity * this.strike - currentValueBASE, 0];
+		return [this.quantity * this.strike - currentValueBASE, (this.quantity * this.strike - currentValueBASE) / currentPrice];
 	}
 }		

@@ -439,6 +439,8 @@ class PositionChartCard extends Component {
         if(subpos.isCall) {
           subpos.under.start = subpos.quantity;
           subpos.base.start = currentValue - subpos.quantity * this.state.currentPrice
+        } else {
+          subpos.base.start = currentValue;
         }
       }
       
