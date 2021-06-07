@@ -28,8 +28,8 @@ class PositionChartCard extends Component {
     this.state = {
       chartLoaded: false,
       chartData: [Math.random() * 5, 2, 1],
-      customMin: 100,
-      customMax: 3000,
+      customMinX: 100,
+      customMaxX: 3000,
       currentPrice: 0
     };
 
@@ -144,8 +144,8 @@ class PositionChartCard extends Component {
       rangeEdgesBASE: rangeEdgesBASE, 
       rangeEdgesUNDER: rangeEdgesUNDER,
       currentPrice: currentPrice,
-      customMin: chartWindow.left,
-      customMax: chartWindow.right
+      customMinX: chartWindow.left,
+      customMaxX: chartWindow.right
     });
   }
 
@@ -229,8 +229,8 @@ class PositionChartCard extends Component {
         text: 'APR for position: ' + (this.state.customPosition != null ? this.state.customPosition.name : 'unknown')
       },
       xAxis: {
-        min: this.state.customMin,
-        max: this.state.customMax,
+        min: this.state.customMinX,
+        max: this.state.customMaxX,
         plotLines: [{
           color: '#3D3D3D',
           width: 2,
@@ -569,12 +569,12 @@ class PositionChartCard extends Component {
                 <FormControl
                   placeholder={"Min X"}
                   type="number"
-                  name="customMin"
+                  name="customMinX"
                   min={0}
-                  value={this.state.customMin}
+                  value={this.state.customMinX}
                   onChange={event => {
                     this.setState({
-                      customMin: Number(event.target.value)
+                      customMinX: Number(event.target.value)
                     });
                   }}
                 />
@@ -588,12 +588,12 @@ class PositionChartCard extends Component {
                 <FormControl
                   placeholder={"Max X"}
                   type="number"
-                  name="customMax"
+                  name="customMaxX"
                   min={0}
-                  value={this.state.customMax}
+                  value={this.state.customMaxX}
                   onChange={event => {
                     this.setState({
-                      customMax: Number(event.target.value)
+                      customMaxX: Number(event.target.value)
                     });
                   }}
                 />
