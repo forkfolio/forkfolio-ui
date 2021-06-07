@@ -41,7 +41,6 @@ class PositionChartCard extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    
     if (this.userModelLoaded() && this.props.selectedPosition) {
       // set customPosition if there is a change in props
       if(prevProps.selectedPosition !== this.props.selectedPosition) {
@@ -73,7 +72,25 @@ class PositionChartCard extends Component {
     console.log("Refreshing chart data. Position: ");
     let pos = this.state.customPosition;   
     console.log(pos)
-    
+
+    // chart data on today
+    let todayData = await this.prepareChartData(pos, 0);
+
+    this.setState({
+      chartLoaded: true,
+      chartData1: todayData.aprsBASE,
+      chartData2: todayData.profitsBASE,
+      chartData3: todayData.profitsUNDER,
+      rangeEdgesBASE: todayData.rangeEdgesBASE, 
+      rangeEdgesUNDER: todayData.rangeEdgesUNDER,
+      currentPrice: todayData.currentPrice,
+      customMinX: todayData.customMinX,
+      customMaxX: todayData.customMaxX
+    });
+
+  }  
+
+  async prepareChartData(pos, days) { 
     // time 
     let daysSinceStart = (new Date() - new Date(pos.startDate)) / (1000 * 60 * 60 * 24);
     
@@ -138,17 +155,16 @@ class PositionChartCard extends Component {
     let rangeEdgesBASE = this.getRangePoints(profitsBASE);
     let rangeEdgesUNDER = this.getRangePoints(profitsUNDER);
 
-    this.setState({
-      chartLoaded: true,
-      chartData1: aprsBASE,
-      chartData2: profitsBASE,
-      chartData3: profitsUNDER,
+    return {
+      aprsBASE: aprsBASE,
+      profitsBASE: profitsBASE,
+      profitsUNDER: profitsUNDER,
       rangeEdgesBASE: rangeEdgesBASE, 
       rangeEdgesUNDER: rangeEdgesUNDER,
       currentPrice: currentPrice,
       customMinX: chartWindow.left,
       customMaxX: chartWindow.right
-    });
+    }
   }
 
   /**
@@ -176,7 +192,7 @@ class PositionChartCard extends Component {
 
     return {
       left: Number(pivot / 3),
-      right: Number(pivot * 3),
+      right: Number(pivot * 5),
       step: step
     }
   }
