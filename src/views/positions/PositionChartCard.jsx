@@ -30,6 +30,8 @@ class PositionChartCard extends Component {
       chartData: [Math.random() * 5, 2, 1],
       customMinX: 100,
       customMaxX: 3000,
+      customMinY: undefined,
+      customMaxY: undefined,
       currentPrice: 0
     };
 
@@ -285,7 +287,9 @@ class PositionChartCard extends Component {
           title: {
             text: 'Profit [BASE]'
           },
-          opposite: true
+          opposite: true,
+          floor: this.state.customMinY,
+          ceiling: this.state.customMaxY,
         },
         {
           title: {
@@ -305,12 +309,12 @@ class PositionChartCard extends Component {
         },
         { 
           name: "Profit [BASE]", 
-          data: this.state.chartData2,
+          data: this.state.chartData2, 
           yAxis: 1,
           tooltip: {
             valueSuffix: ' BASE' // todo
           },
-          turboThreshold: 10000
+          turboThreshold: 10000,
         },
         { 
           name: "Profit [UNDER]", 
@@ -562,8 +566,8 @@ class PositionChartCard extends Component {
               </Col>
             </Row>
             <Row>
-              <Col md={1}>
-                Min X:
+              <Col md={2}>
+                Price:
               </Col>
               <Col md={2}>
                 <FormControl
@@ -578,11 +582,7 @@ class PositionChartCard extends Component {
                     });
                   }}
                 />
-              </Col>
-              <Col md={3}>
-              </Col>
-              <Col md={1}>
-                Max X:
+                {' '}
               </Col>
               <Col md={2}>
                 <FormControl
@@ -598,8 +598,38 @@ class PositionChartCard extends Component {
                   }}
                 />
               </Col>
-              <Col md={3}>
+              <Col md={2}>
+                Profit [BASE]:
               </Col>
+              <Col md={2}>
+                <FormControl
+                  placeholder={"Min Y"}
+                  type="number"
+                  name="customMinY"
+                  value={this.state.customMinY}
+                  onChange={event => {
+                    this.setState({
+                      customMinY: Number(event.target.value)
+                    });
+                  }}
+                />
+                &nbsp;
+              </Col>
+              <Col md={2}>
+                <FormControl
+                  placeholder={"Max Y"}
+                  type="number"
+                  name="customMaxY"
+                  value={this.state.customMaxY}
+                  onChange={event => {
+                    this.setState({
+                      customMaxY: Number(event.target.value)
+                    });
+                  }}
+                />
+              </Col>
+             </Row>
+            <Row>
               {this.getSubpositionCards()}
               <Col md={4}>
                 <AddSubpositionCard
