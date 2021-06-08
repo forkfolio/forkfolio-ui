@@ -76,11 +76,15 @@ class PositionChartCard extends Component {
     // chart data on today
     let todayData = await this.prepareChartData(pos, 0);
 
+    // chart data in 30 days
+    let futureData = await this.prepareChartData(pos, 30);
+
     this.setState({
       chartLoaded: true,
       chartData1: todayData.aprsBASE,
       chartData2: todayData.profitsBASE,
       chartData3: todayData.profitsUNDER,
+      chartData4: futureData.profitsBASE,
       rangeEdgesBASE: todayData.rangeEdgesBASE, 
       rangeEdgesUNDER: todayData.rangeEdgesUNDER,
       currentPrice: todayData.currentPrice,
@@ -90,7 +94,7 @@ class PositionChartCard extends Component {
 
   }  
 
-  async prepareChartData(pos, days) { 
+  async prepareChartData(pos, passedDays) { 
     // time 
     let daysSinceStart = (new Date() - new Date(pos.startDate)) / (1000 * 60 * 60 * 24);
     
@@ -113,10 +117,10 @@ class PositionChartCard extends Component {
 
           // get outs
           let extraBASE = subpos.base.extra + subpos.under.extra * i;
-          totalOutBASE += subpos.service.getCurrentValue(i)[0] + extraBASE;
+          totalOutBASE += subpos.service.getCurrentValue(i, passedDays)[0] + extraBASE;
 
           let extraUNDER = subpos.base.extra / i + subpos.under.extra;
-          totalOutUNDER += subpos.service.getCurrentValue(i)[1] + extraUNDER;
+          totalOutUNDER += subpos.service.getCurrentValue(i, passedDays)[1] + extraUNDER;
         }
 
         if(currentPrice === 0) {
@@ -244,7 +248,7 @@ class PositionChartCard extends Component {
         height: '600'
       },
       title: {
-        text: 'APR for position: ' + (this.state.customPosition != null ? this.state.customPosition.name : 'unknown')
+        text: 'Position: ' + (this.state.customPosition != null ? this.state.customPosition.name : 'unknown')
       },
       xAxis: {
         min: this.state.customMinX,
@@ -324,7 +328,7 @@ class PositionChartCard extends Component {
           turboThreshold: 10000
         },
         { 
-          name: "Profit [BASE]", 
+          name: "Profit Today [BASE]", 
           data: this.state.chartData2, 
           yAxis: 1,
           tooltip: {
@@ -332,7 +336,7 @@ class PositionChartCard extends Component {
           },
           turboThreshold: 10000,
         },
-        { 
+        /*{ 
           name: "Profit [UNDER]", 
           data: this.state.chartData3,
           yAxis: 2,
@@ -340,6 +344,15 @@ class PositionChartCard extends Component {
             valueSuffix: ' UNDER' // todo
           },
           turboThreshold: 10000
+        },*/
+        { 
+          name: "Profit Future [BASE]", 
+          data: this.state.chartData4, 
+          yAxis: 1,
+          tooltip: {
+            valueSuffix: ' BASE' // todo
+          },
+          turboThreshold: 10000,
         }
       ],
       tooltip: {
@@ -372,6 +385,7 @@ class PositionChartCard extends Component {
           start: 30.67,
           extra: 0
         },
+        apr: 20
       }
     } else if(type === 'uniswapv3') {
       newSubpos = {

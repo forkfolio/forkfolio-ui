@@ -47,6 +47,13 @@ class UniswapV2Card extends Component {
     this.props.updateSubposition(this.props.index, subpos);
   }
 
+  onChangeAPR(newValue) {
+    let subpos = clone(this.props.subposition);
+    subpos.apr = Number(newValue);
+    subpos.service.apr = Number(newValue);
+    this.props.updateSubposition(this.props.index, subpos);
+  }
+
   onChangeEnabled(checked) {
     let subpos = clone(this.props.subposition);
     subpos.enabled = checked;
@@ -184,12 +191,8 @@ class UniswapV2Card extends Component {
                 placeholder={"%"}
                 type="number"
                 min={0}
-                value={20}
-                onChange={event => {
-                  this.setState({
-                    customMin: Number(event.target.value)
-                  });
-                }}
+                value={this.props.subposition.apr}
+                onChange={(event) => this.onChangeAPR(event.target.value)}
               />
             </Col>
           </Row>

@@ -4,7 +4,7 @@ import daiABI from "../abis/daiABI.json";
 import { usdcAddress, wbtcAddress, getContractInstance } from './common.js'
 		
 export default class Uniswap {		
-	constructor(marketAddress, addressBASE, addressUNDER, myLIQ) {
+	constructor(marketAddress, addressBASE, addressUNDER, myLIQ, apr) {
 		this.marketAddress = marketAddress;
 		this.addressBASE = addressBASE;
 		this.addressUNDER = addressUNDER;
@@ -20,6 +20,7 @@ export default class Uniswap {
 		this.poolUNDER = 0;
 		this.poolLIQ = 0;
 		this.k = this.poolBASE * this.poolUNDER;
+		this.apr = apr;
 	}
 
 	// gets pool sizes and prices from live market 
@@ -66,13 +67,19 @@ export default class Uniswap {
 
 	// gets user balance in [BASE, UNDER] for given price. 
 	// Moves price to newPrice, calculates, and later returns market to 
-	getCurrentValue(newPrice) {
-		// get old price, move to new price
+	// passedDays - days that passed since 
+	getCurrentValue(newPrice, passedDays) {
+		// move to new price
 		let oldPrice = this.getPrice();
 		this.setMarketPrice(newPrice);
 
+		// apply APR
+		let poolBASEWithAPR = this.poolBASE * (1 + this.apr / 100 * passedDays / 365);
+		let poolUNDERWithAPR = this.poolUNDER * (1 + this.apr / 100 * passedDays / 365);
+
+		// calc my share
 		let myShare = this.myLIQ / this.poolLIQ;
-		let myBASE = this.poolBASE * myShare + this.poolUNDER * myShare * newPrice;
+		let myBASE = poolBASEWithAPR * myShare + poolUNDERWithAPR * myShare * newPrice;
 		let myUNDER = myBASE / newPrice;
 
 		// back to old price

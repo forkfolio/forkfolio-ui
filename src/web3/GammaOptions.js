@@ -17,8 +17,9 @@ export default class GammaOptions {
 	}
 
 	// gets current value in [BASE, UNDER]
-	getCurrentValue(currentPrice) {
-		let currentValueBASE = this.quantity * this.optionMath.blackScholes(this.isCall ? 'call' : 'put', currentPrice, this.strike, this.daysToExpiry / 365, 0.02, this.iv / 100);
+	// passedDays - days that passed since 
+	getCurrentValue(currentPrice, passedDays) {
+		let currentValueBASE = this.quantity * this.optionMath.blackScholes(this.isCall ? 'call' : 'put', currentPrice, this.strike, (this.daysToExpiry - passedDays) / 365, 0.02, this.iv / 100);
 		// long
 		if(this.isLong) {
 			return [currentValueBASE, currentValueBASE / currentPrice];

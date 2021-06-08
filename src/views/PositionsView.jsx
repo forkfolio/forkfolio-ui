@@ -165,8 +165,8 @@ class PositionsView extends Component {
         })
 
         // NOTE: here I can create JSON objects and append to positions
-        let appendedPositions = [...this.props.userModel.positions];
-        //let appendedPositions = [this.props.userModel.positions[6], uniswapv3Test];
+        //let appendedPositions = [...this.props.userModel.positions];
+        let appendedPositions = [this.props.userModel.positions[0]];
         //let appendedPositions = [shortCallOptionTest, shortPutOptionTest, callOptionTest, this.props.userModel.positions[0]];
 
         // get live market data from smart contracts via web3
@@ -209,7 +209,7 @@ class PositionsView extends Component {
     let service;
     switch (subpos.type) {
       case "uniswap":
-        service = new Uniswap(subpos.marketAddress, pos.base.address, pos.under.address, subpos.liq.start);
+        service = new Uniswap(subpos.marketAddress, pos.base.address, pos.under.address, subpos.liq.start, subpos.apr);
         break;
       case "dydx-long":
         service = new dYdXLong(subpos.under.start, subpos.borrowedBASE, subpos.boughtUNDER, subpos.openingPrice);
@@ -274,7 +274,7 @@ class PositionsView extends Component {
 
         // calculate Outs
         let extraBASE = subpos.base.extra + subpos.under.extra * currentPrice;
-        totalOutBASE += subpos.service.getCurrentValue(currentPrice)[0] + extraBASE; 
+        totalOutBASE += subpos.service.getCurrentValue(currentPrice, 0)[0] + extraBASE; 
       }
 
       // today
@@ -429,7 +429,7 @@ class PositionsView extends Component {
 
         // get outs
         let extraBASE = subpos.base.extra + subpos.under.extra * i;
-        totalOutBASE += subpos.service.getCurrentValue(i)[0] + extraBASE;
+        totalOutBASE += subpos.service.getCurrentValue(i, 0)[0] + extraBASE;
       }
 
       // debalance for max BASE
@@ -466,7 +466,7 @@ class PositionsView extends Component {
 
         // get outs
         let extraUNDER = subpos.under.extra + subpos.base.extra / i;
-        totalOutUNDER += subpos.service.getCurrentValue(i)[1] + extraUNDER;
+        totalOutUNDER += subpos.service.getCurrentValue(i, 0)[1] + extraUNDER;
       }
 
       // debalance for max UNDER
