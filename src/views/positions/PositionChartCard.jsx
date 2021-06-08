@@ -77,7 +77,7 @@ class PositionChartCard extends Component {
     let todayData = await this.prepareChartData(pos, 0);
 
     // chart data in 30 days
-    let futureData = await this.prepareChartData(pos, 30);
+    let futureData = await this.prepareChartData(pos, 7);
 
     this.setState({
       chartLoaded: true,
@@ -196,7 +196,7 @@ class PositionChartCard extends Component {
 
     return {
       left: Number(pivot / 3),
-      right: Number(pivot * 5),
+      right: 5000,//Number(pivot * 5),
       step: step
     }
   }
@@ -449,7 +449,7 @@ class PositionChartCard extends Component {
         isLong: true, 
         quantity: 1, 
         strike: 3200,
-        daysToExpiry: 26,
+        daysToExpiry: 30,
         iv: 86
       }
     }
@@ -466,7 +466,7 @@ class PositionChartCard extends Component {
     let updatedPosition = clone(this.state.customPosition);
     updatedPosition.subpositions[index] = subpos;
     if(subpos.type === 'option') {
-      let currentValue = subpos.service.getCurrentValue(this.state.currentPrice)[0];
+      let currentValue = subpos.service.getCurrentValue(this.state.currentPrice, 0)[0];
       if(subpos.isLong) {
         subpos.base.start = currentValue;
         subpos.under.start = 0;

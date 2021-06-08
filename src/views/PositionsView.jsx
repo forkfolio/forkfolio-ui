@@ -166,7 +166,7 @@ class PositionsView extends Component {
 
         // NOTE: here I can create JSON objects and append to positions
         //let appendedPositions = [...this.props.userModel.positions];
-        let appendedPositions = [this.props.userModel.positions[0]];
+        let appendedPositions = [this.props.userModel.positions[1]];
         //let appendedPositions = [shortCallOptionTest, shortPutOptionTest, callOptionTest, this.props.userModel.positions[0]];
 
         // get live market data from smart contracts via web3
