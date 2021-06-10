@@ -89,8 +89,8 @@ class PositionChartCard extends Component {
       rangeEdgesBASE: todayData.rangeEdgesBASE, 
       rangeEdgesUNDER: todayData.rangeEdgesUNDER,
       currentPrice: todayData.currentPrice,
-      customMinX: todayData.customMinX,
-      customMaxX: todayData.customMaxX
+      customMinX: this.state.customXUserSet ? this.state.customMinX : todayData.customMinX,
+      customMaxX: this.state.customXUserSet ? this.state.customMaxX : todayData.customMaxX
     });
 
   }  
@@ -609,7 +609,8 @@ class PositionChartCard extends Component {
                   value={this.state.customMinX}
                   onChange={event => {
                     this.setState({
-                      customMinX: Number(event.target.value)
+                      customMinX: Number(event.target.value),
+                      customXUserSet: true
                     });
                   }}
                 />
@@ -624,7 +625,8 @@ class PositionChartCard extends Component {
                   value={this.state.customMaxX}
                   onChange={event => {
                     this.setState({
-                      customMaxX: Number(event.target.value)
+                      customMaxX: Number(event.target.value),
+                      customXUserSet: true
                     });
                   }}
                 />
