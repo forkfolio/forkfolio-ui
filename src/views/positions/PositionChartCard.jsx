@@ -30,6 +30,7 @@ class PositionChartCard extends Component {
       chartData: [Math.random() * 5, 2, 1],
       customMinX: 100,
       customMaxX: 3000,
+      customXUserSet: false,
       customMinY: undefined,
       customMaxY: undefined,
       currentPrice: 0
@@ -308,8 +309,8 @@ class PositionChartCard extends Component {
             text: 'Profit [BASE]'
           },
           opposite: true,
-          floor: this.state.customMinY,
-          ceiling: this.state.customMaxY,
+          min: this.state.customMinY,
+          max: this.state.customMaxY,
         },
         {
           title: {
