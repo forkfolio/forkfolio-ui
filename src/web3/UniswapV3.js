@@ -11,7 +11,6 @@ export default class UniswapV3 {
 		this.minPrice = minPrice;
 		this.maxPrice = maxPrice;
 		this.feeInPercent = feeInPercent;
-
 	}
 
 	// gets pool sizes and prices from live market 

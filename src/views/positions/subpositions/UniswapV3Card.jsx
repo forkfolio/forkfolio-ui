@@ -12,6 +12,7 @@ class UniswapV3Card extends Component {
   onChangeStartBase(newValue) {
     let subpos = clone(this.props.subposition);
     subpos.base.start = Number(newValue);
+    subpos.service.myBASE = Number(newValue);
     this.props.updateSubposition(this.props.index, subpos);
   }
 
@@ -24,6 +25,7 @@ class UniswapV3Card extends Component {
   onChangeStartUnder(newValue) {
     let subpos = clone(this.props.subposition);
     subpos.under.start = Number(newValue);
+    subpos.service.myUNDER = Number(newValue);
     this.props.updateSubposition(this.props.index, subpos);
   }
 
