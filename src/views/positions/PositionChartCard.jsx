@@ -57,7 +57,6 @@ class PositionChartCard extends Component {
       } else {
         // refresh chart if customPosition is updated
         if(prevState.customPosition !== this.state.customPosition) {
-          console.log("refreshing chart")
           await this.refreshChart();
         }
       }
@@ -197,7 +196,7 @@ class PositionChartCard extends Component {
 
     return {
       left: Number(pivot / 3),
-      right: 5000,//Number(pivot * 5),
+      right: 10000,//Number(pivot * 5),
       step: step
     }
   }
@@ -393,17 +392,16 @@ class PositionChartCard extends Component {
         type: type,
         marketAddress: "0xA478c2975Ab1Ea89e8196811F51A7B7Ade33eB11",
         base: {
-          start: 1800,
+          start: 1000,
           extra: 0
         },
         under: {
-          start: 1,
+          start: 0,
           extra: 0
         },
-        liq: {
-          start: 30.67,
-          extra: 0
-        },
+        minPrice: 3900 * 0.8, 
+        maxPrice: 3900 * 1.2, 
+        feeInPercent: 0.3
       }
     } else if(type === 'dydx-long') {
       newSubpos = {

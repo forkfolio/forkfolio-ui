@@ -4,7 +4,7 @@ import { Col, Row, Tooltip, OverlayTrigger, FormControl } from "react-bootstrap"
 import Button from "components/CustomButton/CustomButton.jsx";
 import { clone } from '../../../web3/common.js';
 
-class UniswapV2Card extends Component {
+class UniswapV3Card extends Component {
   constructor(props) {
     super(props);
   }
@@ -33,17 +33,17 @@ class UniswapV2Card extends Component {
     this.props.updateSubposition(this.props.index, subpos);
   }
 
-  onChangeStartLiq(newValue) {
+  onChangeMinPrice(newValue) {
     let subpos = clone(this.props.subposition);
-    subpos.liq.start = Number(newValue);
-    subpos.service.myLIQ = Number(newValue) + subpos.liq.extra;
+    subpos.minPrice = Number(newValue);
+    subpos.service.minPrice = Number(newValue);
     this.props.updateSubposition(this.props.index, subpos);
   }
 
-  onChangeExtraLiq(newValue) {
+  onChangeMaxPrice(newValue) {
     let subpos = clone(this.props.subposition);
-    subpos.liq.extra = Number(newValue);
-    subpos.service.myLIQ = subpos.liq.start + Number(newValue);
+    subpos.maxPrice = Number(newValue);
+    subpos.service.maxPrice = Number(newValue);
     this.props.updateSubposition(this.props.index, subpos);
   }
 
@@ -149,29 +149,43 @@ class UniswapV2Card extends Component {
           </Row>
           <Row>
             <Col md={6}>
-              Start LIQ:
+              Min price:
             </Col>
             <Col md={6}>
               <FormControl
-                placeholder={"Amount"}
+                placeholder={"MinPrice"}
                 type="number"
                 min={0}
-                value={this.props.subposition.liq.start}
-                onChange={(event) => this.onChangeStartLiq(event.target.value)}
+                value={this.props.subposition.minPrice}
+                onChange={(event) => this.onChangeMinPrice(event.target.value)}
               />
             </Col>
           </Row>
           <Row>
             <Col md={6}>
-              Extra LIQ:
+              Max price:
             </Col>
             <Col md={6}>
               <FormControl
-                placeholder={"Amount"}
+                placeholder={"MaxPrice"}
                 type="number"
                 min={0}
-                value={this.props.subposition.liq.extra}
-                onChange={(event) => this.onChangeExtraLiq(event.target.value)}
+                value={this.props.subposition.maxPrice}
+                onChange={(event) => this.onChangeMaxPrice(event.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              Fee [%]:
+            </Col>
+            <Col md={6}>
+              <FormControl
+                placeholder={"Fee"}
+                type="number"
+                min={0}
+                value={this.props.subposition.feeInPercent}
+                onChange={(event) => this.onChangeFeeInPercent(event.target.value)}
               />
             </Col>
           </Row>
@@ -200,4 +214,4 @@ class UniswapV2Card extends Component {
   }
 }
 
-export default UniswapV2Card;
+export default UniswapV3Card;

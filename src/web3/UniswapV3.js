@@ -12,21 +12,6 @@ export default class UniswapV3 {
 		this.maxPrice = maxPrice;
 		this.feeInPercent = feeInPercent;
 
-		// total in BASE amd total in UNDER
-		this.openingTotalBASE = myBASE + myUNDER * openingPrice;
-
-		this.token1V2 = this.openingTotalBASE / 2;
-		this.token2V2 = this.token1V2 / openingPrice;
-		this.L = Math.sqrt(this.token1V2 * this.token2V2);
-		this.L2 = this.token1V2 * this.token2V2;
-		this.T = this.L * Math.sqrt(minPrice);
-		this.H = this.L / Math.sqrt(maxPrice);
-		this.maxToken2 = this.L2 / this.H - this.T;
-		this.maxToken1 = this.L2 / this.T - this.H;
-		this.LP_a = openingPrice > maxPrice ? 0 : (this.L / Math.sqrt(openingPrice) - this.H) * openingPrice;
-		this.LP_b = openingPrice > maxPrice ? this.maxToken2 : this.L * Math.sqrt(openingPrice) - this.T;
-		this.LP = this.LP_a + this.LP_b;
-		this.multiplier = openingPrice > minPrice ? this.openingTotalBASE / this.LP : this.openingTotalBASE / (openingPrice * this.maxToken1);
 	}
 
 	// gets pool sizes and prices from live market 
@@ -36,6 +21,23 @@ export default class UniswapV3 {
 
 	// gets user balance in [BASE, UNDER] for given price 
 	getCurrentValue(newPrice) {
+		// total in BASE amd total in UNDER
+		this.openingTotalBASE = this.myBASE + this.myUNDER * this.openingPrice;
+
+		this.token1V2 = this.openingTotalBASE / 2;
+		this.token2V2 = this.token1V2 / this.openingPrice;
+		this.L = Math.sqrt(this.token1V2 * this.token2V2);
+		this.L2 = this.token1V2 * this.token2V2;
+		this.T = this.L * Math.sqrt(this.minPrice);
+		this.H = this.L / Math.sqrt(this.maxPrice);
+		this.maxToken2 = this.L2 / this.H - this.T;
+		this.maxToken1 = this.L2 / this.T - this.H;
+		this.LP_a = this.openingPrice > this.maxPrice ? 0 : (this.L / Math.sqrt(this.openingPrice) - this.H) * this.openingPrice;
+		this.LP_b = this.openingPrice > this.maxPrice ? this.maxToken2 : this.L * Math.sqrt(this.openingPrice) - this.T;
+		this.LP = this.LP_a + this.LP_b;
+		this.multiplier = this.openingPrice > this.minPrice ? this.openingTotalBASE / this.LP : this.openingTotalBASE / (this.openingPrice * this.maxToken1);
+
+				
 		let x, y, value; // x is BASE. y is UNDER
 		if (newPrice < this.minPrice) {
 			x = this.maxToken1 * this.multiplier;
