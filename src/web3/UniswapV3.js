@@ -4,13 +4,14 @@
 //import { usdcAddress, getContractInstance } from './common.js'
 		
 export default class UniswapV3 {		
-	constructor(myBASE, myUNDER, openingPrice, minPrice, maxPrice, feeInPercent) {
+	constructor(myBASE, myUNDER, openingPrice, minPrice, maxPrice, feeInPercent, ignoreImpermanentLoss) {
 		this.myBASE = myBASE;             // user invested in BASE
 		this.myUNDER = myUNDER;           // user invested in UNDER
 		this.openingPrice = openingPrice; // price when liq position is opened
 		this.minPrice = minPrice;
 		this.maxPrice = maxPrice;
 		this.feeInPercent = feeInPercent;
+		this.ignoreImpermanentLoss = ignoreImpermanentLoss; 
 	}
 
 	// gets pool sizes and prices from live market 
@@ -20,6 +21,11 @@ export default class UniswapV3 {
 
 	// gets user balance in [BASE, UNDER] for given price 
 	getCurrentValue(newPrice) {
+		if(this.ignoreImpermanentLoss) {
+			let newTotalBASE = this.myBASE + this.myUNDER * newPrice;
+			return [newTotalBASE, newTotalBASE / newPrice]
+		}
+
 		// total in BASE amd total in UNDER
 		this.openingTotalBASE = this.myBASE + this.myUNDER * this.openingPrice;
 
