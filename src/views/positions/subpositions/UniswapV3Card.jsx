@@ -49,6 +49,13 @@ class UniswapV3Card extends Component {
     this.props.updateSubposition(this.props.index, subpos);
   }
 
+  onChangeIgnoreImpermanentLoss(newValue) {
+    let subpos = clone(this.props.subposition);
+    subpos.ignoreImpermanentLoss = newValue == 1;
+    subpos.service.ignoreImpermanentLoss = newValue == 1;
+    this.props.updateSubposition(this.props.index, subpos);
+  }
+
   onChangeEnabled(checked) {
     let subpos = clone(this.props.subposition);
     subpos.enabled = checked;
@@ -188,6 +195,20 @@ class UniswapV3Card extends Component {
                 min={0}
                 value={this.props.subposition.feeInPercent}
                 onChange={(event) => this.onChangeFeeInPercent(event.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              Ignore IL:
+            </Col>
+            <Col md={6}>
+              <FormControl
+                placeholder={"IgnoreImpermanentLoss"}
+                type="number"
+                min={0}
+                value={this.props.subposition.ignoreImpermanentLoss ? 1 : 0}
+                onChange={(event) => this.onChangeIgnoreImpermanentLoss(event.target.value)}
               />
             </Col>
           </Row>
