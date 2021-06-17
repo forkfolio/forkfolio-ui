@@ -1,29 +1,64 @@
 //import { CoinGeckoPrices } from './CoinGeckoPrices.js';
 //import uniswapABI from "../abis/uniswapABI.json";
 //import daiABI from "../abis/daiABI.json";
-//import { usdcAddress, getContractInstance } from './common.js'
+import { usdcAddress, getContractInstance } from './common.js'
+import {
+	abi as NFT_MANAGER_ABI,
+	bytecode as NFT_MANAGER_BYTECODE,
+  } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 		
 export default class UniswapV3 {		
-	constructor(myBASE, myUNDER, openingPrice, minPrice, maxPrice, feeInPercent, ignoreImpermanentLoss) {
+	constructor(myBASE, myUNDER, openingPrice, minPrice, maxPrice, feeInPercent, poolID, ignoreImpermanentLoss) {
 		this.myBASE = myBASE;             // user invested in BASE
 		this.myUNDER = myUNDER;           // user invested in UNDER
 		this.openingPrice = openingPrice; // price when liq position is opened
 		this.minPrice = minPrice;
 		this.maxPrice = maxPrice;
 		this.feeInPercent = feeInPercent;
+		this.poolID = poolID;
 		this.ignoreImpermanentLoss = ignoreImpermanentLoss; 
+
+		this.collectedFeesBASE = 0;
+		this.collectedFeesUNDER = 0;
 	}
+
+	tokens(web3, n) {
+		return new web3.utils.BN(web3.utils.toWei(n.toString()));
+	};
 
 	// gets pool sizes and prices from live market 
 	async getMarketData(web3, position) {
-		console.log("UniswapV3 market data not needed to be loaded, skip. ");
+		if(this.poolID > 0) {
+			let managerInstance = getContractInstance(web3, NFT_MANAGER_ABI, "0xC36442b4a4522E871399CD717aBDD847Ab11FE88");
+			let collectResult = await managerInstance.methods.collect(
+				{
+					tokenId: this.poolID,
+					recipient: position.address,
+					amount0Max: this.tokens(web3, 1000000000).toString(),
+					amount1Max: this.tokens(web3, 1000000000).toString()
+				}
+			).call({ from: position.address });
+			//console.log(collectResult);
+			//console.log(collectResult.amount0)
+	
+			// set collect fees
+			this.collectedFeesBASE = collectResult.amount0 / 10 ** (collectResult.amount0.length > 16 ? 18 : 6);
+			this.collectedFeesUNDER = collectResult.amount1 / 10 ** (collectResult.amount1.length > 16 ? 18 : 6);
+	
+			//let myposition = await managerInstance.methods.positions(47121).call();
+			//console.log("Position on Uni3:")
+			//console.log(myposition)
+	
+			console.log("UniswapV3 market data loaded");
+		}
 	}
 
 	// gets user balance in [BASE, UNDER] for given price 
 	getCurrentValue(newPrice) {
 		if(this.ignoreImpermanentLoss) {
 			let newTotalBASE = this.myBASE + this.myUNDER * newPrice;
-			return [newTotalBASE, newTotalBASE / newPrice]
+			let collectedFeesTotalBASE = this.collectedFeesBASE + this.collectedFeesUNDER * newPrice;
+			return [newTotalBASE + collectedFeesTotalBASE, (newTotalBASE + collectedFeesTotalBASE) / newPrice]
 		}
 
 		// total in BASE amd total in UNDER

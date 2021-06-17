@@ -199,7 +199,8 @@ export const uniswapv3Test = {
       },
       minPrice: 3900 * 0.8, 
       maxPrice: 3900 * 1.2, 
-      feeInPercent: 0.3
+      feeInPercent: 0.3,
+      poolID: 0
     },
     {
       type: "option",

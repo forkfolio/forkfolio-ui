@@ -224,7 +224,7 @@ class PositionsView extends Component {
         service = new Manual(subpos.base.start, subpos.base.extra, subpos.under.start, subpos.under.extra);
         break;
       case "uniswapv3":
-        service = new UniswapV3(subpos.base.start, subpos.under.start, pos.entryPrice, subpos.minPrice, subpos.maxPrice, subpos.feeInPercent, subpos.ignoreImpermanentLoss);
+        service = new UniswapV3(subpos.base.start, subpos.under.start, pos.entryPrice, subpos.minPrice, subpos.maxPrice, subpos.feeInPercent, subpos.poolID, subpos.ignoreImpermanentLoss);
         break;
     }
 
