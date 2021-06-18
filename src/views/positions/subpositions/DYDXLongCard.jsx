@@ -9,6 +9,13 @@ class DYDXLongCard extends Component {
     super(props);
   }
 
+  onChangeQuantity(newValue) {
+    let subpos = clone(this.props.subposition);
+    subpos.quantity = Number(newValue);
+    subpos.service.quantity = Number(newValue);
+    this.props.updateSubposition(this.props.index, subpos);
+  }
+
   onChangeStartUnder(newValue) {
     let subpos = clone(this.props.subposition);
     subpos.under.start = Number(newValue);
@@ -76,12 +83,27 @@ class DYDXLongCard extends Component {
           <div>
           <Row>
             <Col md={6}>
+              Quantity:
+            </Col>
+            <Col md={6}>
+              <FormControl
+                placeholder={"Quantity"}
+                type="number"
+                min={0}
+                value={this.props.subposition.quantity}
+                onChange={(event) => this.onChangeQuantity(event.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
               Start UNDER:
             </Col>
             <Col md={6}>
               <FormControl
                 placeholder={"Amount"}
                 type="number"
+                disabled
                 min={0}
                 value={this.props.subposition.under.start}
                 onChange={(event) => this.onChangeStartUnder(event.target.value)}
@@ -96,6 +118,7 @@ class DYDXLongCard extends Component {
               <FormControl
                 placeholder={"Amount"}
                 type="number"
+                disabled
                 min={0}
                 value={this.props.subposition.borrowedBASE}
                 onChange={(event) => this.onChangeBorrowedBase(event.target.value)}
@@ -110,6 +133,7 @@ class DYDXLongCard extends Component {
               <FormControl
                 placeholder={"Amount"}
                 type="number"
+                disabled
                 min={0}
                 value={this.props.subposition.boughtUNDER}
                 onChange={(event) => this.onChangeBoughtUnder(event.target.value)}

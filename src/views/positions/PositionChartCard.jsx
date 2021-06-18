@@ -414,6 +414,7 @@ class PositionChartCard extends Component {
           start: 1,
           extra: 0
         },
+        quantity: 1, 
         borrowedBASE: 2700, 
         boughtUNDER: 1, 
         openingPrice: 2700
@@ -429,6 +430,7 @@ class PositionChartCard extends Component {
           start: 0,
           extra: 0
         },
+        quantity: 1, 
         borrowedUNDER: 1,
         boughtBASE: 2700,
         openingPrice: 2700
@@ -464,22 +466,7 @@ class PositionChartCard extends Component {
   updateSubposition(index, subpos) {
     let updatedPosition = clone(this.state.customPosition);
     updatedPosition.subpositions[index] = subpos;
-    if(subpos.type === 'option') {
-      let currentValue = subpos.service.getCurrentValue(this.state.currentPrice, 0)[0];
-      if(subpos.isLong) {
-        subpos.base.start = currentValue;
-        subpos.under.start = 0;
-      } else {
-        if(subpos.isCall) {
-          subpos.base.start = currentValue - subpos.quantity * this.state.currentPrice;
-          subpos.under.start = subpos.quantity;
-        } else {
-          subpos.base.start = currentValue;
-          subpos.under.start = 0;
-        }
-      }
-      
-    }
+    subpos.service.update(subpos, this.state.currentPrice);
     console.log(updatedPosition)
     this.setState({
       customPosition: updatedPosition

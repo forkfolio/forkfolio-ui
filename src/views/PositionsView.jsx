@@ -212,10 +212,10 @@ class PositionsView extends Component {
         service = new Uniswap(subpos.marketAddress, pos.base.address, pos.under.address, subpos.liq.start, subpos.apr);
         break;
       case "dydx-long":
-        service = new dYdXLong(subpos.under.start, subpos.borrowedBASE, subpos.boughtUNDER, subpos.openingPrice);
+        service = new dYdXLong(subpos.under.start, subpos.quantity, subpos.borrowedBASE, subpos.boughtUNDER, subpos.openingPrice);
         break;
       case "dydx-short":
-        service = new dYdXShort(subpos.base.start, subpos.borrowedUNDER, subpos.boughtBASE, subpos.openingPrice);
+        service = new dYdXShort(subpos.base.start, subpos.quantity, subpos.borrowedUNDER, subpos.boughtBASE, subpos.openingPrice);
         break;
       case "option":
         service = new GammaOptions(subpos.isCall, subpos.isLong, subpos.quantity, subpos.strike, subpos.daysToExpiry, subpos.iv);

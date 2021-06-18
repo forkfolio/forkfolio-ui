@@ -13,6 +13,11 @@ export default class Manual {
 		console.log("Manual market data not needed to be loaded, skip. ");
 	}
 
+	// when one of the members are updated, others can be updated here
+	update(subpos, currentPrice) {
+		// do nothing
+	}
+
 	// gets current value in [BASE, UNDER]
 	getCurrentValue(currentPrice) {
 		let positionBASE = this.startBASE + this.startUNDER * currentPrice;

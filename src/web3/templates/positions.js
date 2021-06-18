@@ -40,6 +40,7 @@ export const uniswapdYdXTest = {
         start: 1,
         extra: 0
       },
+      quantity: 1, 
       borrowedBASE: 1800, 
       boughtUNDER: 1, 
       openingPrice: 1800
@@ -64,6 +65,7 @@ export const dydxShortTest = {
         start: 0,
         extra: 0
       },
+      quantity: 1, 
       borrowedUNDER: 1,
       boughtBASE: 1800,
       openingPrice: 1800

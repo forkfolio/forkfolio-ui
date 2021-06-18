@@ -16,6 +16,23 @@ export default class GammaOptions {
 		console.log("GammaOptions market data loaded. ");
 	}
 
+	// when one of the members are updated, others can be updated here
+	update(subpos, currentPrice) {
+		let currentValue = this.getCurrentValue(currentPrice, 0)[0];
+		if(this.isLong) {
+			subpos.base.start = currentValue;
+			subpos.under.start = 0;
+		} else {
+			if(this.isCall) {
+				subpos.base.start = currentValue - this.quantity * currentPrice;
+				subpos.under.start = this.quantity;
+			} else {
+				subpos.base.start = currentValue;
+				subpos.under.start = 0;
+			}
+		}
+	}
+
 	// gets current value in [BASE, UNDER]
 	// passedDays - days that passed since 
 	getCurrentValue(currentPrice, passedDays) {

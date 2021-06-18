@@ -22,10 +22,6 @@ export default class UniswapV3 {
 		this.collectedFeesUNDER = 0;
 	}
 
-	tokens(web3, n) {
-		return new web3.utils.BN(web3.utils.toWei(n.toString()));
-	};
-
 	// gets pool sizes and prices from live market 
 	async getMarketData(web3, position) {
 		if(this.poolID > 0) {
@@ -51,6 +47,11 @@ export default class UniswapV3 {
 	
 			console.log("UniswapV3 market data loaded");
 		}
+	}
+
+	// when one of the members are updated, others can be updated here
+	update(subpos, currentPrice) {
+		// do nothing
 	}
 
 	// gets user balance in [BASE, UNDER] for given price 
@@ -95,4 +96,8 @@ export default class UniswapV3 {
 
 		return [value, value / newPrice];
 	}
+
+	tokens(web3, n) {
+		return new web3.utils.BN(web3.utils.toWei(n.toString()));
+	};
 }		

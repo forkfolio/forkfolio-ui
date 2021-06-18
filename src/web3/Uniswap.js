@@ -55,14 +55,9 @@ export default class Uniswap {
 		console.log("AMM market data loaded. " + position.base.symbol + ": " + this.priceBASEUSD + " USD, " + position.under.symbol + ": " + this.priceUNDERUSD + " USD");
 	}
 
-	getDecimals() {
-		if(this.addressUNDER === usdcAddress) {
-			return 6;
-		} else if (this.addressUNDER === wbtcAddress) {
-			return 8;
-		}
-
-		return 18;
+	// when one of the members are updated, others can be updated here
+	update(subpos, currentPrice) {
+		// do nothing
 	}
 
 	// gets user balance in [BASE, UNDER] for given price. 
@@ -157,5 +152,15 @@ export default class Uniswap {
 
 	getPrice() {
 		return this.poolBASE / this.poolUNDER;
+	}
+
+	getDecimals() {
+		if(this.addressUNDER === usdcAddress) {
+			return 6;
+		} else if (this.addressUNDER === wbtcAddress) {
+			return 8;
+		}
+
+		return 18;
 	}
 }		

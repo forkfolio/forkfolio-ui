@@ -9,6 +9,13 @@ class DYDXShortCard extends Component {
     super(props);
   }
 
+  onChangeQuantity(newValue) {
+    let subpos = clone(this.props.subposition);
+    subpos.quantity = Number(newValue);
+    subpos.service.quantity = Number(newValue);
+    this.props.updateSubposition(this.props.index, subpos);
+  }
+
   onChangeStartBase(newValue) {
     let subpos = clone(this.props.subposition);
     subpos.base.start = Number(newValue);
@@ -76,12 +83,27 @@ class DYDXShortCard extends Component {
           <div>
           <Row>
             <Col md={6}>
+              Quantity:
+            </Col>
+            <Col md={6}>
+              <FormControl
+                placeholder={"Quantity"}
+                type="number"
+                min={0}
+                value={this.props.subposition.quantity}
+                onChange={(event) => this.onChangeQuantity(event.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
               Start BASE:
             </Col>
             <Col md={6}>
               <FormControl
                 placeholder={"Amount"}
                 type="number"
+                disabled
                 min={0}
                 value={this.props.subposition.base.start}
                 onChange={(event) => this.onChangeStartBase(event.target.value)}
@@ -96,6 +118,7 @@ class DYDXShortCard extends Component {
               <FormControl
                 placeholder={"Amount"}
                 type="number"
+                disabled
                 min={0}
                 value={this.props.subposition.borrowedUNDER}
                 onChange={(event) => this.onChangeBorrowedUnder(event.target.value)}
@@ -110,6 +133,7 @@ class DYDXShortCard extends Component {
               <FormControl
                 placeholder={"Amount"}
                 type="number"
+                disabled
                 min={0}
                 value={this.props.subposition.boughtBASE}
                 onChange={(event) => this.onChangeBoughtBase(event.target.value)}

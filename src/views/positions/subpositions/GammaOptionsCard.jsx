@@ -102,33 +102,6 @@ class GammaOptionsCard extends Component {
           <div>
           <Row>
             <Col md={6}>
-              Start BASE:
-            </Col>
-            <Col md={6}>
-              <FormControl
-                disabled
-                placeholder={"Amount"}
-                type="number"
-                value={this.props.subposition.base.start.toFixed(2)}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col md={6}>
-              Start UNDER:
-            </Col>
-            <Col md={6}>
-              <FormControl
-                disabled
-                placeholder={"Amount"}
-                type="number"
-                min={0}
-                value={this.props.subposition.under.start.toFixed(2)}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col md={6}>
               Buy or Sell:
             </Col>
             <Col md={6}>
@@ -206,6 +179,33 @@ class GammaOptionsCard extends Component {
                 min={0}
                 value={this.props.subposition.iv}
                 onChange={(event) => this.onChangeIV(event.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              Start BASE:
+            </Col>
+            <Col md={6}>
+              <FormControl
+                disabled
+                placeholder={"Amount"}
+                type="number"
+                value={this.props.subposition.base.start.toFixed(2)}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              Start UNDER:
+            </Col>
+            <Col md={6}>
+              <FormControl
+                disabled
+                placeholder={"Amount"}
+                type="number"
+                min={0}
+                value={this.props.subposition.under.start.toFixed(2)}
               />
             </Col>
           </Row>
