@@ -34,12 +34,12 @@ export default class UniswapV3 {
 					amount1Max: this.tokens(web3, 1000000000).toString()
 				}
 			).call({ from: position.address });
-			//console.log(collectResult);
+			console.log(collectResult);
 			//console.log(collectResult.amount0)
 	
 			// set collect fees
-			this.collectedFeesBASE = collectResult.amount0 / 10 ** (collectResult.amount0.length > 16 ? 18 : 6);
-			this.collectedFeesUNDER = collectResult.amount1 / 10 ** (collectResult.amount1.length > 16 ? 18 : 6);
+			this.collectedFeesBASE = collectResult.amount0 / 10 ** (collectResult.amount0.length >= 15 ? 18 : 6);
+			this.collectedFeesUNDER = collectResult.amount1 / 10 ** (collectResult.amount1.length >= 15 ? 18 : 6);
 	
 			//let myposition = await managerInstance.methods.positions(47121).call();
 			//console.log("Position on Uni3:")
