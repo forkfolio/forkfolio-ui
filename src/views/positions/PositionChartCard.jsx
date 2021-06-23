@@ -391,6 +391,7 @@ class PositionChartCard extends Component {
       newSubpos = {
         type: type,
         marketAddress: "0xA478c2975Ab1Ea89e8196811F51A7B7Ade33eB11",
+        openingPrice: this.state.currentPrice,
         base: {
           start: 1000,
           extra: 0
