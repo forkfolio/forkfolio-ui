@@ -254,9 +254,6 @@ class PositionsView extends Component {
 
       // if there is no uniswap market, use coingecko api
       if(!market) {
-        //let priceBASEUSD = await CoinGeckoPrices.getTokenPriceInUSD(pos.base.address);
-        //let priceUNDERUSD = await CoinGeckoPrices.getTokenPriceInUSD(pos.under.address);
-        //console.log(priceUNDERUSD)
         market = {
           priceBASEUSD: await CoinGeckoPrices.getTokenPriceInUSD(pos.base.address),
           priceUNDERUSD: await CoinGeckoPrices.getTokenPriceInUSD(pos.under.address)
@@ -270,11 +267,19 @@ class PositionsView extends Component {
         let subpos = pos.subpositions[j];
 
         // calculate Ins
-        totalInBASE += subpos.base.start + subpos.under.start * currentPrice;
+        if(!subpos.isStacked) {
+          totalInBASE += subpos.base.start + subpos.under.start * currentPrice;
+        }
 
         // calculate Outs
         let extraBASE = subpos.base.extra + subpos.under.extra * currentPrice;
-        totalOutBASE += subpos.service.getCurrentValue(currentPrice, 0)[0] + extraBASE; 
+        if(subpos.isStacked) {
+          // if stacked, just add profits from stacked position to extraBase
+          let inBASE = subpos.base.start + subpos.under.start * currentPrice;
+          totalOutBASE += subpos.service.getCurrentValue(currentPrice, 0)[0] + extraBASE - inBASE; 
+        } else {
+          totalOutBASE += subpos.service.getCurrentValue(currentPrice, 0)[0] + extraBASE; 
+        }
       }
 
       // today
@@ -312,7 +317,7 @@ class PositionsView extends Component {
         targetPriceBASE = priceAndProfitBASE[0];
         targetProfitBASE = priceAndProfitBASE[1];
         let targetHodlBASE = priceAndProfitBASE[2];
-        console.log("targetHodlBASE: " + targetHodlBASE)
+        //console.log("targetHodlBASE: " + targetHodlBASE)
         profitPerMonthTargetBASE = targetProfitBASE * 30.4167 / daysSinceStart;	
         aprTargetBASE = targetProfitBASE / targetHodlBASE / daysSinceStart * 365 * 100;
       } 
@@ -424,12 +429,24 @@ class PositionsView extends Component {
         let subpos = position.subpositions[j];
 
         // get ins
-        startBASE += subpos.base.start;
-        startUNDER += subpos.under.start;
+        if(!subpos.isStacked) {
+          startBASE += subpos.base.start;
+          startUNDER += subpos.under.start;
+        }
 
         // get outs
         let extraBASE = subpos.base.extra + subpos.under.extra * i;
-        totalOutBASE += subpos.service.getCurrentValue(i, 0)[0] + extraBASE;
+        if(subpos.isStacked) {
+          // if stacked, just add profits from stacked position to totalOutBASE
+          let inBASE = subpos.base.start + subpos.under.start * i;
+          totalOutBASE += subpos.service.getCurrentValue(i, 0)[0] + extraBASE - inBASE; 
+        } else {
+          totalOutBASE += subpos.service.getCurrentValue(i, 0)[0] + extraBASE; 
+        }
+
+        // get outs
+        //let extraBASE = subpos.base.extra + subpos.under.extra * i;
+        //totalOutBASE += subpos.service.getCurrentValue(i, 0)[0] + extraBASE;
       }
 
       // debalance for max BASE
@@ -461,12 +478,20 @@ class PositionsView extends Component {
         let subpos = position.subpositions[j];
 
         // get ins
-        startBASE += subpos.base.start;
-        startUNDER += subpos.under.start;
+        if(!subpos.isStacked) {
+          startBASE += subpos.base.start;
+          startUNDER += subpos.under.start;
+        }
 
         // get outs
         let extraUNDER = subpos.under.extra + subpos.base.extra / i;
-        totalOutUNDER += subpos.service.getCurrentValue(i, 0)[1] + extraUNDER;
+        if(subpos.isStacked) {
+          // if stacked, just add profits from stacked position to totalOutUNDER
+          let inUNDER = subpos.base.start / i + subpos.under.start;
+          totalOutUNDER += subpos.service.getCurrentValue(i, 0)[1] + extraUNDER - inUNDER; 
+        } else {
+          totalOutUNDER += subpos.service.getCurrentValue(i, 0)[1] + extraUNDER; 
+        }
       }
 
       // debalance for max UNDER
