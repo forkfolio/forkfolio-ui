@@ -569,7 +569,7 @@ class PositionsView extends Component {
               <b>{row.value[0]}</b><br></br>
               {this.displayDescription(row.value[1])}<br></br>
               {this.displayLinks(row.value[1])}
-              <a href={"https://zapper.fi/dashboard?address=" + row.value[2]}>Zap</a>
+              <a href={"https://zapper.fi/account/" + row.value[2]}>Zap</a>
             </span>
           )
         },
