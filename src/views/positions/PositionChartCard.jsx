@@ -216,7 +216,7 @@ class PositionChartCard extends Component {
       }
     }
 
-    console.log("maxProfit: " + maxProfit)
+    //console.log("maxProfit: " + maxProfit)
 
     let firstPoint = { x: profits[0].x, y: profits[0].y };
     let leftPoint = firstPoint; 

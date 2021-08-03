@@ -37,17 +37,8 @@ class PositionsView extends Component {
     this.hideConfirmDialog = this.hideConfirmDialog.bind(this);
     this.removeTransaction = this.removeTransaction.bind(this);
     this.hideChartDialog = this.hideChartDialog.bind(this);
-    this.loadWeb3 = this.loadWeb3.bind(this);
     this.loadWeb3Account = this.loadWeb3Account.bind(this);
     this.addService = this.addService.bind(this);
-
-    // OLD WAY: load web3
-    //let web3;
-    //if (typeof window.web3 !== "undefined") {
-    //  web3 = this.loadWeb3();
-    //}
-
-
 
     this.state = {
       //data: null,
@@ -63,15 +54,6 @@ class PositionsView extends Component {
   async componentWillMount() {
     console.log("Navigate to: " + window.location.pathname + window.location.hash);
     ReactGA.pageview(window.location.pathname + window.location.hash);
-
-    // OLD WAY: load account
-    //const web3 = this.state.web3;
-    //if (web3) {
-    //  const userAccount = await this.loadWeb3Account(web3);
-    //  this.setState({
-    //    account: userAccount
-    //  });
-    //}
 
     const providerOptions = {
       /* See Provider Options Section */
@@ -117,26 +99,6 @@ class PositionsView extends Component {
       web3: web3
     });
   }
-
-  loadWeb3() {
-    let web3;
-    if (typeof global.window !== "undefined") {
-      // Modern dapp browsers...
-      if (window.ethereum) {
-        web3 = new Web3(window.ethereum);
-      }
-      // Legacy dapp browsers...
-      else if (typeof global.window.web3 !== "undefined") {
-        // Use Mist/MetaMask's provider
-        web3 = new Web3(window.web3.currentProvider);
-      } else {
-        // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
-      }
-    }
-
-    return web3;
-  };
   
   async loadWeb3Account(web3) {
     try {
@@ -165,8 +127,8 @@ class PositionsView extends Component {
         })
 
         // NOTE: here I can create JSON objects and append to positions
-        let appendedPositions = [...this.props.userModel.positions];
-        //let appendedPositions = [this.props.userModel.positions[0]];
+        //let appendedPositions = [...this.props.userModel.positions];
+        let appendedPositions = [this.props.userModel.positions[0]];
         //let appendedPositions = [shortCallOptionTest, shortPutOptionTest, callOptionTest, this.props.userModel.positions[0]];
 
         // get live market data from smart contracts via web3
@@ -330,7 +292,7 @@ class PositionsView extends Component {
 
       pos.maxProfitTargetUSD = Math.max(profitTargetETHUSD, profitTargetTokenUSD);
       pos.maxProfitPerMonthTargetUSD = Math.max(profitPerMonthTargetTokenUSD, profitPerMonthTargetETHUSD);
-
+      
       // prepare dataset for table
       uniswapTableSet.push({
         id: pos,

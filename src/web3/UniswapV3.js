@@ -41,10 +41,6 @@ export default class UniswapV3 {
 			this.collectedFeesBASE = collectResult.amount0 / 10 ** (collectResult.amount0.length >= 15 ? 18 : 6);
 			this.collectedFeesUNDER = collectResult.amount1 / 10 ** (collectResult.amount1.length >= 15 ? 18 : 6);
 	
-			//let myposition = await managerInstance.methods.positions(47121).call();
-			//console.log("Position on Uni3:")
-			//console.log(myposition)
-	
 			console.log("UniswapV3 market data loaded");
 		}
 	}
@@ -61,7 +57,6 @@ export default class UniswapV3 {
 			let collectedFeesTotalBASE = this.collectedFeesBASE + this.collectedFeesUNDER * newPrice;
 			return [newTotalBASE + collectedFeesTotalBASE, (newTotalBASE + collectedFeesTotalBASE) / newPrice]
 		}
-
 		// total in BASE amd total in UNDER
 		this.openingTotalBASE = this.myBASE + this.myUNDER * this.openingPrice;
 
