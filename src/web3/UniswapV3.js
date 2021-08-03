@@ -1,10 +1,7 @@
-//import { CoinGeckoPrices } from './CoinGeckoPrices.js';
-//import uniswapABI from "../abis/uniswapABI.json";
-//import daiABI from "../abis/daiABI.json";
-import { usdcAddress, getContractInstance } from './common.js'
+import { getContractInstance } from './common.js'
 import {
 	abi as NFT_MANAGER_ABI,
-	bytecode as NFT_MANAGER_BYTECODE,
+	//bytecode as NFT_MANAGER_BYTECODE,
   } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 		
 export default class UniswapV3 {		
@@ -34,7 +31,7 @@ export default class UniswapV3 {
 					amount1Max: this.tokens(web3, 1000000000).toString()
 				}
 			).call({ from: position.address });
-			console.log(collectResult);
+			//console.log(collectResult);
 			//console.log(collectResult.amount0)
 	
 			// set collect fees

@@ -5,9 +5,6 @@ import Button from "components/CustomButton/CustomButton.jsx";
 import { clone } from '../../../web3/common.js';
 
 class GammaOptionsCard extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   //onChangeStartBase(newValue) {
   //  let subpos = clone(this.props.subposition);

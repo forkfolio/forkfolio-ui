@@ -45,7 +45,6 @@ class PositionChartCard extends Component {
     if (this.userModelLoaded() && this.props.selectedPosition) {
       // set customPosition if there is a change in props
       if(prevProps.selectedPosition !== this.props.selectedPosition) {
-        console.log("setting customPosition")
         let customPosition = clone(this.props.selectedPosition);
         // add enabled flag
         for(let j = 0; j < customPosition.subpositions.length; j++) {
@@ -536,7 +535,7 @@ class PositionChartCard extends Component {
     if(this.state.customPosition) {
       return this.state.customPosition.subpositions.map((subpos, index) => {
         return (
-          <Col md={4}>
+          <Col md={4} key={index}>
             {this.displayCard(subpos, index)}
           </Col>
         )

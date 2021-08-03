@@ -5,9 +5,6 @@ import Button from "components/CustomButton/CustomButton.jsx";
 import { clone } from '../../../web3/common.js';
 
 class DYDXLongCard extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   onChangeQuantity(newValue) {
     let subpos = clone(this.props.subposition);

@@ -19,7 +19,7 @@ import UniswapV3 from '../web3/UniswapV3';
 import PositionChartCard from "./positions/PositionChartCard";
 import { clone, debalanceETH, debalanceDAI } from '../web3/common.js';
 import { CoinGeckoPrices } from '../web3/CoinGeckoPrices.js';
-import { 
+/*import { 
   uniswapdYdXTest, 
   dydxShortTest, 
   callOptionTest, 
@@ -27,7 +27,7 @@ import {
   uniswapv3Test,
   shortCallOptionTest,
   shortPutOptionTest
- } from '../web3/templates/positions.js';
+ } from '../web3/templates/positions.js';*/
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
@@ -188,6 +188,8 @@ class PositionsView extends Component {
       case "uniswapv3":
         service = new UniswapV3(subpos.base.start, subpos.under.start, subpos.openingPrice, subpos.minPrice, subpos.maxPrice, subpos.feeInPercent, subpos.poolID, subpos.ignoreImpermanentLoss);
         break;
+      default:
+        console.log("There was an error in addService()")
     }
 
     await service.getMarketData(this.state.web3, pos);
@@ -704,9 +706,6 @@ class PositionsView extends Component {
   }
 
   render() {
-    let currentPortfolio = this.props.userModel.portfolios.slice(-1)[0];
-    let tradeCount = currentPortfolio.tradeCount;
-
     let addTradeDialog = (
       <AddTradeDialog
         isDialogShown={this.props.isAddTradeDialogShown}

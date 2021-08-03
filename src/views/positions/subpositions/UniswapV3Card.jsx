@@ -5,9 +5,6 @@ import Button from "components/CustomButton/CustomButton.jsx";
 import { clone } from '../../../web3/common.js';
 
 class UniswapV3Card extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   onChangeStartBase(newValue) {
     let subpos = clone(this.props.subposition);
@@ -51,8 +48,8 @@ class UniswapV3Card extends Component {
 
   onChangeIgnoreImpermanentLoss(newValue) {
     let subpos = clone(this.props.subposition);
-    subpos.ignoreImpermanentLoss = newValue == 1;
-    subpos.service.ignoreImpermanentLoss = newValue == 1;
+    subpos.ignoreImpermanentLoss = newValue === 1;
+    subpos.service.ignoreImpermanentLoss = newValue === 1;
     this.props.updateSubposition(this.props.index, subpos);
   }
 
