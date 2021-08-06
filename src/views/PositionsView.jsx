@@ -127,8 +127,8 @@ class PositionsView extends Component {
         })
 
         // NOTE: here I can create JSON objects and append to positions
-        //let appendedPositions = [...this.props.userModel.positions];
-        let appendedPositions = [this.props.userModel.positions[0]];
+        let appendedPositions = [...this.props.userModel.positions];
+        //let appendedPositions = [this.props.userModel.positions[0]];
         //let appendedPositions = [shortCallOptionTest, shortPutOptionTest, callOptionTest, this.props.userModel.positions[0]];
 
         // get live market data from smart contracts via web3
@@ -186,7 +186,7 @@ class PositionsView extends Component {
         service = new Manual(subpos.base.start, subpos.base.extra, subpos.under.start, subpos.under.extra);
         break;
       case "uniswapv3":
-        service = new UniswapV3(subpos.base.start, subpos.under.start, subpos.openingPrice, subpos.minPrice, subpos.maxPrice, subpos.feeInPercent, subpos.poolID, subpos.ignoreImpermanentLoss);
+        service = new UniswapV3(subpos.base.start, subpos.under.start, subpos.openingPrice, subpos.minPrice, subpos.maxPrice, subpos.feeInPercent, subpos.poolID, subpos.ignoreImpermanentLoss, subpos.apr);
         break;
       default:
         console.log("There was an error in addService()")

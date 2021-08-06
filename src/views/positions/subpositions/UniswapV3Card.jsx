@@ -46,10 +46,24 @@ class UniswapV3Card extends Component {
     this.props.updateSubposition(this.props.index, subpos);
   }
 
+  onChangeOpeningPrice(newValue) {
+    let subpos = clone(this.props.subposition);
+    subpos.openingPrice = Number(newValue);
+    subpos.service.openingPrice = Number(newValue);
+    this.props.updateSubposition(this.props.index, subpos);
+  }
+
   onChangeIgnoreImpermanentLoss(newValue) {
     let subpos = clone(this.props.subposition);
     subpos.ignoreImpermanentLoss = newValue === 1;
     subpos.service.ignoreImpermanentLoss = newValue === 1;
+    this.props.updateSubposition(this.props.index, subpos);
+  }
+
+  onChangeAPR(newValue) {
+    let subpos = clone(this.props.subposition);
+    subpos.apr = Number(newValue);
+    subpos.service.apr = Number(newValue);
     this.props.updateSubposition(this.props.index, subpos);
   }
 
@@ -183,15 +197,15 @@ class UniswapV3Card extends Component {
           </Row>
           <Row>
             <Col md={6}>
-              Fee [%]:
+              Opening price:
             </Col>
             <Col md={6}>
               <FormControl
-                placeholder={"Fee"}
+                placeholder={"OpeningPrice"}
                 type="number"
                 min={0}
-                value={this.props.subposition.feeInPercent}
-                onChange={(event) => this.onChangeFeeInPercent(event.target.value)}
+                value={this.props.subposition.openingPrice}
+                onChange={(event) => this.onChangeOpeningPrice(event.target.value)}
               />
             </Col>
           </Row>
@@ -215,15 +229,11 @@ class UniswapV3Card extends Component {
             </Col>
             <Col md={6}>
               <FormControl
-                placeholder={"%"}
+                placeholder={"APR"}
                 type="number"
                 min={0}
-                value={20}
-                onChange={event => {
-                  this.setState({
-                    customMin: Number(event.target.value)
-                  });
-                }}
+                value={this.props.subposition.apr}
+                onChange={(event) => this.onChangeAPR(event.target.value)}
               />
             </Col>
           </Row>

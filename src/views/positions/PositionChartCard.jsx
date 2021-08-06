@@ -76,7 +76,7 @@ class PositionChartCard extends Component {
     let todayData = await this.prepareChartData(pos, 0);
 
     // chart data in 30 days
-    let futureData = await this.prepareChartData(pos, 7);
+    let futureData = await this.prepareChartData(pos, 30);
 
     this.setState({
       chartLoaded: true,

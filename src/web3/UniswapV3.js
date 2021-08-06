@@ -5,15 +5,16 @@ import {
   } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 		
 export default class UniswapV3 {		
-	constructor(myBASE, myUNDER, openingPrice, minPrice, maxPrice, feeInPercent, poolID, ignoreImpermanentLoss) {
+	constructor(myBASE, myUNDER, openingPrice, minPrice, maxPrice, feeInPercent, poolID, ignoreImpermanentLoss, apr) {
 		this.myBASE = myBASE;             // user invested in BASE
 		this.myUNDER = myUNDER;           // user invested in UNDER
 		this.openingPrice = openingPrice; // price when liq position is opened
 		this.minPrice = minPrice;
 		this.maxPrice = maxPrice;
-		this.feeInPercent = feeInPercent;
+		this.feeInPercent = feeInPercent; // NOTE: not used
 		this.poolID = poolID;
 		this.ignoreImpermanentLoss = ignoreImpermanentLoss; 
+		this.apr = apr;
 
 		this.collectedFeesBASE = 0;
 		this.collectedFeesUNDER = 0;
@@ -48,7 +49,7 @@ export default class UniswapV3 {
 	}
 
 	// gets user balance in [BASE, UNDER] for given price 
-	getCurrentValue(newPrice) {
+	getCurrentValue(newPrice, passedDays) {
 		if(this.ignoreImpermanentLoss) {
 			let newTotalBASE = this.myBASE + this.myUNDER * newPrice;
 			let collectedFeesTotalBASE = this.collectedFeesBASE + this.collectedFeesUNDER * newPrice;
@@ -86,7 +87,9 @@ export default class UniswapV3 {
 			value = y;
 		}
 
-		return [value, value / newPrice];
+		let aprMultiplier = (1 + this.apr / 100 * passedDays / 365);
+
+		return [value * aprMultiplier, (value * aprMultiplier) / newPrice];
 	}
 
 	tokens(web3, n) {
