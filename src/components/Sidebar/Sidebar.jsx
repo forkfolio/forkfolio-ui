@@ -102,7 +102,7 @@ class Sidebar extends Component {
               if (prop.collapse) {
                 return (
                   <li className={this.activeRoute(prop.path)} key={key}>
-                    <a href="/#" onClick={() => this.setState(st)}>
+                    <a onClick={() => this.setState(st)}>
                       <i className={prop.icon} />
                       <p>
                         {prop.name + (this.state[prop.state] ? "" : this.getChangeCount())}
@@ -118,19 +118,19 @@ class Sidebar extends Component {
                     <Collapse in={this.state[prop.state]}>
                       <ul className="nav">
                         <li className={""} key={5}>
-                          <a href="/#" className="nav-link" onClick={() => this.props.newPortfolio()}>
+                          <a className="nav-link" onClick={() => this.props.newPortfolio()}>
                               <i className={"fa fa-file-text-o"} />
                               <p>New</p>
                             </a>
                         </li>                      
                         <li className={""} key={6}>
-                          <a href="/#" className="nav-link" onClick={() => this.onOpenClick()}>
+                          <a className="nav-link" onClick={() => this.onOpenClick()}>
                               <i className={"fa fa-folder-open"} />
                               <p>Open</p>
                             </a>
                         </li>
                         <li className={""} key={7}>
-                          <a href="/#" className="nav-link" onClick={() => this.props.downloadPortfolio()}>
+                          <a className="nav-link" onClick={() => this.props.downloadPortfolio()}>
                             <i className={"fa fa-floppy-o"} />
                             <p>Save{this.getChangeCount()}</p>
                           </a>
@@ -140,7 +140,7 @@ class Sidebar extends Component {
                     <InputFiles 
                       onChange={this.props.uploadPortfolioFromFile}
                       accept="application/json">
-                      <a href="/#" id="input-files">
+                      <a id="input-files">
                       </a>
                     </InputFiles>
                   </li>
