@@ -32,7 +32,7 @@ export default class Squeeth {
 
 	// gets current value in [BASE, UNDER]
 	getCurrentValue(currentPrice, passedDays) {
-		//let positionBASE = (this.collateralUNDER + this.boughtUNDER) * currentPrice - this.borrowedBASE;
-		return [Math.max(0, 1000), Math.max(0, 1000) / currentPrice];
+		let currentValueBASE = this.quantity * (currentPrice ** 2);
+		return [currentValueBASE, currentValueBASE / currentPrice];
 	}
 }		

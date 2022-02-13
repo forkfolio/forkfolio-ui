@@ -6,6 +6,18 @@ import { clone } from '../../../web3/common.js';
 
 class SqueethCard extends Component {
 
+  onChangeStartBase(newValue) {
+    let subpos = clone(this.props.subposition);
+    subpos.base.start = Number(newValue);
+    this.props.updateSubposition(this.props.index, subpos);
+  }
+
+  onChangeStartUnder(newValue) {
+    let subpos = clone(this.props.subposition);
+    subpos.under.start = Number(newValue);
+    this.props.updateSubposition(this.props.index, subpos);
+  }
+
   onChangeIsLong(newValue) {
     let subpos = clone(this.props.subposition);
     subpos.isLong = newValue === 'L';
@@ -71,74 +83,75 @@ class SqueethCard extends Component {
         }
         content={
           <div>
-          <Row>
-            <Col md={6}>
-              Long or Short:
-            </Col>
-            <Col md={6}>
-              <FormControl
-                placeholder={"Long or Short"}
-                type="text"
-                value={this.props.subposition.isLong ? 'L' : 'S'}
-                onChange={(event) => this.onChangeIsLong(event.target.value)}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col md={6}>
-              Quantity:
-            </Col>
-            <Col md={6}>
-              <FormControl
-                placeholder={"Quantity"}
-                type="number"
-                min={0}
-                value={this.props.subposition.quantity}
-                onChange={(event) => this.onChangeQuantity(event.target.value)}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col md={6}>
-              APR [%]:
-            </Col>
-            <Col md={6}>
-              <FormControl
-                placeholder={"APR %"}
-                type="number"
-                min={0}
-                value={this.props.subposition.apr}
-                onChange={(event) => this.onChangeAPR(event.target.value)}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col md={6}>
-              Start BASE:
-            </Col>
-            <Col md={6}>
-              <FormControl
-                disabled
-                placeholder={"Start BASE"}
-                type="number"
-                value={this.props.subposition.base.start.toFixed(2)}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col md={6}>
-              Start UNDER:
-            </Col>
-            <Col md={6}>
-              <FormControl
-                disabled
-                placeholder={"Start UNDER"}
-                type="number"
-                min={0}
-                value={this.props.subposition.under.start.toFixed(2)}
-              />
-            </Col>
-          </Row>
+            <Row>
+              <Col md={6}>
+                Start BASE:
+              </Col>
+              <Col md={6}>
+                <FormControl
+                  placeholder={"Start BASE"}
+                  type="number"
+                  min={0}
+                  value={this.props.subposition.base.start}
+                  onChange={(event) => this.onChangeStartBase(event.target.value)}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                Start UNDER:
+              </Col>
+              <Col md={6}>
+                <FormControl
+                  placeholder={"Start UNDER"}
+                  type="number"
+                  min={0}
+                  value={this.props.subposition.under.start}
+                  onChange={(event) => this.onChangeStartUnder(event.target.value)}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                Long or Short:
+              </Col>
+              <Col md={6}>
+                <FormControl
+                  placeholder={"Long or Short"}
+                  type="text"
+                  value={this.props.subposition.isLong ? 'L' : 'S'}
+                  onChange={(event) => this.onChangeIsLong(event.target.value)}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                Quantity:
+              </Col>
+              <Col md={6}>
+                <FormControl
+                  placeholder={"Quantity"}
+                  type="number"
+                  min={0}
+                  value={this.props.subposition.quantity}
+                  onChange={(event) => this.onChangeQuantity(event.target.value)}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                APR [%]:
+              </Col>
+              <Col md={6}>
+                <FormControl
+                  placeholder={"APR %"}
+                  type="number"
+                  min={0}
+                  value={this.props.subposition.apr}
+                  onChange={(event) => this.onChangeAPR(event.target.value)}
+                />
+              </Col>
+            </Row>
           </div>
         }
       />          

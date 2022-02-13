@@ -462,10 +462,10 @@ class PositionChartCard extends Component {
           extra: 0
         },
         under: {
-          start: 1,
+          start: 0,
           extra: 0
         },
-        quantity: 1, 
+        quantity: 0.001, 
         isLong: true, 
         apr: 120,
         openingPrice: 2700
