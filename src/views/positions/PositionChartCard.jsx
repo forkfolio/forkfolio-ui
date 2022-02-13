@@ -15,6 +15,7 @@ import UniswapV3Card from "./subpositions/UniswapV3Card.jsx";
 import DYDXLongCard from "./subpositions/DYDXLongCard.jsx";
 import DYDXShortCard from "./subpositions/DYDXShortCard.jsx";
 import GammaOptionsCard from "./subpositions/GammaOptionsCard.jsx";
+import SqueethCard from "./subpositions/SqueethCard.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -453,6 +454,22 @@ class PositionChartCard extends Component {
         daysToExpiry: 30,
         iv: 86
       }
+    } else if(type === 'squeeth') {
+      newSubpos = {
+        type: "squeeth",
+        base: {
+          start: 0,
+          extra: 0
+        },
+        under: {
+          start: 1,
+          extra: 0
+        },
+        quantity: 1, 
+        isLong: true, 
+        apr: 120,
+        openingPrice: 2700
+      }
     }
     await this.props.addService(this.state.customPosition, newSubpos);
     let updatedPosition = clone(this.state.customPosition);
@@ -528,7 +545,16 @@ class PositionChartCard extends Component {
           removeSubposition={this.removeSubposition}
         />
       );
-    }
+    } else if(subpos.type === 'squeeth') {
+      return (
+        <SqueethCard
+          index={index}
+          subposition={subpos}
+          updateSubposition={this.updateSubposition}
+          removeSubposition={this.removeSubposition}
+        />
+      );
+    } 
   }
 
   getSubpositionCards() {
@@ -651,7 +677,7 @@ class PositionChartCard extends Component {
               {this.getSubpositionCards()}
               <Col md={4}>
                 <AddSubpositionCard
-                  types={['uniswap','uniswapv3', 'dydx-long', 'dydx-short', 'option']}
+                  types={['uniswap','uniswapv3', 'dydx-long', 'dydx-short', 'option', 'squeeth']}
                   addSubposition={this.addSubposition}
                 />
               </Col>

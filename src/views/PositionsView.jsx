@@ -16,6 +16,7 @@ import dYdXShort from '../web3/dYdXShort';
 import GammaOptions from '../web3/GammaOptions';
 import Manual from '../web3/Manual';
 import UniswapV3 from '../web3/UniswapV3';
+import Squeeth from '../web3/Squeeth';
 import PositionChartCard from "./positions/PositionChartCard";
 import { clone, debalanceETH, debalanceDAI } from '../web3/common.js';
 import { CoinGeckoPrices } from '../web3/CoinGeckoPrices.js';
@@ -187,6 +188,9 @@ class PositionsView extends Component {
         break;
       case "uniswapv3":
         service = new UniswapV3(subpos.base.start, subpos.under.start, subpos.openingPrice, subpos.minPrice, subpos.maxPrice, subpos.feeInPercent, subpos.poolID, subpos.ignoreImpermanentLoss, subpos.apr);
+        break;
+      case "squeeth":
+        service = new Squeeth(subpos.quantity, subpos.isLong, subpos.apr, subpos.openingPrice);
         break;
       default:
         console.log("There was an error in addService()")
