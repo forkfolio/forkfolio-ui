@@ -50,9 +50,11 @@ export default class UniswapV3 {
 
 	// gets user balance in [BASE, UNDER] for given price 
 	getCurrentValue(newPrice, passedDays) {
+		let collectedFeesTotalBASE = this.collectedFeesBASE + this.collectedFeesUNDER * newPrice;
+
+		// ignore impermanent loss
 		if(this.ignoreImpermanentLoss) {
 			let newTotalBASE = this.myBASE + this.myUNDER * newPrice;
-			let collectedFeesTotalBASE = this.collectedFeesBASE + this.collectedFeesUNDER * newPrice;
 			return [newTotalBASE + collectedFeesTotalBASE, (newTotalBASE + collectedFeesTotalBASE) / newPrice]
 		}
 		// total in BASE amd total in UNDER
@@ -89,7 +91,7 @@ export default class UniswapV3 {
 
 		let aprMultiplier = (1 + this.apr / 100 * passedDays / 365);
 
-		return [value * aprMultiplier, (value * aprMultiplier) / newPrice];
+		return [value * aprMultiplier + collectedFeesTotalBASE, (value * aprMultiplier + collectedFeesTotalBASE) / newPrice];
 	}
 
 	tokens(web3, n) {

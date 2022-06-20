@@ -107,8 +107,14 @@ class Dashboard extends Component {
   }
   
   fetchRecentPrices() {
+    // handle localhost
+    if(config.isLocalhost) {
+      return;
+    }
+
     let currencies = this.getCurrenciesToFetch(this.state.userModel);
     if(currencies.length > 0) {
+      console.log("Fetching:  " + config.restURL + 'recent?tokens=' + this.toTokensString(currencies))
       fetch(config.restURL + 'recent?tokens=' + this.toTokensString(currencies)).then((response) => {
         return response.text()
       }).then((body) => {
@@ -148,11 +154,22 @@ class Dashboard extends Component {
   // fetches a list of all curencies, crypto and fiat, and stores them in resModel
   fetchCurrencies() {
     return new Promise((accept, reject) => {
+      // handle localhost
+      if(config.isLocalhost) {
+        resModel.usd = new Currency("USD", "United States Dollar", 1, true);
+        resModel.dailyTickers.set(new Currency("USD", "United States Dollar", 1, true), []);
+        resModel.dailyTickers.set(new Currency("ETH", "ETHER", 2, false), []);
+        accept();
+        return;
+      }
+
       let url = config.restURL + (config.isLocalhost ? 'currencies.json' : 'currencies');
       console.log("Fetching: " + url)
       fetch(url).then((response) => {
+
         return response.text()
       }).then((body) => {
+        console.log(body)
         for (let c of JSON.parse(body)) {
           let currency = new Currency(c.c, c.n, c.r, c.f);
           resModel.dailyTickers.set(currency, []);
@@ -202,7 +219,13 @@ class Dashboard extends Component {
   }
   
   fetchHistoday(currency, days) {
+
     return new Promise((accept, reject) => {
+      // handle localhost
+      if(config.isLocalhost) {
+        accept();
+        return;
+      }
       fetch(config.restURL + 'histoday?range=' + days + '&tokens=' + currency.code)
       .then((response) => {
         return response.text()
@@ -223,6 +246,13 @@ class Dashboard extends Component {
     return new Promise((accept, reject) => {
       let currencies = this.getCurrenciesToFetch(this.state.userModel);
       if(currencies.length > 0) {
+        // handle localhost
+        if(config.isLocalhost) {
+          accept();
+          return;
+        }
+
+        console.log("Fetching: " + config.restURL + 'meta?tokens=' + this.toTokensString(currencies))
         fetch(config.restURL + 'meta?tokens=' + this.toTokensString(currencies)).then((response) => {
           return response.text()
         }).then((body) => {

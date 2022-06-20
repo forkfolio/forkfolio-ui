@@ -13,26 +13,31 @@ export default class Squeeth {
 		console.log("Squeeth market data loaded. ");
 	}
 
-	// when one of the members are updated, others can be updated here
+	// when one of the properties are updated in UI, 
+	// others can be updated here
 	update(subpos, currentPrice) {
+		console.log("update called")
 		let currentValue = this.getCurrentValue(currentPrice, 0)[0];
 		if(this.isLong) {
 			subpos.base.start = currentValue;
 			subpos.under.start = 0;
 		} else {
-			if(this.isCall) {
-				subpos.base.start = currentValue - this.quantity * currentPrice;
-				subpos.under.start = this.quantity;
-			} else {
-				subpos.base.start = currentValue;
-				subpos.under.start = 0;
-			}
+			//subpos.base.start = currentValue - this.quantity * currentPrice;
+			//subpos.under.start = 0;
 		}
 	}
 
 	// gets current value in [BASE, UNDER]
+	// todo: apply APR
 	getCurrentValue(currentPrice, passedDays) {
 		let currentValueBASE = this.quantity * (currentPrice ** 2);
-		return [currentValueBASE, currentValueBASE / currentPrice];
+		if (this.isLong) {
+			return [currentValueBASE, currentValueBASE / currentPrice];
+		} else {
+			// todo: 1
+			let currentShortValueBASE = 1 * currentPrice - currentValueBASE;
+			return [currentShortValueBASE, currentShortValueBASE / currentPrice]
+		}
+		
 	}
 }		
