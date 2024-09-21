@@ -13,6 +13,7 @@ import Web3 from 'web3';
 import Uniswap from '../web3/Uniswap';
 import dYdXLong from '../web3/dYdXLong';
 import dYdXShort from '../web3/dYdXShort';
+import Long from '../web3/Long';
 import GammaOptions from '../web3/GammaOptions';
 import Manual from '../web3/Manual';
 import UniswapV3 from '../web3/UniswapV3';
@@ -179,6 +180,9 @@ class PositionsView extends Component {
         break;
       case "dydx-short":
         service = new dYdXShort(subpos.base.start, subpos.quantity, subpos.borrowedUNDER, subpos.boughtBASE, subpos.openingPrice);
+        break;
+      case "long":
+        service = new Long(subpos.under.start, subpos.quantity, subpos.openingPrice);
         break;
       case "option":
         service = new GammaOptions(subpos.isCall, subpos.isLong, subpos.quantity, subpos.strike, subpos.daysToExpiry, subpos.iv);

@@ -12,6 +12,7 @@ import Card from "components/Card/Card.jsx";
 import AddSubpositionCard from "./AddSubpositionCard.jsx";
 import UniswapV2Card from "./subpositions/UniswapV2Card.jsx";
 import UniswapV3Card from "./subpositions/UniswapV3Card.jsx";
+import LongCard from "./subpositions/LongCard.jsx";
 import DYDXLongCard from "./subpositions/DYDXLongCard.jsx";
 import DYDXShortCard from "./subpositions/DYDXShortCard.jsx";
 import GammaOptionsCard from "./subpositions/GammaOptionsCard.jsx";
@@ -404,6 +405,20 @@ class PositionChartCard extends Component {
         maxPrice: 3900 * 1.2, 
         feeInPercent: 0.3
       }
+    } else if(type === 'long') {
+      newSubpos = {
+        type: "long",
+        base: {
+          start: 0,
+          extra: 0
+        },
+        under: {
+          start: 1,
+          extra: 0
+        },
+        quantity: 1, 
+        openingPrice: 8888
+      }
     } else if(type === 'dydx-long') {
       newSubpos = {
         type: "dydx-long",
@@ -512,6 +527,15 @@ class PositionChartCard extends Component {
     } else if(subpos.type === 'uniswapv3') {
       return (
         <UniswapV3Card
+          index={index}
+          subposition={subpos}
+          updateSubposition={this.updateSubposition}
+          removeSubposition={this.removeSubposition}
+        />
+      );
+    } else if(subpos.type === 'long') {
+      return (
+        <LongCard
           index={index}
           subposition={subpos}
           updateSubposition={this.updateSubposition}
@@ -677,7 +701,7 @@ class PositionChartCard extends Component {
               {this.getSubpositionCards()}
               <Col md={4}>
                 <AddSubpositionCard
-                  types={['uniswap','uniswapv3', 'dydx-long', 'dydx-short', 'option', 'squeeth']}
+                  types={['uniswap','uniswapv3', 'long', 'dydx-long', 'dydx-short', 'option', 'squeeth']}
                   addSubposition={this.addSubposition}
                 />
               </Col>
